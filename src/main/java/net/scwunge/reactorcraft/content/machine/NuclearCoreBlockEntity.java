@@ -23,6 +23,7 @@ import net.scwunge.reactorcraft.core.Linkable;
 import net.scwunge.reactorcraft.core.NeutronTile;
 import net.scwunge.reactorcraft.core.NeutronType;
 import net.scwunge.reactorcraft.core.RadiationHooks;
+import net.scwunge.reactorcraft.core.ReactorPart;
 import net.scwunge.reactorcraft.core.ReactorMeltdownEvent;
 import net.scwunge.reactorcraft.core.TemperaturedReactorTyped;
 import net.scwunge.reactorcraft.core.Thermal;
@@ -37,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
  * while neutrons keep hitting it, heat that passes into neighbouring cores, hydrogen from overheated cladding, and meltdown.
  */
 public abstract class NuclearCoreBlockEntity extends ReactorMachineBlockEntity implements TemperaturedReactorTyped, Linkable, Feedable,
-        NeutronTile {
+        NeutronTile, ReactorPart {
     /** Fuel in slots 0 to 3 (3 is the one reacting); spent fuel and waste in 4 to 11. */
     public static final int FUEL_SLOTS = 4;
     public static final int SLOTS = 12;
@@ -151,6 +152,9 @@ public abstract class NuclearCoreBlockEntity extends ReactorMachineBlockEntity i
 
     @Override
     public void setRemoved() {
+        if (cpu != null && level != null && level.getBlockEntity(cpu) instanceof CpuBlockEntity c) {
+            c.removeTemperatureCheck(worldPosition);
+        }
         if (activeTimer > 0 && level instanceof ServerLevel) {
             activeTimer = 0;
             onActivityChange(false);

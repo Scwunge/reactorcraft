@@ -25,13 +25,16 @@ import net.scwunge.reactorcraft.client.render.MachineItemRenderer;
 import net.scwunge.reactorcraft.client.render.ModelMachineRenderer;
 import net.scwunge.reactorcraft.client.render.NeutronRenderer;
 import net.scwunge.reactorcraft.client.render.ProcessorRenderer;
+import net.scwunge.reactorcraft.client.screen.CpuScreen;
 import net.scwunge.reactorcraft.client.screen.ReactorMachineScreen;
+import net.scwunge.reactorcraft.content.machine.CpuBlockEntity;
 import net.scwunge.reactorcraft.content.waste.WasteManager;
 import net.scwunge.reactorcraft.registry.ReactorBlockEntities;
 import net.scwunge.reactorcraft.registry.ReactorBlocks;
 import net.scwunge.reactorcraft.registry.ReactorEntities;
 import net.scwunge.reactorcraft.registry.ReactorFluids;
 import net.scwunge.reactorcraft.registry.ReactorItems;
+import net.scwunge.reactorcraft.content.machine.ReactorMenu;
 import net.scwunge.reactorcraft.registry.ReactorMenus;
 
 @EventBusSubscriber(modid = ReactorCraft.MODID, value = Dist.CLIENT)
@@ -85,9 +88,14 @@ public final class ClientSetup {
         event.registerEntityRenderer(ReactorEntities.NEUTRON.get(), NeutronRenderer::new);
     }
 
+    private static ReactorMachineScreen machineScreen(ReactorMenu menu, net.minecraft.world.entity.player.Inventory inventory,
+                                                      net.minecraft.network.chat.Component title) {
+        return menu.machine() instanceof CpuBlockEntity ? new CpuScreen(menu, inventory, title) : new ReactorMachineScreen(menu, inventory, title);
+    }
+
     @SubscribeEvent
     static void screens(RegisterMenuScreensEvent event) {
-        event.register(ReactorMenus.MACHINE.get(), ReactorMachineScreen::new);
+        event.register(ReactorMenus.MACHINE.get(), ClientSetup::machineScreen);
     }
 
     @SubscribeEvent

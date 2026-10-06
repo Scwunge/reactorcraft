@@ -43,6 +43,7 @@
     "reactorcraft:waste_container",
     "reactorcraft:waste_decayer",
     "reactorcraft:fuel_rod",
+    "reactorcraft:cpu",
     "reactorcraft:coolant_cell"
   ]
 }

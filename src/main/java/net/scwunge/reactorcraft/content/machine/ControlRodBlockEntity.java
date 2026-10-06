@@ -14,6 +14,7 @@ import net.scwunge.reactorcraft.core.Chance;
 import net.scwunge.reactorcraft.core.CoolantState;
 import net.scwunge.reactorcraft.core.Linkable;
 import net.scwunge.reactorcraft.core.NeutronTile;
+import net.scwunge.reactorcraft.core.ReactorPart;
 import net.scwunge.reactorcraft.core.ReactorType;
 import net.scwunge.reactorcraft.core.TemperaturedReactorTyped;
 import net.scwunge.reactorcraft.registry.ReactorBlockEntities;
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
  * that enter it, or raised out of it, where it does nothing. It moves a step a tick; a SCRAM drops it seven times faster.
  * Rods stacked in a column move together.
  */
-public class ControlRodBlockEntity extends ReactorMachineBlockEntity implements TemperaturedReactorTyped, Linkable, NeutronTile {
+public class ControlRodBlockEntity extends ReactorMachineBlockEntity implements TemperaturedReactorTyped, Linkable, NeutronTile, ReactorPart {
     private static final int MIN_OFFSET = -5;
     private static final int MAX_OFFSET = 20;
 
@@ -159,6 +160,15 @@ public class ControlRodBlockEntity extends ReactorMachineBlockEntity implements 
     @Override
     public ReactorType getReactorType() {
         return ReactorType.FISSION;
+    }
+
+    @Override
+    public void setRemoved() {
+        if (cpu != null && level != null && level.getBlockEntity(cpu) instanceof CpuBlockEntity c) {
+            c.layout().remove(worldPosition);
+            c.removeTemperatureCheck(worldPosition);
+        }
+        super.setRemoved();
     }
 
     @Override

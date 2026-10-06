@@ -196,6 +196,32 @@ public final class FissionTests {
         });
     }
 
+    @GameTest(template = EMPTY, timeoutTicks = 120)
+    public static void theCpuFindsRodsAndScramsWithoutPower(GameTestHelper helper) {
+        BlockPos cpuPos = new BlockPos(2, 1, 2);
+        helper.setBlock(cpuPos, ReactorBlocks.CPU.get());
+        helper.setBlock(cpuPos.east(), ReactorBlocks.CONTROL_ROD.get());
+        helper.setBlock(cpuPos.south(), ReactorBlocks.CONTROL_ROD.get());
+        helper.setBlock(cpuPos.south().south(), ReactorBlocks.CONTROL_ROD.get());
+        net.scwunge.reactorcraft.content.machine.CpuBlockEntity cpu = helper.getBlockEntity(cpuPos);
+        ControlRodBlockEntity east = helper.getBlockEntity(cpuPos.east());
+        helper.runAfterDelay(4, () -> {
+            helper.assertTrue(cpu.layout().count() == 3, "the CPU should find 3 rods, found " + cpu.layout().count());
+            helper.assertTrue(cpu.layout().minPower() == 3 * 1024, "needs 1024 W a rod");
+            helper.assertTrue(cpu.onMenuButton(null, net.scwunge.reactorcraft.content.machine.CpuBlockEntity.BUTTON_RAISE_ALL), "raise all");
+        });
+        helper.runAfterDelay(15, () -> {
+            helper.assertTrue(!east.isActive() || east.rodPosition() > -5, "raising all rods should have started");
+            helper.assertTrue(cpu.onMenuButton(null, net.scwunge.reactorcraft.content.machine.CpuBlockEntity.toggleButton(1, 0, 0)), "toggle one rod");
+            helper.assertTrue(!cpu.onMenuButton(null, net.scwunge.reactorcraft.content.machine.CpuBlockEntity.toggleButton(5, 0, 0)), "no rod there");
+        });
+        // there is no shaft power, so a few ticks after it has been up a while the CPU drops every rod
+        helper.runAfterDelay(60, () -> {
+            helper.assertTrue(east.isActive() && east.rodPosition() == -5, "the unpowered CPU should have SCRAMmed: " + east.rodPosition());
+            helper.succeed();
+        });
+    }
+
     @GameTest(template = EMPTY, timeoutTicks = 100)
     public static void anOverheatedCoreMeltsDown(GameTestHelper helper) {
         BlockPos at = new BlockPos(2, 1, 2);

@@ -174,6 +174,11 @@ public class ReactorMenu extends AbstractContainerMenu {
     }
 
     @Override
+    public boolean clickMenuButton(Player player, int id) {
+        return machine.onMenuButton(player, id);
+    }
+
+    @Override
     public boolean stillValid(Player player) {
         return machine.stillValid(player);
     }

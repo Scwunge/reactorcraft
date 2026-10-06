@@ -16,6 +16,7 @@ import net.scwunge.reactorcraft.content.machine.UraniumProcessorBlockEntity;
 import net.scwunge.reactorcraft.content.machine.FuelRodBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ControlRodBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CoolantCellBlockEntity;
+import net.scwunge.reactorcraft.content.machine.CpuBlockEntity;
 import net.scwunge.reactorcraft.content.machine.WasteContainerBlockEntity;
 import net.scwunge.reactorcraft.content.machine.WasteDecayerBlockEntity;
 import net.scwunge.reactorcraft.content.machine.WasteStorageBlockEntity;
@@ -55,6 +56,9 @@ public final class ReactorBlockEntities {
             register("control_rod", ControlRodBlockEntity::new, ReactorBlocks.CONTROL_ROD);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CoolantCellBlockEntity>> COOLANT_CELL =
             register("coolant_cell", CoolantCellBlockEntity::new, ReactorBlocks.COOLANT_CELL);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CpuBlockEntity>> CPU =
+            register("cpu", CpuBlockEntity::new, ReactorBlocks.CPU);
 
     private ReactorBlockEntities() {
     }

@@ -339,6 +339,11 @@ public abstract class ReactorMachineBlockEntity extends ReactorBlockEntity imple
         return dataAccess;
     }
 
+    /** A button press from the machine's GUI (AbstractContainerMenu.clickMenuButton); true if handled. Runs on the server. */
+    public boolean onMenuButton(Player player, int id) {
+        return false;
+    }
+
     /** Adds this machine's slots to its menu at the original GUI positions. */
     public void addMenuSlots(ReactorMenu menu) {
     }

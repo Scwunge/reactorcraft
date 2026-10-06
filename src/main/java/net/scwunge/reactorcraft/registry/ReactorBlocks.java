@@ -13,6 +13,7 @@ import net.scwunge.reactorcraft.content.block.FluoriteBlock;
 import net.scwunge.reactorcraft.content.block.FluoriteOreBlock;
 import net.scwunge.reactorcraft.content.block.LodestoneBlock;
 import net.scwunge.reactorcraft.content.machine.ControlRodBlock;
+import net.scwunge.reactorcraft.content.machine.CpuBlock;
 import net.scwunge.reactorcraft.content.machine.CoolantCellBlock;
 import net.scwunge.reactorcraft.content.machine.ReactorMachineBlock;
 import net.scwunge.reactorcraft.content.machine.StackableMachineBlock;
@@ -89,6 +90,9 @@ public final class ReactorBlocks {
             () -> new ControlRodBlock(machine().noOcclusion(), ReactorBlockEntities.CONTROL_ROD));
     public static final DeferredBlock<CoolantCellBlock> COOLANT_CELL = block("coolant_cell",
             () -> new CoolantCellBlock(machine(), ReactorBlockEntities.COOLANT_CELL));
+
+    public static final DeferredBlock<CpuBlock> CPU = block("cpu",
+            () -> new CpuBlock(machine(), ReactorBlockEntities.CPU));
 
     private ReactorBlocks() {
     }

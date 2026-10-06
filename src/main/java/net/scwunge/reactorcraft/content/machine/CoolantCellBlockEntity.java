@@ -15,6 +15,7 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.scwunge.reactorcraft.content.entity.NeutronEntity;
 import net.scwunge.reactorcraft.core.CoolantState;
 import net.scwunge.reactorcraft.core.NeutronTile;
+import net.scwunge.reactorcraft.core.ReactorPart;
 import net.scwunge.reactorcraft.core.Temperatured;
 import net.scwunge.reactorcraft.registry.ReactorBlockEntities;
 import net.scwunge.reactorcraft.registry.ReactorFluids;
@@ -25,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
  * bucketful (1000 mB) at a time from a tank above it, passes its contents down to an empty cell below it, takes heat from hot
  * neighbours (and sometimes boils off when it does) and, full of heavy water, slows neutrons down to thermal speed.
  */
-public class CoolantCellBlockEntity extends ReactorMachineBlockEntity implements Temperatured, NeutronTile {
+public class CoolantCellBlockEntity extends ReactorMachineBlockEntity implements Temperatured, NeutronTile, ReactorPart {
     public static final int BUCKET = 1000;
     public static final int MAX_TEMPERATURE = 1000;
 

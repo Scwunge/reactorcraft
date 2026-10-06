@@ -326,6 +326,17 @@ def core_blocks():
     lang[f"block.{MOD}.{block}"] = "Fuel Core"
     self_drop(block)
     out.append(m(block))
+    block = "cpu"
+    if ORIG_BLOCKS.exists():
+        copy_png(ORIG_BLOCKS / "cpu.png", ASSETS / f"textures/block/{block}.png")
+    write_json(ASSETS / f"models/block/{block}.json", {"parent": "minecraft:block/cube_all", "textures": {"all": m(f"block/{block}")}})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}")})
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {"": {"model": m(f"block/{block}")}}})
+    if GUI_TEX.exists():
+        copy_png(GUI_TEX / "control2.png", ASSETS / f"textures/gui/{block}.png")
+    lang[f"block.{MOD}.{block}"] = "Central Control"
+    self_drop(block)
+    out.append(m(block))
     block = "coolant_cell"
     states = ["empty", "water", "heavy", "sodium", "lithium"]
     for i, state in enumerate(states):
@@ -452,6 +463,7 @@ def recipes():
     shaped("gas_collector", m("gas_collector"), [" p ", "SpS", "PpP"], {"p": PIPE, "P": P, "S": STEEL})
     # ReactorRecipes.addMachines: the fission core
     shaped("fuel_rod", m("fuel_rod"), ["SHS", "PCP", "SCS"], {"P": P, "S": STEEL, "C": m("fuel_canister"), "H": "minecraft:hopper"})
+    shaped("cpu", m("cpu"), ["SCS", "CGC", "SCS"], {"S": P, "C": R + "circuit_board", "G": R + "steel_gear_unit_2"})
     shaped("control_rod", m("control_rod"), ["SGS", "RRR", "PPP"],
            {"S": STEEL, "P": P, "R": m("absorption_rod"), "G": R + "steel_gear_unit_2"})
     shaped("coolant_cell", m("coolant_cell"), ["SPS", "GRG", "SPS"], {"S": STEEL, "P": PIPE, "G": "minecraft:glass", "R": R + "reservoir"})

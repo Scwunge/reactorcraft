@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SCS",
+    "CGC",
+    "SCS"
+  ],
+  "key": {
+    "S": {
+      "item": "rotarycraft:base_panel"
+    },
+    "C": {
+      "item": "rotarycraft:circuit_board"
+    },
+    "G": {
+      "item": "rotarycraft:steel_gear_unit_2"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:cpu",
+    "count": 1
+  }
+}
