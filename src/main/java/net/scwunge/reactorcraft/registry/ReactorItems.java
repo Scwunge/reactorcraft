@@ -6,6 +6,7 @@ import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.scwunge.reactorcraft.ReactorCraft;
 import net.scwunge.reactorcraft.content.item.FluidContainerItem;
+import net.scwunge.reactorcraft.content.item.NuclearWasteItem;
 import net.scwunge.reactorcraft.content.material.FluoriteColor;
 
 import java.util.ArrayList;
@@ -34,6 +35,9 @@ public final class ReactorItems {
     public static final DeferredItem<Item> THORIUM_DUST = simple("thorium_dust");
     public static final DeferredItem<Item> EMERALD_DUST = simple("emerald_dust");
     public static final DeferredItem<Item> UNPROCESSED_WASTE = simple("unprocessed_nuclear_waste");
+    /** One isotope (or a mixed lot) of fission waste; the creative tab lists every variant, see ReactorTabs. */
+    public static final DeferredItem<NuclearWasteItem> NUCLEAR_WASTE = ITEMS.register("nuclear_waste",
+            () -> new NuclearWasteItem(new Item.Properties()));
 
     private static final Map<FluoriteColor, DeferredItem<Item>> FLUORITE = new EnumMap<>(FluoriteColor.class);
 

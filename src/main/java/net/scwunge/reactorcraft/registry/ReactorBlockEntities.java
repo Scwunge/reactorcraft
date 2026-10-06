@@ -13,6 +13,9 @@ import net.scwunge.reactorcraft.content.machine.FluidSynthesizerBlockEntity;
 import net.scwunge.reactorcraft.content.machine.GasCollectorBlockEntity;
 import net.scwunge.reactorcraft.content.machine.IsotopeCentrifugeBlockEntity;
 import net.scwunge.reactorcraft.content.machine.UraniumProcessorBlockEntity;
+import net.scwunge.reactorcraft.content.machine.WasteContainerBlockEntity;
+import net.scwunge.reactorcraft.content.machine.WasteDecayerBlockEntity;
+import net.scwunge.reactorcraft.content.machine.WasteStorageBlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,13 @@ public final class ReactorBlockEntities {
             register("fluid_synthesizer", FluidSynthesizerBlockEntity::new, ReactorBlocks.FLUID_SYNTHESIZER);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GasCollectorBlockEntity>> GAS_COLLECTOR =
             register("gas_collector", GasCollectorBlockEntity::new, ReactorBlocks.GAS_COLLECTOR);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WasteContainerBlockEntity>> WASTE_CONTAINER =
+            register("waste_container", WasteContainerBlockEntity::new, ReactorBlocks.WASTE_CONTAINER);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WasteStorageBlockEntity>> WASTE_STORAGE =
+            register("waste_storage", WasteStorageBlockEntity::new, ReactorBlocks.WASTE_STORAGE);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WasteDecayerBlockEntity>> WASTE_DECAYER =
+            register("waste_decayer", WasteDecayerBlockEntity::new, ReactorBlocks.WASTE_DECAYER);
 
     private ReactorBlockEntities() {
     }

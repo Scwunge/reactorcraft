@@ -72,6 +72,13 @@ public final class ReactorBlocks {
     public static final DeferredBlock<ReactorMachineBlock> GAS_COLLECTOR = block("gas_collector",
             () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.GAS_COLLECTOR, true, true));
 
+    public static final DeferredBlock<ReactorMachineBlock> WASTE_CONTAINER = block("waste_container",
+            () -> new ReactorMachineBlock(machine(), ReactorBlockEntities.WASTE_CONTAINER, false, false));
+    public static final DeferredBlock<ReactorMachineBlock> WASTE_STORAGE = block("waste_storage",
+            () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.WASTE_STORAGE, true, false));
+    public static final DeferredBlock<ReactorMachineBlock> WASTE_DECAYER = block("waste_decayer",
+            () -> new ReactorMachineBlock(machine(), ReactorBlockEntities.WASTE_DECAYER, false, false));
+
     private ReactorBlocks() {
     }
 
