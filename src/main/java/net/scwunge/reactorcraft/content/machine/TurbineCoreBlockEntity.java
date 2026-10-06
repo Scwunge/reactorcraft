@@ -209,6 +209,18 @@ public class TurbineCoreBlockEntity extends ReactorMachineBlockEntity implements
     protected void tickClient() {
         if (omega > 0) {
             spin((float) (0.2 * Math.pow(Math.log(omega + 1) / Math.log(2), 1.05)));
+            Direction back = steamMovement().getOpposite();
+            if (level.random.nextInt(6) == 0) {
+                // steam blowing in at the inlet side
+                level.addParticle(net.minecraft.core.particles.ParticleTypes.CLOUD, worldPosition.getX() + 0.5 + back.getStepX() * 0.6,
+                        worldPosition.getY() + 0.5 + back.getStepY() * 0.6, worldPosition.getZ() + 0.5 + back.getStepZ() * 0.6,
+                        -back.getStepX() * 0.05, -back.getStepY() * 0.05, -back.getStepZ() * 0.05);
+            }
+            if (level.getGameTime() % 40 == worldPosition.hashCode() % 40 + (worldPosition.hashCode() % 40 < 0 ? 40 : 0)) {
+                // a low hum that rises with the speed
+                level.playLocalSound(worldPosition, net.minecraft.sounds.SoundEvents.BEACON_AMBIENT, net.minecraft.sounds.SoundSource.BLOCKS, 0.3F,
+                        Math.min(2F, 0.6F + (float) (Math.log(omega + 1) / Math.log(2)) / 14F), false);
+            }
         }
     }
 
