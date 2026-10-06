@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "formed=false": {
+      "model": "reactorcraft:block/generator"
+    },
+    "formed=true": {
+      "model": "reactorcraft:block/generator_formed"
+    }
+  }
+}

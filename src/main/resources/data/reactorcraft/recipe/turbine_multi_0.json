@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "sis",
+    "ici",
+    "sis"
+  ],
+  "key": {
+    "s": {
+      "item": "rotarycraft:propeller"
+    },
+    "c": {
+      "item": "rotarycraft:spring_tungsten_ingot"
+    },
+    "i": {
+      "item": "rotarycraft:silumin_ingot"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:turbine_multi_0",
+    "count": 1
+  }
+}

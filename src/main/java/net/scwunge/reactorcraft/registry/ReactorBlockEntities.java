@@ -155,6 +155,14 @@ public final class ReactorBlockEntities {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CentrifugalTurbineBlockEntity>> CENTRIFUGAL_TURBINE =
             register("centrifugal_turbine", CentrifugalTurbineBlockEntity::new, ReactorBlocks.CENTRIFUGAL_TURBINE);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<net.scwunge.reactorcraft.content.machine.BigTurbineBlockEntity>> BIG_TURBINE =
+            register("big_turbine", net.scwunge.reactorcraft.content.machine.BigTurbineBlockEntity::new, ReactorBlocks.BIG_TURBINE);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<net.scwunge.reactorcraft.content.machine.SteamInjectorBlockEntity>> STEAM_INJECTOR =
+            register("steam_injector", net.scwunge.reactorcraft.content.machine.SteamInjectorBlockEntity::new, () -> ReactorBlocks.TURBINE_PARTS.get(2).get());
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<net.scwunge.reactorcraft.content.machine.ReactorFlywheelBlockEntity>> FLYWHEEL =
+            register("flywheel", net.scwunge.reactorcraft.content.machine.ReactorFlywheelBlockEntity::new, ReactorBlocks.FLYWHEEL);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<net.scwunge.reactorcraft.content.machine.ReactorGeneratorBlockEntity>> GENERATOR =
+            register("generator", net.scwunge.reactorcraft.content.machine.ReactorGeneratorBlockEntity::new, ReactorBlocks.GENERATOR);
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WastePipeBlockEntity>> WASTE_PIPE =
             register("waste_pipe", WastePipeBlockEntity::new, ReactorBlocks.WASTE_PIPE);

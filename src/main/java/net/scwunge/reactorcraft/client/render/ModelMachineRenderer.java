@@ -21,10 +21,10 @@ import java.util.Set;
  * by minus the machine's spin angle.
  */
 public class ModelMachineRenderer<T extends ReactorMachineBlockEntity> implements BlockEntityRenderer<T> {
-    private final ModelPart root;
+    protected final ModelPart root;
     private final String[] parts;
     private final Set<String> spinning;
-    private final ResourceLocation texture;
+    protected final ResourceLocation texture;
 
     /**
      * @param parts    every part of the model, in the original's draw order

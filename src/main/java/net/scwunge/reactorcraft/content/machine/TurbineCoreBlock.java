@@ -29,10 +29,18 @@ public class TurbineCoreBlock extends ReactorMachineBlock {
                                               BlockHitResult hit) {
         if (BuiltInRegistries.ITEM.getKey(stack.getItem()).equals(SCREWDRIVER)) {
             if (!level.isClientSide) {
-                level.setBlock(pos, state.setValue(LOOK, state.getValue(LOOK).getClockWise()), 3);
+                BlockState turned = turnedBy(state, level, pos, hit);
+                if (turned != state) {
+                    level.setBlock(pos, turned, 3);
+                }
             }
             return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hit);
+    }
+
+    /** What the screwdriver does to the block: turns it a quarter. */
+    protected BlockState turnedBy(BlockState state, Level level, BlockPos pos, BlockHitResult hit) {
+        return state.setValue(LOOK, state.getValue(LOOK).getClockWise());
     }
 }

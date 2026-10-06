@@ -197,16 +197,33 @@ public final class ReactorBlocks {
 
     public static final DeferredBlock<TurbineCoreBlock> CENTRIFUGAL_TURBINE = block("centrifugal_turbine",
             () -> new TurbineCoreBlock(machine().noOcclusion(), ReactorBlockEntities.CENTRIFUGAL_TURBINE));
+    // ---- the big turbine, flywheel and generator, and the casings round them ----
+    public static final DeferredBlock<net.scwunge.reactorcraft.content.machine.TurbineCoreBlock> BIG_TURBINE = block("big_turbine",
+            () -> new net.scwunge.reactorcraft.content.machine.TurbineCoreBlock(machine().noOcclusion(), ReactorBlockEntities.BIG_TURBINE));
+    public static final DeferredBlock<net.scwunge.reactorcraft.content.machine.FlywheelBlock> FLYWHEEL = block("flywheel",
+            () -> new net.scwunge.reactorcraft.content.machine.FlywheelBlock(machine().noOcclusion(), ReactorBlockEntities.FLYWHEEL, false));
+    public static final DeferredBlock<net.scwunge.reactorcraft.content.machine.FlywheelBlock> GENERATOR = block("generator",
+            () -> new net.scwunge.reactorcraft.content.machine.FlywheelBlock(machine().noOcclusion(), ReactorBlockEntities.GENERATOR, true));
+    /** The turbine casing: 0 blades, 1 housing, 2 steam injector (which holds lubricant). */
+    public static final List<DeferredBlock<MultiPartBlock>> TURBINE_PARTS = parts("turbine_multi", net.scwunge.reactorcraft.content.multi.PowerStructures.TURBINE, 3, 2);
+    public static final List<DeferredBlock<MultiPartBlock>> FLYWHEEL_PARTS = parts("flywheel_multi", net.scwunge.reactorcraft.content.multi.PowerStructures.FLYWHEEL, 3);
+    public static final List<DeferredBlock<MultiPartBlock>> GENERATOR_PARTS = parts("generator_multi", net.scwunge.reactorcraft.content.multi.PowerStructures.GENERATOR, 4);
 
     public static final DeferredBlock<ReactorPipeBlock> WASTE_PIPE = block("waste_pipe",
             () -> new ReactorPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 10F).sound(SoundType.STONE).noOcclusion(),
                     ReactorBlockEntities.WASTE_PIPE, (level, pos, other) -> WastePipeBlockEntity.interacts(other)));
 
     private static List<DeferredBlock<MultiPartBlock>> parts(String name, MultiStructure structure, int count) {
+        return parts(name, structure, count, -1);
+    }
+
+    private static List<DeferredBlock<MultiPartBlock>> parts(String name, MultiStructure structure, int count, int injectorVariant) {
         List<DeferredBlock<MultiPartBlock>> list = new ArrayList<>();
         for (int variant = 0; variant < count; variant++) {
             int v = variant;
-            DeferredBlock<MultiPartBlock> part = block(name + "_" + variant, () -> new MultiPartBlock(machine().noOcclusion(), structure, v));
+            DeferredBlock<MultiPartBlock> part = block(name + "_" + variant, () -> v == injectorVariant
+                    ? new net.scwunge.reactorcraft.content.multi.InjectorPartBlock(machine().noOcclusion(), structure, v)
+                    : new MultiPartBlock(machine().noOcclusion(), structure, v));
             structure.addPart(part);
             list.add(part);
         }

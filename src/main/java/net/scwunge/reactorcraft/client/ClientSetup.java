@@ -13,6 +13,8 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.scwunge.reactorcraft.ReactorCraft;
 import net.scwunge.reactorcraft.client.model.ModelCentrifuge;
+import net.scwunge.reactorcraft.client.model.ModelFlywheel;
+import net.scwunge.reactorcraft.client.model.ModelGenerator;
 import net.scwunge.reactorcraft.client.model.ModelElectrolyzer;
 import net.scwunge.reactorcraft.client.model.ModelCondenser;
 import net.scwunge.reactorcraft.client.model.ModelGasCollector;
@@ -26,7 +28,10 @@ import net.scwunge.reactorcraft.client.model.ModelSolenoid;
 import net.scwunge.reactorcraft.client.model.ModelProcessor;
 import net.scwunge.reactorcraft.client.model.ModelWasteStorage;
 import net.scwunge.reactorcraft.client.model.ModelControl;
+import net.scwunge.reactorcraft.client.render.BigTurbineRenderer;
 import net.scwunge.reactorcraft.client.render.ControlRodRenderer;
+import net.scwunge.reactorcraft.client.render.FlywheelRenderer;
+import net.scwunge.reactorcraft.client.render.GeneratorRenderer;
 import net.scwunge.reactorcraft.client.render.GasCollectorRenderer;
 import net.scwunge.reactorcraft.client.render.MachineItemRenderer;
 import net.scwunge.reactorcraft.client.render.ModelMachineRenderer;
@@ -66,10 +71,16 @@ public final class ClientSetup {
     private static final ModelLayerLocation STEAM_DIFFUSER = layer("steam_diffuser");
     private static final ModelLayerLocation CENTRIFUGAL_TURBINE = layer("centrifugal_turbine");
     private static final ModelLayerLocation[] TURBINE_STAGES = new ModelLayerLocation[TurbineRenderer.STAGES];
+    private static final ModelLayerLocation[] BIG_TURBINE_STAGES = new ModelLayerLocation[BigTurbineRenderer.STAGES];
+    private static final ModelLayerLocation FLYWHEEL = layer("flywheel");
+    private static final ModelLayerLocation GENERATOR = layer("generator");
 
     static {
         for (int i = 0; i < TURBINE_STAGES.length; i++) {
             TURBINE_STAGES[i] = layer("turbine_stage_" + i);
+        }
+        for (int i = 0; i < BIG_TURBINE_STAGES.length; i++) {
+            BIG_TURBINE_STAGES[i] = layer("big_turbine_stage_" + i);
         }
     }
 
@@ -96,6 +107,12 @@ public final class ClientSetup {
         event.registerLayerDefinition(SOLENOID, ModelSolenoid::create);
         event.registerLayerDefinition(STEAM_DIFFUSER, ModelDiffuser::create);
         event.registerLayerDefinition(CENTRIFUGAL_TURBINE, ModelMiniTurbine::create);
+        event.registerLayerDefinition(FLYWHEEL, ModelFlywheel::create);
+        event.registerLayerDefinition(GENERATOR, ModelGenerator::create);
+        for (int i = 0; i < BIG_TURBINE_STAGES.length; i++) {
+            int stage = i;
+            event.registerLayerDefinition(BIG_TURBINE_STAGES[i], () -> BigTurbineRenderer.createLayer(stage));
+        }
         for (int i = 0; i < TURBINE_STAGES.length; i++) {
             int stage = i;
             event.registerLayerDefinition(TURBINE_STAGES[i], () -> TurbineRenderer.createLayer(stage));
@@ -124,6 +141,9 @@ public final class ClientSetup {
                 new ModelMachineRenderer<>(context, REACTOR_PUMP, "reactor_pump", ModelReactorPump.PARTS,
                         java.util.Arrays.stream(ModelReactorPump.PARTS).filter(n -> n.startsWith("shape2") || n.startsWith("shape3")).toArray(String[]::new)));
         event.registerBlockEntityRenderer(ReactorBlockEntities.TURBINE_CORE.get(), context -> new TurbineRenderer(context, TURBINE_STAGES, "turbine_core"));
+        event.registerBlockEntityRenderer(ReactorBlockEntities.BIG_TURBINE.get(), context -> new BigTurbineRenderer(context, BIG_TURBINE_STAGES, "big_turbine"));
+        event.registerBlockEntityRenderer(ReactorBlockEntities.FLYWHEEL.get(), context -> new FlywheelRenderer(context, FLYWHEEL));
+        event.registerBlockEntityRenderer(ReactorBlockEntities.GENERATOR.get(), context -> new GeneratorRenderer(context, GENERATOR));
         event.registerBlockEntityRenderer(ReactorBlockEntities.TOROID_MAGNET.get(), context -> new ToroidMagnetRenderer(context, TOROID_MAGNET));
         event.registerBlockEntityRenderer(ReactorBlockEntities.SOLENOID.get(), context -> new SolenoidRenderer(context, SOLENOID));
         event.registerBlockEntityRenderer(ReactorBlockEntities.STEAM_DIFFUSER.get(), context -> new SteamDiffuserRenderer(context, STEAM_DIFFUSER));
@@ -165,7 +185,8 @@ public final class ClientSetup {
         event.registerItem(new MachineItemRenderer(), ReactorBlocks.FLUID_EXTRACTOR.asItem(), ReactorBlocks.ISOTOPE_CENTRIFUGE.asItem(),
                 ReactorBlocks.URANIUM_PROCESSOR.asItem(), ReactorBlocks.ELECTROLYZER.asItem(), ReactorBlocks.GAS_COLLECTOR.asItem(),
                 ReactorBlocks.CONTROL_ROD.asItem(), ReactorBlocks.STEAM_GRATE.asItem(), ReactorBlocks.CONDENSER.asItem(), ReactorBlocks.REACTOR_PUMP.asItem(), ReactorBlocks.TURBINE_CORE.asItem(),
-                ReactorBlocks.WASTE_STORAGE.asItem(), ReactorBlocks.TOROID_MAGNET.asItem(), ReactorBlocks.SOLENOID.asItem(), ReactorBlocks.STEAM_DIFFUSER.asItem(), ReactorBlocks.CENTRIFUGAL_TURBINE.asItem());
+                ReactorBlocks.WASTE_STORAGE.asItem(), ReactorBlocks.TOROID_MAGNET.asItem(), ReactorBlocks.SOLENOID.asItem(), ReactorBlocks.STEAM_DIFFUSER.asItem(), ReactorBlocks.CENTRIFUGAL_TURBINE.asItem(),
+                ReactorBlocks.BIG_TURBINE.asItem(), ReactorBlocks.FLYWHEEL.asItem(), ReactorBlocks.GENERATOR.asItem());
         for (ReactorFluids.Entry fluid : ReactorFluids.ALL) {
             ResourceLocation still = fluid.texture == null
                     ? ResourceLocation.withDefaultNamespace("block/water_still") : ReactorCraft.id("block/fluid/" + fluid.texture);

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PbP",
+    "bIb",
+    "PbP"
+  ],
+  "key": {
+    "P": {
+      "item": "rotarycraft:pipe"
+    },
+    "b": {
+      "item": "rotarycraft:base_panel"
+    },
+    "I": {
+      "item": "rotarycraft:pump"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:turbine_multi_2",
+    "count": 1
+  }
+}

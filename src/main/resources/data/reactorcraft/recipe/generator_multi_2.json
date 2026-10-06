@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "MMM",
+    "SSS"
+  ],
+  "key": {
+    "M": {
+      "item": "reactorcraft:gold_wiring"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:generator_multi_2",
+    "count": 1
+  }
+}

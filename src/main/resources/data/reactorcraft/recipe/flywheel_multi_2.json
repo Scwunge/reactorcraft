@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "sSs",
+    "SSS",
+    "sSs"
+  ],
+  "key": {
+    "s": {
+      "item": "rotarycraft:base_panel"
+    },
+    "S": {
+      "item": "rotarycraft:spring_steel_ingot"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:flywheel_multi_2",
+    "count": 1
+  }
+}

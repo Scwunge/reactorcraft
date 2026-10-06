@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "reactorcraft:block/turbine_multi_5",
+    "top": "reactorcraft:block/turbine_multi_5",
+    "bottom": "reactorcraft:block/turbine_multi_5"
+  }
+}

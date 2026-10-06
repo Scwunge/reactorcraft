@@ -179,7 +179,8 @@ public class MultiStructure {
         return false;
     }
 
-    private void form(Level level, BlockPos origin, int rotation) {
+    /** Switches the parts and controllers of the structure standing at {@code origin} to formed. */
+    protected void form(Level level, BlockPos origin, int rotation) {
         for (Cell cell : cells) {
             BlockPos pos = at(origin, cell.x, cell.y, cell.z, rotation);
             BlockState state = level.getBlockState(pos);
