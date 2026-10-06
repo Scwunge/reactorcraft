@@ -264,6 +264,41 @@ public final class FissionTests {
         });
     }
 
+    @GameTest(template = EMPTY, timeoutTicks = 40)
+    public static void aCondenserTurnsSteamBackIntoLowPressureWater(GameTestHelper helper) {
+        BlockPos condenserPos = new BlockPos(2, 2, 2);
+        BlockPos steamPos = new BlockPos(2, 1, 2);
+        helper.setBlock(condenserPos, ReactorBlocks.CONDENSER.get());
+        helper.setBlock(steamPos, net.scwunge.reactorcraft.content.block.SteamBlock.grateSteam(false));
+        net.scwunge.reactorcraft.content.machine.CondenserBlockEntity condenser = helper.getBlockEntity(condenserPos);
+        helper.runAfterDelay(6, () -> {
+            helper.assertTrue(!helper.getBlockState(steamPos).is(ReactorBlocks.STEAM.get()), "the steam under the condenser should have gone");
+            helper.assertTrue(condenser.tank().getFluidAmount() == 200
+                            && condenser.tank().getFluid().is(net.scwunge.reactorcraft.registry.ReactorFluids.LOW_PRESSURE_WATER.get()),
+                    "200 mB of low-pressure water: " + condenser.tank().getFluid());
+            net.neoforged.neoforge.fluids.capability.IFluidHandler top = helper.getLevel().getCapability(
+                    net.neoforged.neoforge.capabilities.Capabilities.FluidHandler.BLOCK, helper.absolutePos(condenserPos), Direction.UP);
+            net.neoforged.neoforge.fluids.capability.IFluidHandler side = helper.getLevel().getCapability(
+                    net.neoforged.neoforge.capabilities.Capabilities.FluidHandler.BLOCK, helper.absolutePos(condenserPos), Direction.NORTH);
+            helper.assertTrue(top != null && side == null, "liquid comes out of the top only");
+            helper.assertTrue(top.drain(100, net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction.SIMULATE).getAmount() == 100, "drain from the top");
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 40)
+    public static void anUnpoweredPumpDoesNothing(GameTestHelper helper) {
+        BlockPos at = new BlockPos(2, 1, 2);
+        helper.setBlock(at, ReactorBlocks.REACTOR_PUMP.get());
+        net.scwunge.reactorcraft.content.machine.ReactorPumpBlockEntity pump = helper.getBlockEntity(at);
+        pump.inputTank().setFluid(new net.neoforged.neoforge.fluids.FluidStack(
+                net.scwunge.reactorcraft.registry.ReactorFluids.LOW_PRESSURE_WATER.get(), 1000));
+        helper.runAfterDelay(10, () -> {
+            helper.assertTrue(!pump.hasPower() && pump.outputTank().isEmpty() && pump.inputTank().getFluidAmount() == 1000, "no power, no pumping");
+            helper.succeed();
+        });
+    }
+
     @GameTest(template = EMPTY, timeoutTicks = 80)
     public static void ammoniaAtSixHundredFiftyBlowsTheBoilerUp(GameTestHelper helper) {
         BlockPos boilerPos = new BlockPos(2, 1, 2);

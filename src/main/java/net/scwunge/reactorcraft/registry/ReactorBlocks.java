@@ -109,6 +109,11 @@ public final class ReactorBlocks {
             () -> new SteamBlock(BlockBehaviour.Properties.of().mapColor(MapColor.NONE).noCollission().noOcclusion().replaceable().strength(0F, 3600000F)
                     .noLootTable().pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY)));
 
+    public static final DeferredBlock<ReactorMachineBlock> CONDENSER = block("condenser",
+            () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.CONDENSER, true, false));
+    public static final DeferredBlock<ReactorMachineBlock> REACTOR_PUMP = block("reactor_pump",
+            () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.REACTOR_PUMP, true, true));
+
     private ReactorBlocks() {
     }
 

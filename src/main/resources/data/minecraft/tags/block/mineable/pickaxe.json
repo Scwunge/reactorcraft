@@ -40,6 +40,8 @@
     "reactorcraft:waste_storage",
     "reactorcraft:control_rod",
     "reactorcraft:steam_grate",
+    "reactorcraft:condenser",
+    "reactorcraft:reactor_pump",
     "reactorcraft:fluid_synthesizer",
     "reactorcraft:waste_container",
     "reactorcraft:waste_decayer",

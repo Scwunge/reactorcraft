@@ -16,7 +16,9 @@ import net.scwunge.reactorcraft.content.machine.UraniumProcessorBlockEntity;
 import net.scwunge.reactorcraft.content.machine.FuelRodBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ControlRodBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CoolantCellBlockEntity;
+import net.scwunge.reactorcraft.content.machine.CondenserBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CpuBlockEntity;
+import net.scwunge.reactorcraft.content.machine.ReactorPumpBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ReactorBoilerBlockEntity;
 import net.scwunge.reactorcraft.content.machine.SteamGrateBlockEntity;
 import net.scwunge.reactorcraft.content.machine.SteamLineBlockEntity;
@@ -69,6 +71,11 @@ public final class ReactorBlockEntities {
             register("steam_line", SteamLineBlockEntity::new, ReactorBlocks.STEAM_LINE);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SteamGrateBlockEntity>> STEAM_GRATE =
             register("steam_grate", SteamGrateBlockEntity::new, ReactorBlocks.STEAM_GRATE);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CondenserBlockEntity>> CONDENSER =
+            register("condenser", CondenserBlockEntity::new, ReactorBlocks.CONDENSER);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReactorPumpBlockEntity>> REACTOR_PUMP =
+            register("reactor_pump", ReactorPumpBlockEntity::new, ReactorBlocks.REACTOR_PUMP);
 
     private ReactorBlockEntities() {
     }

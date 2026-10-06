@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PpP",
+    "gCg",
+    "PsP"
+  ],
+  "key": {
+    "P": {
+      "item": "rotarycraft:base_panel"
+    },
+    "g": {
+      "item": "minecraft:glass_pane"
+    },
+    "p": {
+      "item": "rotarycraft:pipe"
+    },
+    "C": {
+      "item": "rotarycraft:compressor"
+    },
+    "s": {
+      "item": "rotarycraft:shaft_core"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:reactor_pump",
+    "count": 1
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SPS",
+    "pRp",
+    "FFF"
+  ],
+  "key": {
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "P": {
+      "item": "rotarycraft:base_panel"
+    },
+    "p": {
+      "item": "rotarycraft:pipe"
+    },
+    "R": {
+      "item": "rotarycraft:reservoir"
+    },
+    "F": {
+      "item": "rotarycraft:cooling_fin"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:condenser",
+    "count": 1
+  }
+}

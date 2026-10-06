@@ -251,6 +251,8 @@ MODELLED = {
     "waste_storage": ("Nuclear Waste Disposal Drum", "storage", "wastestorage"),
     "control_rod": ("Control Rod", "control", None),
     "steam_grate": ("Steam Grate", "steamgrate", None),
+    "condenser": ("Condenser", "condenser", None),
+    "reactor_pump": ("Pressurizer", "pump", None),
 }
 # block id -> (English name, side texture, top and bottom texture, GUI texture)
 CUBES = {
@@ -516,6 +518,9 @@ def recipes():
     shaped("reactor_boiler", m("reactor_boiler"), ["SPS", "PrP", "SPS"], {"S": STEEL, "P": P, "r": R + "reservoir"})
     shaped("steam_line", m("steam_line"), ["NPN", "NPN", "NPN"], {"N": "#minecraft:wool", "P": PIPE}, 3)
     shaped("steam_grate", m("steam_grate"), ["SIS", "p p", "SPS"], {"S": STEEL, "I": "minecraft:iron_bars", "p": P, "P": PIPE})
+    shaped("condenser", m("condenser"), ["SPS", "pRp", "FFF"], {"S": STEEL, "P": P, "p": PIPE, "R": R + "reservoir", "F": R + "cooling_fin"})
+    shaped("reactor_pump", m("reactor_pump"), ["PpP", "gCg", "PsP"],
+           {"P": P, "g": "minecraft:glass_pane", "p": PIPE, "C": R + "compressor", "s": R + "shaft_core"})
     # RotaryCraft grinder
     write_json(DATA / "recipe/grinding/emerald_dust.json", {"type": R + "grinding", "ingredient": ing("#c:gems/emerald"),
                                                            "result": {"id": m("emerald_dust"), "count": 1}})

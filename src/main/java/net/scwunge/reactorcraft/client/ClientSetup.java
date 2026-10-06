@@ -14,7 +14,9 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
 import net.scwunge.reactorcraft.ReactorCraft;
 import net.scwunge.reactorcraft.client.model.ModelCentrifuge;
 import net.scwunge.reactorcraft.client.model.ModelElectrolyzer;
+import net.scwunge.reactorcraft.client.model.ModelCondenser;
 import net.scwunge.reactorcraft.client.model.ModelGasCollector;
+import net.scwunge.reactorcraft.client.model.ModelReactorPump;
 import net.scwunge.reactorcraft.client.model.ModelSteamGrate;
 import net.scwunge.reactorcraft.client.model.ModelHeavyPump;
 import net.scwunge.reactorcraft.client.model.ModelProcessor;
@@ -48,6 +50,8 @@ public final class ClientSetup {
     private static final ModelLayerLocation WASTE_STORAGE = layer("waste_storage");
     private static final ModelLayerLocation CONTROL_ROD = layer("control_rod");
     private static final ModelLayerLocation STEAM_GRATE = layer("steam_grate");
+    private static final ModelLayerLocation CONDENSER = layer("condenser");
+    private static final ModelLayerLocation REACTOR_PUMP = layer("reactor_pump");
 
     private ClientSetup() {
     }
@@ -66,6 +70,8 @@ public final class ClientSetup {
         event.registerLayerDefinition(WASTE_STORAGE, ModelWasteStorage::create);
         event.registerLayerDefinition(CONTROL_ROD, ModelControl::create);
         event.registerLayerDefinition(STEAM_GRATE, ModelSteamGrate::create);
+        event.registerLayerDefinition(CONDENSER, ModelCondenser::create);
+        event.registerLayerDefinition(REACTOR_PUMP, ModelReactorPump::create);
     }
 
     @SubscribeEvent
@@ -84,6 +90,11 @@ public final class ClientSetup {
         event.registerBlockEntityRenderer(ReactorBlockEntities.CONTROL_ROD.get(), context -> new ControlRodRenderer(context, CONTROL_ROD));
         event.registerBlockEntityRenderer(ReactorBlockEntities.STEAM_GRATE.get(), context ->
                 new ModelMachineRenderer<>(context, STEAM_GRATE, "steam_grate", ModelSteamGrate.PARTS));
+        event.registerBlockEntityRenderer(ReactorBlockEntities.CONDENSER.get(), context ->
+                new ModelMachineRenderer<>(context, CONDENSER, "condenser", ModelCondenser.PARTS));
+        event.registerBlockEntityRenderer(ReactorBlockEntities.REACTOR_PUMP.get(), context ->
+                new ModelMachineRenderer<>(context, REACTOR_PUMP, "reactor_pump", ModelReactorPump.PARTS,
+                        java.util.Arrays.stream(ModelReactorPump.PARTS).filter(n -> n.startsWith("shape2") || n.startsWith("shape3")).toArray(String[]::new)));
         event.registerBlockEntityRenderer(ReactorBlockEntities.WASTE_STORAGE.get(), context ->
                 new ModelMachineRenderer<>(context, WASTE_STORAGE, "waste_storage", ModelWasteStorage.PARTS));
     }
@@ -115,7 +126,7 @@ public final class ClientSetup {
         // the modelled machines are drawn as items by their block entity renderers
         event.registerItem(new MachineItemRenderer(), ReactorBlocks.FLUID_EXTRACTOR.asItem(), ReactorBlocks.ISOTOPE_CENTRIFUGE.asItem(),
                 ReactorBlocks.URANIUM_PROCESSOR.asItem(), ReactorBlocks.ELECTROLYZER.asItem(), ReactorBlocks.GAS_COLLECTOR.asItem(),
-                ReactorBlocks.CONTROL_ROD.asItem(), ReactorBlocks.STEAM_GRATE.asItem(),
+                ReactorBlocks.CONTROL_ROD.asItem(), ReactorBlocks.STEAM_GRATE.asItem(), ReactorBlocks.CONDENSER.asItem(), ReactorBlocks.REACTOR_PUMP.asItem(),
                 ReactorBlocks.WASTE_STORAGE.asItem());
         for (ReactorFluids.Entry fluid : ReactorFluids.ALL) {
             ResourceLocation still = fluid.texture == null
