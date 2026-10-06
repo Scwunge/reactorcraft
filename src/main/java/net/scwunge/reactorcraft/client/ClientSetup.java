@@ -18,7 +18,9 @@ import net.scwunge.reactorcraft.client.model.ModelCondenser;
 import net.scwunge.reactorcraft.client.model.ModelGasCollector;
 import net.scwunge.reactorcraft.client.model.ModelReactorPump;
 import net.scwunge.reactorcraft.client.model.ModelSteamGrate;
+import net.scwunge.reactorcraft.client.model.ModelDiffuser;
 import net.scwunge.reactorcraft.client.model.ModelHeavyPump;
+import net.scwunge.reactorcraft.client.model.ModelMiniTurbine;
 import net.scwunge.reactorcraft.client.model.ModelMagnet;
 import net.scwunge.reactorcraft.client.model.ModelSolenoid;
 import net.scwunge.reactorcraft.client.model.ModelProcessor;
@@ -30,6 +32,7 @@ import net.scwunge.reactorcraft.client.render.MachineItemRenderer;
 import net.scwunge.reactorcraft.client.render.ModelMachineRenderer;
 import net.scwunge.reactorcraft.client.render.FusionMarkerRenderer;
 import net.scwunge.reactorcraft.client.render.SolenoidRenderer;
+import net.scwunge.reactorcraft.client.render.SteamDiffuserRenderer;
 import net.scwunge.reactorcraft.client.render.ToroidMagnetRenderer;
 import net.scwunge.reactorcraft.client.render.NeutronRenderer;
 import net.scwunge.reactorcraft.client.render.ProcessorRenderer;
@@ -60,6 +63,8 @@ public final class ClientSetup {
     private static final ModelLayerLocation REACTOR_PUMP = layer("reactor_pump");
     private static final ModelLayerLocation TOROID_MAGNET = layer("toroid_magnet");
     private static final ModelLayerLocation SOLENOID = layer("solenoid_magnet");
+    private static final ModelLayerLocation STEAM_DIFFUSER = layer("steam_diffuser");
+    private static final ModelLayerLocation CENTRIFUGAL_TURBINE = layer("centrifugal_turbine");
     private static final ModelLayerLocation[] TURBINE_STAGES = new ModelLayerLocation[TurbineRenderer.STAGES];
 
     static {
@@ -89,6 +94,8 @@ public final class ClientSetup {
         event.registerLayerDefinition(REACTOR_PUMP, ModelReactorPump::create);
         event.registerLayerDefinition(TOROID_MAGNET, ModelMagnet::create);
         event.registerLayerDefinition(SOLENOID, ModelSolenoid::create);
+        event.registerLayerDefinition(STEAM_DIFFUSER, ModelDiffuser::create);
+        event.registerLayerDefinition(CENTRIFUGAL_TURBINE, ModelMiniTurbine::create);
         for (int i = 0; i < TURBINE_STAGES.length; i++) {
             int stage = i;
             event.registerLayerDefinition(TURBINE_STAGES[i], () -> TurbineRenderer.createLayer(stage));
@@ -119,6 +126,9 @@ public final class ClientSetup {
         event.registerBlockEntityRenderer(ReactorBlockEntities.TURBINE_CORE.get(), context -> new TurbineRenderer(context, TURBINE_STAGES, "turbine_core"));
         event.registerBlockEntityRenderer(ReactorBlockEntities.TOROID_MAGNET.get(), context -> new ToroidMagnetRenderer(context, TOROID_MAGNET));
         event.registerBlockEntityRenderer(ReactorBlockEntities.SOLENOID.get(), context -> new SolenoidRenderer(context, SOLENOID));
+        event.registerBlockEntityRenderer(ReactorBlockEntities.STEAM_DIFFUSER.get(), context -> new SteamDiffuserRenderer(context, STEAM_DIFFUSER));
+        event.registerBlockEntityRenderer(ReactorBlockEntities.CENTRIFUGAL_TURBINE.get(), context ->
+                new ModelMachineRenderer<>(context, CENTRIFUGAL_TURBINE, "centrifugal_turbine", ModelMiniTurbine.PARTS));
         event.registerBlockEntityRenderer(ReactorBlockEntities.FUSION_MARKER.get(), FusionMarkerRenderer::new);
         event.registerBlockEntityRenderer(ReactorBlockEntities.WASTE_STORAGE.get(), context ->
                 new ModelMachineRenderer<>(context, WASTE_STORAGE, "waste_storage", ModelWasteStorage.PARTS));
@@ -155,7 +165,7 @@ public final class ClientSetup {
         event.registerItem(new MachineItemRenderer(), ReactorBlocks.FLUID_EXTRACTOR.asItem(), ReactorBlocks.ISOTOPE_CENTRIFUGE.asItem(),
                 ReactorBlocks.URANIUM_PROCESSOR.asItem(), ReactorBlocks.ELECTROLYZER.asItem(), ReactorBlocks.GAS_COLLECTOR.asItem(),
                 ReactorBlocks.CONTROL_ROD.asItem(), ReactorBlocks.STEAM_GRATE.asItem(), ReactorBlocks.CONDENSER.asItem(), ReactorBlocks.REACTOR_PUMP.asItem(), ReactorBlocks.TURBINE_CORE.asItem(),
-                ReactorBlocks.WASTE_STORAGE.asItem(), ReactorBlocks.TOROID_MAGNET.asItem(), ReactorBlocks.SOLENOID.asItem());
+                ReactorBlocks.WASTE_STORAGE.asItem(), ReactorBlocks.TOROID_MAGNET.asItem(), ReactorBlocks.SOLENOID.asItem(), ReactorBlocks.STEAM_DIFFUSER.asItem(), ReactorBlocks.CENTRIFUGAL_TURBINE.asItem());
         for (ReactorFluids.Entry fluid : ReactorFluids.ALL) {
             ResourceLocation still = fluid.texture == null
                     ? ResourceLocation.withDefaultNamespace("block/water_still") : ReactorCraft.id("block/fluid/" + fluid.texture);

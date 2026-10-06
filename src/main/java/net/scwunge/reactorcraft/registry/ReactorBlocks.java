@@ -191,6 +191,12 @@ public final class ReactorBlocks {
             () -> new ReactorMachineBlock(machine().noOcclusion().noCollission().strength(0.5F), ReactorBlockEntities.FUSION_MARKER,
                     net.minecraft.world.level.block.Block.box(4, 0, 4, 12, 16, 12), false, false));
 
+    public static final DeferredBlock<ReactorMachineBlock> STEAM_DIFFUSER = block("steam_diffuser",
+            () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.STEAM_DIFFUSER, true, false));
+
+    public static final DeferredBlock<TurbineCoreBlock> CENTRIFUGAL_TURBINE = block("centrifugal_turbine",
+            () -> new TurbineCoreBlock(machine().noOcclusion(), ReactorBlockEntities.CENTRIFUGAL_TURBINE));
+
     private static List<DeferredBlock<MultiPartBlock>> parts(String name, MultiStructure structure, int count) {
         List<DeferredBlock<MultiPartBlock>> list = new ArrayList<>();
         for (int variant = 0; variant < count; variant++) {

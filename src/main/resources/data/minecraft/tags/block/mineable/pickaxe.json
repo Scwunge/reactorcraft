@@ -43,6 +43,8 @@
     "reactorcraft:condenser",
     "reactorcraft:reactor_pump",
     "reactorcraft:turbine_core",
+    "reactorcraft:steam_diffuser",
+    "reactorcraft:centrifugal_turbine",
     "reactorcraft:toroid_magnet",
     "reactorcraft:fluid_synthesizer",
     "reactorcraft:waste_container",

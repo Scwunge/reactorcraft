@@ -271,6 +271,8 @@ MODELLED = {
     "condenser": ("Condenser", "condenser", None),
     "reactor_pump": ("Pressurizer", "pump", None),
     "turbine_core": ("Turbine", "turbine", None),
+    "steam_diffuser": ("Steam Diffuser", "diffuser", None),
+    "centrifugal_turbine": ("Centrifugal Turbine", "miniturbine", None),
     "toroid_magnet": ("Toroid Magnet", "magnet", None),
 }
 # block id -> (English name, side texture, top and bottom texture, GUI texture)
@@ -638,7 +640,7 @@ FLUIDS = {
     "low_pressure_water": "Low Pressure Water", "hot_sodium": "Superheated Sodium", "warm_sodium": "Hot Sodium", "co2": "Carbon Dioxide",
     "hot_co2": "Hot Carbon Dioxide", "corium": "Corium", "nuclear_waste": "Nuclear Waste", "lithium": "Molten Lithium",
     "lifbe": "Lithium Beryllium Fluoride", "lifbe_fuel": "Thorium Fuel Salt", "lifbe_fuel_preheat": "Preheated Thorium Fuel Salt",
-    "hot_lifbe": "Hot Lithium Beryllium Fluoride",
+    "hot_lifbe": "Hot Lithium Beryllium Fluoride", "steam": "Steam",
 }
 FLUID_TEXTURES = ["heavywater", "hf", "uf6", "ammonia", "sodium", "sodiumhot", "chlorine", "oxygen", "deuterium", "tritium", "plasma",
                   "co2", "slag_flow", "lithium", "lifbe", "lifbe_fuel", "lifbe_hot"]
@@ -797,6 +799,7 @@ def recipes():
         write_json(DATA / f"recipe/compacting/permanent_magnet_{i + 1}.json", {"type": R + "compacting", "ingredient": ing(m(f"permanent_magnet_{i}")),
                                                                                 "result": {"id": m(f"permanent_magnet_{i + 1}"), "count": 2},
                                                                                 "pressure": 10000 * (1 + i), "temperature": 100, "stage": 1})
+    shaped("steam_diffuser", m("steam_diffuser"), ["BBB", "DPD", "BBB"], {"B": R + "base_panel", "D": R + "diffuser", "P": PIPE})
     shaped("tritizer", m("tritizer"), ["SPS", "GPG", "SPS"], {"G": R + "blast_glass", "P": PIPE, "S": STEEL})
     shaped("fusion_marker", m("fusion_marker"), ["F", "R"], {"F": m("blue_fluorite"), "R": "minecraft:redstone_torch"})
     shaped("toroid_magnet", m("toroid_magnet"), ["MCM", "CHC", "MCM"], {"H": m("hysteresis_ring"), "M": m("magnetic_core"), "C": m("coolant_pack")})

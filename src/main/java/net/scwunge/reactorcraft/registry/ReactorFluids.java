@@ -46,6 +46,8 @@ public final class ReactorFluids {
     public static final Entry LIFBE = liquid("lifbe", "lifbe", 6300, 800 * 3, 773, 0);
     public static final Entry LIFBE_FUEL = liquid("lifbe_fuel", "lifbe_fuel", 6750, 850 * 3, 473, 0);
     public static final Entry LIFBE_FUEL_PREHEAT = liquid("lifbe_fuel_preheat", "lifbe_fuel", 6700, 850 * 5 / 2, 673, 0);
+    /** Steam as a fluid, made by the steam diffuser (the original used a fluid some other mod registered). */
+    public static final Entry STEAM = gas("steam", "co2", 1, 1, 400, 0);
     public static final Entry HOT_LIFBE = liquid("hot_lifbe", "lifbe_hot", 6000, 800 * 3, 1273, 8);
 
     private ReactorFluids() {
