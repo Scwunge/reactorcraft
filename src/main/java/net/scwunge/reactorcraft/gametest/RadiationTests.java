@@ -85,7 +85,7 @@ public final class RadiationTests {
         double fraction = RadiationEffects.contaminateArea(helper.getLevel(), center, 4, 4, 1.5, false, RadiationIntensity.HIGHLEVEL);
         helper.runAfterDelay(2, () -> {
             int count = helper.getLevel().getEntitiesOfClass(RadiationEntity.class, new net.minecraft.world.phys.AABB(center).inflate(6)).size();
-            helper.assertTrue(count >= 8, "sqrt(4) * 4 = 8 patches expected, found " + count);
+            helper.assertTrue(count == 8, "sqrt(4) * 4 = 8 patches expected, found " + count);
             helper.assertTrue(fraction <= 1 && fraction >= 0, "fraction " + fraction);
             helper.succeed();
         });

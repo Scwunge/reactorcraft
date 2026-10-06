@@ -20,6 +20,8 @@ import net.scwunge.reactorcraft.content.machine.CondenserBlockEntity;
 import net.scwunge.reactorcraft.content.machine.AbsorberBlockEntity;
 import net.scwunge.reactorcraft.content.machine.BreederCoreBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CpuBlockEntity;
+import net.scwunge.reactorcraft.content.machine.FuelDumpBlockEntity;
+import net.scwunge.reactorcraft.content.machine.ThoriumCoreBlockEntity;
 import net.scwunge.reactorcraft.content.machine.SodiumHeaterBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ReflectorBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ReactorPumpBlockEntity;
@@ -98,6 +100,11 @@ public final class ReactorBlockEntities {
             register("breeder_core", BreederCoreBlockEntity::new, ReactorBlocks.BREEDER_CORE);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SodiumHeaterBlockEntity>> SODIUM_HEATER =
             register("sodium_heater", SodiumHeaterBlockEntity::new, ReactorBlocks.SODIUM_HEATER);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ThoriumCoreBlockEntity>> THORIUM_CORE =
+            register("thorium_core", ThoriumCoreBlockEntity::new, ReactorBlocks.THORIUM_CORE);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FuelDumpBlockEntity>> FUEL_DUMP =
+            register("fuel_dump", FuelDumpBlockEntity::new, ReactorBlocks.FUEL_DUMP);
 
     private ReactorBlockEntities() {
     }

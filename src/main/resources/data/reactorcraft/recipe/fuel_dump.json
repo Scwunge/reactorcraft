@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "pIp",
+    "BPB",
+    "pbp"
+  ],
+  "key": {
+    "b": {
+      "item": "minecraft:iron_bars"
+    },
+    "p": {
+      "item": "rotarycraft:pipe"
+    },
+    "P": {
+      "item": "rotarycraft:bedrock_pipe"
+    },
+    "B": {
+      "item": "rotarycraft:base_panel"
+    },
+    "I": {
+      "item": "rotarycraft:impeller"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:fuel_dump",
+    "count": 1
+  }
+}

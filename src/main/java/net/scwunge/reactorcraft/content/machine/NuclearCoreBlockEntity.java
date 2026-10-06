@@ -249,7 +249,7 @@ public abstract class NuclearCoreBlockEntity extends ReactorMachineBlockEntity i
     }
 
     /** checkPoisonedChance: the more waste has built up, the likelier a neutron is soaked up without causing fission. */
-    protected final boolean isPoisoned() {
+    protected boolean isPoisoned() {
         int count = 0;
         for (int i = FUEL_SLOTS; i < SLOTS; i++) {
             if (WasteManager.isWaste(stack(i))) {
@@ -260,7 +260,7 @@ public abstract class NuclearCoreBlockEntity extends ReactorMachineBlockEntity i
     }
 
     /** addWaste: a piece of fission waste goes into spent fuel, on top of the same waste if there is some. */
-    protected final void addWaste() {
+    protected void addWaste() {
         ItemStack waste = WasteManager.randomWasteItem(random());
         for (int i = FUEL_SLOTS; i < SLOTS; i++) {
             ItemStack inSlot = stack(i);

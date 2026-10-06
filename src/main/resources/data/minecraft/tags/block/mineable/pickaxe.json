@@ -55,6 +55,8 @@
     "reactorcraft:neutron_reflector",
     "reactorcraft:neutron_absorber",
     "reactorcraft:breeder_core",
-    "reactorcraft:sodium_heater"
+    "reactorcraft:sodium_heater",
+    "reactorcraft:thorium_core",
+    "reactorcraft:fuel_dump"
   ]
 }

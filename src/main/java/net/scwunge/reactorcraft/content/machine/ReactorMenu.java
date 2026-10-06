@@ -67,7 +67,9 @@ public class ReactorMenu extends AbstractContainerMenu {
         this.data = client ? new SimpleContainerData(machine.dataAccess().getCount()) : machine.dataAccess();
         machine.addMenuSlots(this);
         machineSlots = slots.size();
-        addPlayerInventory(inventory, 8, machine.inventoryY());
+        if (machine.hasPlayerInventory()) {
+            addPlayerInventory(inventory, 8, machine.inventoryY());
+        }
         addDataSlots(data);
     }
 
@@ -130,6 +132,9 @@ public class ReactorMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
+        if (!machine.hasPlayerInventory()) {
+            return ItemStack.EMPTY;
+        }
         Slot slot = slots.get(index);
         if (!slot.hasItem()) {
             return ItemStack.EMPTY;

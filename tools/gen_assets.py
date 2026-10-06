@@ -456,6 +456,27 @@ def m6_blocks():
     out = [plain_cube("neutron_reflector", "reflector", "Neutron Reflector"), plain_cube("neutron_absorber", "absorber", "Neutron Absorber")]
     out.append(stacked_cube("breeder_core", "breeder", "Breeder Reactor Core", 5, gui="fuelrod"))
     out.append(stacked_cube("sodium_heater", "sodiumboiler", "Sodium Heater", 4, top_state=0))
+    out.append(stacked_cube("thorium_core", "thorium", "Thorium Fuel Core", 5, gui="fuelpool"))
+    block = "fuel_dump"
+    if ORIG_BLOCKS.exists():
+        for part, name in (("", "side"), ("_top", "top"), ("_bottom", "bottom")):
+            copy_png(ORIG_BLOCKS / f"fueldump{part}.png", ASSETS / f"textures/block/{block}_{name}.png")
+    write_json(ASSETS / f"models/block/{block}.json", {"parent": "minecraft:block/cube_bottom_top", "textures": {
+        "side": m(f"block/{block}_side"), "top": m(f"block/{block}_top"), "bottom": m(f"block/{block}_bottom")}})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}")})
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {"": {"model": m(f"block/{block}")}}})
+    lang[f"block.{MOD}.{block}"] = "Fuel Dump Valve"
+    self_drop(block)
+    out.append(m(block))
+    # spilled fuel salt: up to eight layers
+    block = "thorium_fuel"
+    for level in range(1, 9):
+        write_json(ASSETS / f"models/block/{block}_{level}.json", {"textures": {"all": m("block/fluid/lifbe_fuel"), "particle": m("block/fluid/lifbe_fuel")},
+                   "elements": [{"from": [0, 0, 0], "to": [16, level * 2, 16], "faces": {
+                       d: {"texture": "#all"} for d in ("north", "south", "east", "west", "up", "down")}}]})
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {f"level={level}": {"model": m(f"block/{block}_{level}")} for level in range(1, 9)}})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}_8")})
+    lang[f"block.{MOD}.{block}"] = "Spilled Thorium Fuel"
     return out
 
 
@@ -603,6 +624,10 @@ def recipes():
     shaped("breeder_fuel", m("breeder_fuel"), [" D ", "DED", " D "], {"D": m("depleted_uranium"), "E": m("uranium_fuel_pellet")}, 4)
     shaped("breeder_core", m("breeder_core"), ["SPS", "PCP", "SPS"], {"P": P, "S": STEEL, "C": m("fuel_rod")})
     shaped("sodium_heater", m("sodium_heater"), [" i ", "ibi", " i "], {"b": m("reactor_boiler"), "i": "minecraft:iron_ingot"})
+    shaped("thorium_core", m("thorium_core"), ["aSa", "PCP", "tPt"],
+           {"t": R + "tungsten_ingot", "a": R + "silumin_ingot", "P": P, "S": STEEL, "C": m("fuel_rod")})
+    shaped("fuel_dump", m("fuel_dump"), ["pIp", "BPB", "pbp"],
+           {"b": "minecraft:iron_bars", "p": PIPE, "P": R + "bedrock_pipe", "B": P, "I": R + "impeller"})
     # RotaryCraft grinder
     write_json(DATA / "recipe/grinding/emerald_dust.json", {"type": R + "grinding", "ingredient": ing("#c:gems/emerald"),
                                                            "result": {"id": m("emerald_dust"), "count": 1}})

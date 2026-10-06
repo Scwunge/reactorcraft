@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "level=1": {
+      "model": "reactorcraft:block/thorium_fuel_1"
+    },
+    "level=2": {
+      "model": "reactorcraft:block/thorium_fuel_2"
+    },
+    "level=3": {
+      "model": "reactorcraft:block/thorium_fuel_3"
+    },
+    "level=4": {
+      "model": "reactorcraft:block/thorium_fuel_4"
+    },
+    "level=5": {
+      "model": "reactorcraft:block/thorium_fuel_5"
+    },
+    "level=6": {
+      "model": "reactorcraft:block/thorium_fuel_6"
+    },
+    "level=7": {
+      "model": "reactorcraft:block/thorium_fuel_7"
+    },
+    "level=8": {
+      "model": "reactorcraft:block/thorium_fuel_8"
+    }
+  }
+}

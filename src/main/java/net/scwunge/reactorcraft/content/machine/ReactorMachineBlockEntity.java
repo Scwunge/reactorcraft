@@ -348,6 +348,11 @@ public abstract class ReactorMachineBlockEntity extends ReactorBlockEntity imple
     public void addMenuSlots(ReactorMenu menu) {
     }
 
+    /** Whether the GUI has the player's inventory under it (the liquid-fuelled core has none). */
+    public boolean hasPlayerInventory() {
+        return true;
+    }
+
     /** Where the player inventory starts in the GUI (the original's addPlayerInventoryWithOffset). */
     public int inventoryY() {
         return 84;

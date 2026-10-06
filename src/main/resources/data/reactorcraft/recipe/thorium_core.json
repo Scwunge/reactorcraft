@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aSa",
+    "PCP",
+    "tPt"
+  ],
+  "key": {
+    "t": {
+      "item": "rotarycraft:tungsten_ingot"
+    },
+    "a": {
+      "item": "rotarycraft:silumin_ingot"
+    },
+    "P": {
+      "item": "rotarycraft:base_panel"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "C": {
+      "item": "reactorcraft:fuel_rod"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:thorium_core",
+    "count": 1
+  }
+}

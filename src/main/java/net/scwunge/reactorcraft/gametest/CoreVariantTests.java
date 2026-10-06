@@ -91,6 +91,47 @@ public final class CoreVariantTests {
         });
     }
 
+    @GameTest(template = EMPTY, timeoutTicks = 40)
+    public static void aThoriumCoreBurnsLiquidFuelAndMakesLiquidWaste(GameTestHelper helper) {
+        BlockPos at = new BlockPos(2, 1, 2);
+        helper.setBlock(at, ReactorBlocks.THORIUM_CORE.get());
+        net.scwunge.reactorcraft.content.machine.ThoriumCoreBlockEntity core = helper.getBlockEntity(at);
+        helper.assertTrue(!core.isFissile(), "it makes no neutrons of its own");
+        core.fuelTank().setFluid(new net.neoforged.neoforge.fluids.FluidStack(net.scwunge.reactorcraft.registry.ReactorFluids.LIFBE_FUEL.get(), 4000));
+        helper.runAfterDelay(3, () -> {
+            core.setTemperature(800);
+            for (int i = 0; i < 3000; i++) {
+                core.onNeutron(neutron(helper, NeutronType.FISSION), helper.getLevel(), helper.absolutePos(at));
+                core.setTemperature(800);
+                if (core.fuelTank().getFluidAmount() < 1000) {
+                    core.fuelTank().setFluid(new net.neoforged.neoforge.fluids.FluidStack(net.scwunge.reactorcraft.registry.ReactorFluids.LIFBE_FUEL.get(), 4000));
+                }
+            }
+            helper.assertTrue(core.fuelTank().getFluidAmount() < 4000 || !core.hotFuelTank().isEmpty(), "fuel was burned");
+            helper.assertTrue(!core.hotFuelTank().isEmpty() && core.hotFuelTank().getFluid().is(net.scwunge.reactorcraft.registry.ReactorFluids.HOT_LIFBE.get()),
+                    "into hot fuel salt");
+            helper.assertTrue(!core.wasteTank().isEmpty(), "leaving some liquid waste");
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 60)
+    public static void aFuelDumpPoursAnOverheatedCoresFuelOnTheGround(GameTestHelper helper) {
+        BlockPos dump = new BlockPos(2, 2, 2);
+        BlockPos coreAt = new BlockPos(2, 3, 2);
+        helper.setBlock(dump, ReactorBlocks.FUEL_DUMP.get());
+        helper.setBlock(coreAt, ReactorBlocks.THORIUM_CORE.get());
+        net.scwunge.reactorcraft.content.machine.ThoriumCoreBlockEntity core = helper.getBlockEntity(coreAt);
+        core.fuelTank().setFluid(new net.neoforged.neoforge.fluids.FluidStack(net.scwunge.reactorcraft.registry.ReactorFluids.LIFBE_FUEL.get(), 1000));
+        helper.runAfterDelay(3, () -> core.setTemperature(1150));
+        helper.runAfterDelay(30, () -> {
+            helper.assertTrue(core.fuelTank().getFluidAmount() < 1000, "the core's fuel was drained: " + core.fuelTank().getFluidAmount());
+            net.minecraft.world.level.block.state.BlockState pool = helper.getBlockState(new BlockPos(2, 1, 2));
+            helper.assertTrue(pool.is(ReactorBlocks.THORIUM_FUEL.get()), "and poured out below as spilled fuel: " + pool);
+            helper.succeed();
+        });
+    }
+
     @GameTest(template = EMPTY)
     public static void anAbsorberHeatsUpOnFusionNeutronsOnly(GameTestHelper helper) {
         BlockPos at = new BlockPos(2, 1, 2);

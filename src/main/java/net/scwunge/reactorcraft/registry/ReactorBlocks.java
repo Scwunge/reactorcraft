@@ -13,6 +13,7 @@ import net.scwunge.reactorcraft.content.block.FluoriteBlock;
 import net.scwunge.reactorcraft.content.block.FluoriteOreBlock;
 import net.scwunge.reactorcraft.content.block.LodestoneBlock;
 import net.scwunge.reactorcraft.content.block.SteamBlock;
+import net.scwunge.reactorcraft.content.block.ThoriumFuelBlock;
 import net.scwunge.reactorcraft.content.machine.BoilerBlock;
 import net.scwunge.reactorcraft.content.machine.ControlRodBlock;
 import net.scwunge.reactorcraft.content.machine.SteamGrateBlock;
@@ -131,6 +132,14 @@ public final class ReactorBlocks {
             () -> new StackableMachineBlock(machine(), ReactorBlockEntities.BREEDER_CORE));
     public static final DeferredBlock<StackableMachineBlock> SODIUM_HEATER = block("sodium_heater",
             () -> new StackableMachineBlock(machine(), ReactorBlockEntities.SODIUM_HEATER));
+
+    public static final DeferredBlock<StackableMachineBlock> THORIUM_CORE = block("thorium_core",
+            () -> new StackableMachineBlock(machine(), ReactorBlockEntities.THORIUM_CORE));
+    public static final DeferredBlock<ReactorMachineBlock> FUEL_DUMP = block("fuel_dump",
+            () -> new ReactorMachineBlock(machine(), ReactorBlockEntities.FUEL_DUMP, false, false));
+    public static final DeferredBlock<ThoriumFuelBlock> THORIUM_FUEL = block("thorium_fuel",
+            () -> new ThoriumFuelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(100F, 500F).noOcclusion()
+                    .noLootTable().lightLevel(state -> 6).pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY)));
 
     private ReactorBlocks() {
     }

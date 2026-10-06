@@ -55,6 +55,9 @@ public record MachineLayout(int height, boolean inventoryLabel, List<TankBox> ta
                     List.of(new Bar(1, 2, 103, 26, 24, 34, 176, 92, true)),
                     List.of()),
             "fuel_rod", plain(182, true),
+            "breeder_core", plain(182, true),
+            "thorium_core", new MachineLayout(100, false,
+                    List.of(new TankBox(0, 53, 23, 16, 70), new TankBox(1, 80, 23, 16, 70), new TankBox(2, 107, 23, 16, 70)), List.of(), List.of()),
             "waste_container", plain(175, true),
             "waste_decayer", plain(175, true),
             "waste_storage", plain(186, true));
