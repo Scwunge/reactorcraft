@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.NeoForge;
 import net.scwunge.reactorcraft.content.entity.NeutronEntity;
+import net.scwunge.reactorcraft.content.item.RemoteControlItem;
 import net.scwunge.reactorcraft.core.CoolantState;
 import net.scwunge.reactorcraft.core.Linkable;
 import net.scwunge.reactorcraft.core.NeutronTile;
@@ -237,6 +238,14 @@ public class CpuBlockEntity extends ReactorMachineBlockEntity implements Tempera
     }
 
     // ---- GUI ----
+
+    /** The screen also stays open for a player holding a remote control linked to this CPU. */
+    @Override
+    public boolean stillValid(Player player) {
+        return super.stillValid(player) || level != null && level.getBlockEntity(worldPosition) == this
+                && (RemoteControlItem.canReach(player.getMainHandItem(), player, worldPosition)
+                || RemoteControlItem.canReach(player.getOffhandItem(), player, worldPosition));
+    }
 
     @Override
     public boolean hasMenu() {

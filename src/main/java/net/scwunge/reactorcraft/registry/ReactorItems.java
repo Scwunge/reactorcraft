@@ -8,6 +8,7 @@ import net.scwunge.reactorcraft.ReactorCraft;
 import net.scwunge.reactorcraft.content.item.FluidContainerItem;
 import net.scwunge.reactorcraft.content.item.FuelPelletItem;
 import net.scwunge.reactorcraft.content.item.NuclearWasteItem;
+import net.scwunge.reactorcraft.content.item.RemoteControlItem;
 import net.scwunge.reactorcraft.content.material.FluoriteColor;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public final class ReactorItems {
     public static final DeferredItem<Item> UNPROCESSED_WASTE = simple("unprocessed_nuclear_waste");
     public static final DeferredItem<FuelPelletItem> FUEL = add(ITEMS.register("uranium_fuel_pellet", () -> new FuelPelletItem(false)));
     public static final DeferredItem<Item> DEPLETED = simple("depleted_uranium");
+    public static final DeferredItem<RemoteControlItem> REMOTE_CONTROL = add(ITEMS.register("remote_control", RemoteControlItem::new));
     public static final DeferredItem<FuelPelletItem> PLUTONIUM = add(ITEMS.register("plutonium_fuel_pellet", () -> new FuelPelletItem(true)));
     /** One isotope (or a mixed lot) of fission waste; the creative tab lists every variant, see ReactorTabs. */
     public static final DeferredItem<NuclearWasteItem> NUCLEAR_WASTE = ITEMS.register("nuclear_waste",

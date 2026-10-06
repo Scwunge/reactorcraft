@@ -49,6 +49,7 @@ ITEMS = {
     "heavy_water_bucket": (3, "Heavy Water Bucket"),
     "uranium_fuel_pellet": (1, "Uranium Fuel Pellet"),
     "depleted_uranium": (2, "Depleted Uranium"),
+    "remote_control": (101, "Remote Reactor Control"),
     "plutonium_fuel_pellet": (96, "Plutonium Fuel Pellet"),
     "hydrogen_fluoride": (4, "Hydrogen Fluoride"),
     "enriched_uranium_dust": (5, "Enriched Uranium Dust"),
@@ -342,6 +343,17 @@ def core_blocks():
     lang[f"block.{MOD}.{block}"] = "Central Control"
     self_drop(block)
     out.append(m(block))
+    block = "turbine_meter"
+    for i, name in enumerate(("bottom", "side", "top")):
+        if ORIG_BLOCKS.exists():
+            copy_png(ORIG_BLOCKS / f"turbinemeter_#{i}.png", ASSETS / f"textures/block/{block}_{name}.png")
+    write_json(ASSETS / f"models/block/{block}.json", {"parent": "minecraft:block/cube_bottom_top", "textures": {
+        "side": m(f"block/{block}_side"), "top": m(f"block/{block}_top"), "bottom": m(f"block/{block}_bottom")}})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}")})
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {"": {"model": m(f"block/{block}")}}})
+    lang[f"block.{MOD}.{block}"] = "Turbine Dynamometer"
+    self_drop(block)
+    out.append(m(block))
     block = "coolant_cell"
     states = ["empty", "water", "heavy", "sodium", "lithium"]
     for i, state in enumerate(states):
@@ -523,6 +535,10 @@ def recipes():
     shaped("reactor_pump", m("reactor_pump"), ["PpP", "gCg", "PsP"],
            {"P": P, "g": "minecraft:glass_pane", "p": PIPE, "C": R + "compressor", "s": R + "shaft_core"})
     shaped("turbine_core", m("turbine_core"), ["BBB", "BCB", "BBB"], {"B": R + "propeller", "C": m("steam_turbine_core")})
+    shaped("turbine_meter", m("turbine_meter"), ["SrS", "PGP", "PCP"],
+           {"S": STEEL, "r": "minecraft:redstone", "P": P, "G": "minecraft:glowstone", "C": R + "circuit_board"})
+    shaped("remote_control", m("remote_control"), ["SES", "BCB", "BPB"],
+           {"S": STEEL, "E": "minecraft:ender_pearl", "B": "minecraft:stone_button", "C": R + "circuit_board", "P": P})
     # RotaryCraft grinder
     write_json(DATA / "recipe/grinding/emerald_dust.json", {"type": R + "grinding", "ingredient": ing("#c:gems/emerald"),
                                                            "result": {"id": m("emerald_dust"), "count": 1}})

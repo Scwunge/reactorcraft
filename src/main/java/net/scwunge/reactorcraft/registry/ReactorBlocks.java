@@ -17,6 +17,7 @@ import net.scwunge.reactorcraft.content.machine.BoilerBlock;
 import net.scwunge.reactorcraft.content.machine.ControlRodBlock;
 import net.scwunge.reactorcraft.content.machine.SteamGrateBlock;
 import net.scwunge.reactorcraft.content.machine.TurbineCoreBlock;
+import net.scwunge.reactorcraft.content.machine.TurbineMeterBlock;
 import net.scwunge.reactorcraft.content.machine.SteamLineBlock;
 import net.scwunge.reactorcraft.content.machine.CpuBlock;
 import net.scwunge.reactorcraft.content.machine.CoolantCellBlock;
@@ -117,6 +118,9 @@ public final class ReactorBlocks {
 
     public static final DeferredBlock<TurbineCoreBlock> TURBINE_CORE = block("turbine_core",
             () -> new TurbineCoreBlock(machine().noOcclusion(), ReactorBlockEntities.TURBINE_CORE));
+
+    public static final DeferredBlock<TurbineMeterBlock> TURBINE_METER = block("turbine_meter",
+            () -> new TurbineMeterBlock(machine(), ReactorBlockEntities.TURBINE_METER));
 
     private ReactorBlocks() {
     }

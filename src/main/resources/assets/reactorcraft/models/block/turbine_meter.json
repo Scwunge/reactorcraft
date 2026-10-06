@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "reactorcraft:block/turbine_meter_side",
+    "top": "reactorcraft:block/turbine_meter_top",
+    "bottom": "reactorcraft:block/turbine_meter_bottom"
+  }
+}

@@ -335,6 +335,47 @@ public final class FissionTests {
     }
 
     @GameTest(template = EMPTY, timeoutTicks = 100)
+    public static void theDynamometerReadsTheTurbineAboveIt(GameTestHelper helper) {
+        BlockPos meterPos = new BlockPos(2, 1, 2);
+        BlockPos turbinePos = new BlockPos(2, 3, 2);
+        BlockPos steamPos = new BlockPos(2, 2, 2);
+        helper.setBlock(meterPos, ReactorBlocks.TURBINE_METER.get());
+        net.scwunge.reactorcraft.content.machine.TurbineMeterBlockEntity meter = helper.getBlockEntity(meterPos);
+        net.scwunge.reactorcraft.content.machine.TurbineCoreBlockEntity turbine = placeTurbine(helper, turbinePos, Direction.EAST);
+        helper.onEachTick(() -> {
+            if (!helper.getBlockState(steamPos).is(ReactorBlocks.STEAM.get())) {
+                helper.setBlock(steamPos, net.scwunge.reactorcraft.content.block.SteamBlock.grateSteam(false));
+            }
+        });
+        helper.runAfterDelay(2, () -> {
+            helper.assertTrue(meter.signal() == 0, "an idle turbine reads 0");
+            try {
+                java.lang.reflect.Field field = net.scwunge.reactorcraft.content.machine.TurbineCoreBlockEntity.class.getDeclaredField("omega");
+                field.setAccessible(true);
+                field.setInt(turbine, 40000);
+            } catch (ReflectiveOperationException e) {
+                throw new IllegalStateException(e);
+            }
+        });
+        helper.runAfterDelay(50, () -> {
+            helper.assertTrue(turbine.omega() > 30000, "the turbine should still be fast: " + turbine.omega());
+            helper.assertTrue(meter.signal() == 15 * turbine.omega() / turbine.maxSpeed() && meter.signal() >= 8,
+                    "signal " + meter.signal() + " for " + turbine.omega());
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY)
+    public static void theRemoteControlReachesFurtherWithMoreCharge(GameTestHelper helper) {
+        ItemStack remote = new ItemStack(ReactorItems.REMOTE_CONTROL.get());
+        helper.assertTrue(net.scwunge.reactorcraft.content.item.RemoteControlItem.charge(remote) == 32000, "a new remote is full");
+        helper.assertTrue(net.scwunge.reactorcraft.content.item.RemoteControlItem.range(remote) == 56, "56 blocks at full charge");
+        remote.set(net.scwunge.reactorcraft.registry.ReactorComponents.CHARGE.get(), 0);
+        helper.assertTrue(net.scwunge.reactorcraft.content.item.RemoteControlItem.range(remote) == 0, "an empty remote reaches nowhere");
+        helper.succeed();
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 100)
     public static void aTurbineNeedsLubricantAndRoomForItsBlades(GameTestHelper helper) {
         BlockPos first = new BlockPos(2, 2, 2);
         BlockPos steamPos = new BlockPos(2, 1, 2);

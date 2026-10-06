@@ -58,6 +58,9 @@ final class HarnessScript {
         if (only.isEmpty() || only.equals("core")) {
             core();
         }
+        if (only.isEmpty() || only.equals("plant")) {
+            plant();
+        }
     }
 
     static void look(ServerPlayer player, double x, double y, double z, float yaw, float pitch) {
@@ -164,6 +167,41 @@ final class HarnessScript {
                 return 5;
             });
         }
+    }
+
+    /** The power plant side: a boiler under a steam line to a grate, a three-stage turbine fed by steam, a condenser, a pump and a CPU. */
+    private static void plant() {
+        server(40, server -> {
+            ServerLevel level = level(server);
+            ServerPlayer player = player(server);
+            player.setGameMode(GameType.CREATIVE);
+            for (int dx = -1; dx <= 12; dx++) {
+                for (int dz = 3; dz <= 10; dz++) {
+                    for (int dy = 1; dy <= 6; dy++) {
+                        level.setBlockAndUpdate(new BlockPos(dx, Y + dy, dz), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+                    }
+                }
+            }
+            // a line, then a grate, then the boiler last so the line connects down to it
+            level.setBlockAndUpdate(new BlockPos(0, Y + 2, 6), ReactorBlocks.STEAM_LINE.get().defaultBlockState());
+            level.setBlockAndUpdate(new BlockPos(1, Y + 2, 6), ReactorBlocks.STEAM_LINE.get().defaultBlockState());
+            level.setBlockAndUpdate(new BlockPos(2, Y + 2, 6), ReactorBlocks.STEAM_GRATE.get().defaultBlockState());
+            level.setBlockAndUpdate(new BlockPos(0, Y + 1, 6), ReactorBlocks.REACTOR_BOILER.get().defaultBlockState());
+            level.setBlockAndUpdate(new BlockPos(0, Y + 1, 5), ReactorBlocks.CPU.get().defaultBlockState());
+            for (int i = 0; i < 3; i++) {
+                level.setBlockAndUpdate(new BlockPos(5 + i, Y + 3, 6), ReactorBlocks.TURBINE_CORE.get().defaultBlockState()
+                        .setValue(net.scwunge.reactorcraft.content.machine.ReactorMachineBlock.LOOK, net.minecraft.core.Direction.EAST));
+            }
+            level.setBlockAndUpdate(new BlockPos(5, Y + 2, 6), net.scwunge.reactorcraft.content.block.SteamBlock.grateSteam(false));
+            level.setBlockAndUpdate(new BlockPos(10, Y + 2, 6), ReactorBlocks.CONDENSER.get().defaultBlockState());
+            level.setBlockAndUpdate(new BlockPos(10, Y + 1, 6), net.scwunge.reactorcraft.content.block.SteamBlock.grateSteam(false));
+            level.setBlockAndUpdate(new BlockPos(10, Y + 3, 6), ReactorBlocks.REACTOR_PUMP.get().defaultBlockState());
+            level.setDayTime(6000);
+            look(player, 5.5, Y + 3.2, 1.5, 0, 12);
+        });
+        shot("plant-1");
+        server(60, server -> look(player(server), 6.5, Y + 4.6, 9.5, 180, 15));
+        shot("plant-2");
     }
 
     /** A small fission core: a fuel column, coolant cells in every state, control rods up and down, with neutrons flying. */
