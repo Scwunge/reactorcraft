@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "above=false,below=false": {
+      "model": "reactorcraft:block/waste_decayer_0"
+    },
+    "above=true,below=false": {
+      "model": "reactorcraft:block/waste_decayer_1"
+    },
+    "above=true,below=true": {
+      "model": "reactorcraft:block/waste_decayer_2"
+    },
+    "above=false,below=true": {
+      "model": "reactorcraft:block/waste_decayer_3"
+    }
+  }
+}

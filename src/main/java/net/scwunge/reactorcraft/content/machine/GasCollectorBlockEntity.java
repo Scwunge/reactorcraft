@@ -2,6 +2,8 @@ package net.scwunge.reactorcraft.content.machine;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -77,7 +79,7 @@ public class GasCollectorBlockEntity extends ReactorMachineBlockEntity implement
 
     public boolean hasFurnace() {
         BlockState state = level.getBlockState(worldPosition.relative(readDirection()));
-        return state.is(Blocks.FURNACE);
+        return state.is(Blocks.FURNACE) || BuiltInRegistries.BLOCK.getOptional(ResourceLocation.parse("rotarycraft:refrigerator")).map(state::is).orElse(false);
     }
 
     /** Fluid comes out of the side opposite the one it reads. */

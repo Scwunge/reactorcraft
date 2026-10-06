@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "reactorcraft:item/nuclear_waste"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "reactorcraft:mixed": 1
+      },
+      "model": "reactorcraft:item/mixed_nuclear_waste"
+    }
+  ]
+}

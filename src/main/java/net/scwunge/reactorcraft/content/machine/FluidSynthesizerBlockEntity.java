@@ -253,6 +253,11 @@ public class FluidSynthesizerBlockEntity extends ReactorMachineBlockEntity imple
     // ---- GUI ----
 
     @Override
+    public int inventoryY() {
+        return 93;
+    }
+
+    @Override
     public boolean hasMenu() {
         return true;
     }

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " p ",
+    "SpS",
+    "PpP"
+  ],
+  "key": {
+    "p": {
+      "item": "rotarycraft:pipe"
+    },
+    "P": {
+      "item": "rotarycraft:base_panel"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:gas_collector",
+    "count": 1
+  }
+}

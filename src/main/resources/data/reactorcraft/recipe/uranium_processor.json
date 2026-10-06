@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "POP",
+    "OMO"
+  ],
+  "key": {
+    "O": {
+      "item": "reactorcraft:obsidian_tank"
+    },
+    "M": {
+      "item": "rotarycraft:mixer"
+    },
+    "P": {
+      "item": "rotarycraft:pipe"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:uranium_processor",
+    "count": 1
+  }
+}

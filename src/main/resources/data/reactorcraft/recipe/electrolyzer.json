@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SPS",
+    "PRP",
+    "BPB"
+  ],
+  "key": {
+    "P": {
+      "item": "rotarycraft:pipe"
+    },
+    "B": {
+      "item": "rotarycraft:base_panel"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "R": {
+      "item": "rotarycraft:reservoir"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:electrolyzer",
+    "count": 1
+  }
+}

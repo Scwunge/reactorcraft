@@ -1,0 +1,12 @@
+{
+  "type": "rotarycraft:friction_heating",
+  "ingredient": {
+    "item": "rotarycraft:coal_dust"
+  },
+  "result": {
+    "id": "reactorcraft:graphite",
+    "count": 1
+  },
+  "temperature": 400,
+  "duration": 100
+}

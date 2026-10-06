@@ -296,6 +296,11 @@ public class ElectrolyzerBlockEntity extends ReactorMachineBlockEntity implement
     // ---- GUI ----
 
     @Override
+    public int inventoryY() {
+        return 93;
+    }
+
+    @Override
     public boolean hasMenu() {
         return true;
     }

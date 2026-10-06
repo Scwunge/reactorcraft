@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SCS",
+    "CcC",
+    "SCS"
+  ],
+  "key": {
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "C": {
+      "item": "rotarycraft:cooling_fin"
+    },
+    "c": {
+      "tag": "c:chests/wooden"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:waste_container",
+    "count": 1
+  }
+}

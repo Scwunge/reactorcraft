@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PpP",
+    "GIG",
+    "PSP"
+  ],
+  "key": {
+    "P": {
+      "item": "rotarycraft:base_panel"
+    },
+    "p": {
+      "item": "rotarycraft:pipe"
+    },
+    "G": {
+      "tag": "c:glass_blocks/colorless"
+    },
+    "I": {
+      "item": "rotarycraft:impeller"
+    },
+    "S": {
+      "item": "rotarycraft:shaft_core"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:fluid_extractor",
+    "count": 1
+  }
+}

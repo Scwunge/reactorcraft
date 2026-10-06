@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SpS",
+    "pMp",
+    "ShS"
+  ],
+  "key": {
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "M": {
+      "item": "rotarycraft:mixer"
+    },
+    "p": {
+      "item": "rotarycraft:base_panel"
+    },
+    "h": {
+      "item": "rotarycraft:igniter"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:fluid_synthesizer",
+    "count": 1
+  }
+}

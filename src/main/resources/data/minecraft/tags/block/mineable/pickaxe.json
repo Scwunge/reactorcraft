@@ -31,6 +31,15 @@
     "reactorcraft:calcite_block",
     "reactorcraft:steam_scrubber",
     "reactorcraft:lodestone_block",
-    "reactorcraft:graphite_block"
+    "reactorcraft:graphite_block",
+    "reactorcraft:fluid_extractor",
+    "reactorcraft:isotope_centrifuge",
+    "reactorcraft:uranium_processor",
+    "reactorcraft:electrolyzer",
+    "reactorcraft:gas_collector",
+    "reactorcraft:waste_storage",
+    "reactorcraft:fluid_synthesizer",
+    "reactorcraft:waste_container",
+    "reactorcraft:waste_decayer"
   ]
 }

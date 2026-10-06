@@ -13,6 +13,7 @@ import net.scwunge.reactorcraft.content.block.FluoriteBlock;
 import net.scwunge.reactorcraft.content.block.FluoriteOreBlock;
 import net.scwunge.reactorcraft.content.block.LodestoneBlock;
 import net.scwunge.reactorcraft.content.machine.ReactorMachineBlock;
+import net.scwunge.reactorcraft.content.machine.WasteDecayerBlock;
 import net.scwunge.reactorcraft.content.material.FluoriteColor;
 
 import java.util.EnumMap;
@@ -70,14 +71,14 @@ public final class ReactorBlocks {
     public static final DeferredBlock<ReactorMachineBlock> FLUID_SYNTHESIZER = block("fluid_synthesizer",
             () -> new ReactorMachineBlock(machine(), ReactorBlockEntities.FLUID_SYNTHESIZER, false, false));
     public static final DeferredBlock<ReactorMachineBlock> GAS_COLLECTOR = block("gas_collector",
-            () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.GAS_COLLECTOR, true, true));
+            () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.GAS_COLLECTOR, true, true, true));
 
     public static final DeferredBlock<ReactorMachineBlock> WASTE_CONTAINER = block("waste_container",
             () -> new ReactorMachineBlock(machine(), ReactorBlockEntities.WASTE_CONTAINER, false, false));
     public static final DeferredBlock<ReactorMachineBlock> WASTE_STORAGE = block("waste_storage",
             () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.WASTE_STORAGE, true, false));
-    public static final DeferredBlock<ReactorMachineBlock> WASTE_DECAYER = block("waste_decayer",
-            () -> new ReactorMachineBlock(machine(), ReactorBlockEntities.WASTE_DECAYER, false, false));
+    public static final DeferredBlock<WasteDecayerBlock> WASTE_DECAYER = block("waste_decayer",
+            () -> new WasteDecayerBlock(machine(), ReactorBlockEntities.WASTE_DECAYER));
 
     private ReactorBlocks() {
     }

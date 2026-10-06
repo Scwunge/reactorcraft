@@ -15,7 +15,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
@@ -42,12 +41,14 @@ import java.util.function.Supplier;
  * empty the machine's tanks; otherwise right-clicking opens its GUI.
  */
 public class ReactorMachineBlock extends BaseEntityBlock {
-    public static final DirectionProperty LOOK = HorizontalDirectionalBlock.FACING;
+    /** The way the placer was looking; machines other than the gas collector only take the horizontal ones. */
+    public static final DirectionProperty LOOK = DirectionProperty.create("look");
 
     private final Supplier<? extends BlockEntityType<? extends ReactorBlockEntity>> type;
     private final VoxelShape shape;
     private final boolean modelled;
     private final boolean clientTicks;
+    private final boolean sixWay;
 
     public ReactorMachineBlock(Properties properties, Supplier<? extends BlockEntityType<? extends ReactorBlockEntity>> type,
                                boolean modelled, boolean clientTicks) {
@@ -56,7 +57,19 @@ public class ReactorMachineBlock extends BaseEntityBlock {
 
     public ReactorMachineBlock(Properties properties, Supplier<? extends BlockEntityType<? extends ReactorBlockEntity>> type,
                                VoxelShape shape, boolean modelled, boolean clientTicks) {
+        this(properties, type, shape, modelled, clientTicks, false);
+    }
+
+    /** {@code sixWay}: placed facing any direction, up and down included (the gas collector). */
+    public ReactorMachineBlock(Properties properties, Supplier<? extends BlockEntityType<? extends ReactorBlockEntity>> type,
+                               boolean modelled, boolean clientTicks, boolean sixWay) {
+        this(properties, type, Shapes.block(), modelled, clientTicks, sixWay);
+    }
+
+    private ReactorMachineBlock(Properties properties, Supplier<? extends BlockEntityType<? extends ReactorBlockEntity>> type,
+                                VoxelShape shape, boolean modelled, boolean clientTicks, boolean sixWay) {
         super(properties);
+        this.sixWay = sixWay;
         this.type = type;
         this.shape = shape;
         this.modelled = modelled;
@@ -76,7 +89,7 @@ public class ReactorMachineBlock extends BaseEntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState().setValue(LOOK, context.getHorizontalDirection());
+        return defaultBlockState().setValue(LOOK, sixWay ? context.getNearestLookingDirection() : context.getHorizontalDirection());
     }
 
     @Override

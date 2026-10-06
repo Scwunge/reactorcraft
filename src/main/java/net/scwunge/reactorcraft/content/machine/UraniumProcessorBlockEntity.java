@@ -252,6 +252,11 @@ public class UraniumProcessorBlockEntity extends ReactorMachineBlockEntity {
     // ---- GUI ----
 
     @Override
+    public int inventoryY() {
+        return 93;
+    }
+
+    @Override
     public boolean hasMenu() {
         return true;
     }

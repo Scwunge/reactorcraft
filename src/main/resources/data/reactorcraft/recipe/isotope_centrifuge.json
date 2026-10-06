@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SPS",
+    "B B",
+    "PGP"
+  ],
+  "key": {
+    "B": {
+      "item": "rotarycraft:bedrock_ingot"
+    },
+    "P": {
+      "item": "rotarycraft:base_panel"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "G": {
+      "item": "rotarycraft:bedrock_gear_unit_16"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:isotope_centrifuge",
+    "count": 1
+  }
+}

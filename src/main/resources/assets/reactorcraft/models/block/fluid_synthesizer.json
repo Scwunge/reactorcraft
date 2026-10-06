@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "reactorcraft:block/fluid_synthesizer",
+    "top": "reactorcraft:block/fluid_synthesizer_top",
+    "bottom": "reactorcraft:block/fluid_synthesizer_top"
+  }
+}

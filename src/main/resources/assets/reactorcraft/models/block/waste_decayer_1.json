@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "reactorcraft:block/waste_decayer_1",
+    "top": "reactorcraft:block/waste_decayer_4",
+    "bottom": "reactorcraft:block/waste_decayer_4"
+  }
+}

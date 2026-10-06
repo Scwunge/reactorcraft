@@ -111,6 +111,15 @@ def items():
             sheet.crop((x, y, x + 16, y + 16)).save(out)
         write_json(ASSETS / f"models/item/{item}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": m(f"item/{item}")}})
         lang[f"item.{MOD}.{item}"] = english
+    # nuclear waste: one item, the isotope is a data component; mixed waste uses another sprite (a client item property switches)
+    if sheet is not None:
+        for name, index in (("nuclear_waste", 0), ("mixed_nuclear_waste", 14)):
+            x, y = index % 16 * 16, index // 16 * 16
+            sheet.crop((x, y, x + 16, y + 16)).save(ASSETS / f"textures/item/{name}.png")
+    write_json(ASSETS / "models/item/mixed_nuclear_waste.json", {"parent": "minecraft:item/generated", "textures": {"layer0": m("item/mixed_nuclear_waste")}})
+    write_json(ASSETS / "models/item/nuclear_waste.json", {"parent": "minecraft:item/generated", "textures": {"layer0": m("item/nuclear_waste")},
+                                                           "overrides": [{"predicate": {m("mixed"): 1}, "model": m("item/mixed_nuclear_waste")}]})
+    lang[f"item.{MOD}.nuclear_waste"] = "Nuclear Waste"
 
 
 # --------------------------------------------------------------------------------------------------------------- blocks
@@ -209,9 +218,85 @@ def blocks():
         write_json(ASSETS / f"blockstates/{block}.json", {"variants": {"": {"model": m(f"block/{block}")}}})
         self_drop(block)
         pickaxe.append(m(block))
+    pickaxe.extend(machines())
     write_json(RES / "data/minecraft/tags/block/mineable/pickaxe.json", {"replace": False, "values": pickaxe})
     write_json(RES / "data/minecraft/tags/block/needs_stone_tool.json", {"replace": False, "values": stone_tool})
     write_json(RES / "data/minecraft/tags/block/needs_iron_tool.json", {"replace": False, "values": iron_tool})
+
+
+# ------------------------------------------------------------------------------------------------------------- machines
+TILE_TEX = JAR / "Reika/ReactorCraft/Textures/TileEntity"
+GUI_TEX = JAR / "Reika/ReactorCraft/Textures/GUI"
+# the display transforms a block-shaped builtin/entity item model needs (vanilla's minecraft:block/block)
+ENTITY_DISPLAY = {
+    "gui": {"rotation": [30, 225, 0], "translation": [0, 0, 0], "scale": [0.625, 0.625, 0.625]},
+    "ground": {"rotation": [0, 0, 0], "translation": [0, 3, 0], "scale": [0.25, 0.25, 0.25]},
+    "fixed": {"rotation": [0, 0, 0], "translation": [0, 0, 0], "scale": [0.5, 0.5, 0.5]},
+    "thirdperson_righthand": {"rotation": [75, 45, 0], "translation": [0, 2.5, 0], "scale": [0.375, 0.375, 0.375]},
+    "firstperson_righthand": {"rotation": [0, 45, 0], "translation": [0, 0, 0], "scale": [0.4, 0.4, 0.4]},
+    "firstperson_lefthand": {"rotation": [0, 225, 0], "translation": [0, 0, 0], "scale": [0.4, 0.4, 0.4]},
+}
+# block id -> (English name, 3D model texture in the jar, GUI texture in the jar or None)
+MODELLED = {
+    "fluid_extractor": ("Centrifugal Fluid Extractor", "heavypump", None),
+    "isotope_centrifuge": ("Isotope Centrifuge", "centrifuge", "centrifuge"),
+    "uranium_processor": ("Uranium Processor", "processor", "processor"),
+    "electrolyzer": ("Electrolyzer", "electrolyzer", "electrolyzer"),
+    "gas_collector": ("Gas Collector", "co2collector", None),
+    "waste_storage": ("Nuclear Waste Disposal Drum", "storage", "wastestorage"),
+}
+# block id -> (English name, side texture, top and bottom texture, GUI texture)
+CUBES = {
+    "fluid_synthesizer": ("Fluid Synthesizer", "synthesizer", "synthesizer_top", "synthesizer"),
+    "waste_container": ("Spent Fuel Container", "wastecontainer", "wastecontainer_top", "wastecontainer2"),
+}
+PARTICLE = "minecraft:block/iron_block"
+
+
+def machines():
+    out = []
+    for block, (english, entity, gui) in MODELLED.items():
+        if TILE_TEX.exists():
+            copy_png(TILE_TEX / f"{entity}.png", ASSETS / f"textures/entity/{block}.png")
+        if gui and GUI_TEX.exists():
+            copy_png(GUI_TEX / f"{gui}.png", ASSETS / f"textures/gui/{block}.png")
+        write_json(ASSETS / f"models/block/{block}.json", {"parent": "minecraft:block/block", "textures": {"particle": PARTICLE}})
+        write_json(ASSETS / f"models/item/{block}.json", {"parent": "minecraft:builtin/entity", "display": ENTITY_DISPLAY})
+        write_json(ASSETS / f"blockstates/{block}.json", {"variants": {"": {"model": m(f"block/{block}")}}})
+        lang[f"block.{MOD}.{block}"] = english
+        self_drop(block)
+        out.append(m(block))
+    for block, (english, side, top, gui) in CUBES.items():
+        if ORIG_BLOCKS.exists():
+            copy_png(ORIG_BLOCKS / f"{side}.png", ASSETS / f"textures/block/{block}.png")
+            copy_png(ORIG_BLOCKS / f"{top}.png", ASSETS / f"textures/block/{block}_top.png")
+        if GUI_TEX.exists():
+            copy_png(GUI_TEX / f"{gui}.png", ASSETS / f"textures/gui/{block}.png")
+        write_json(ASSETS / f"models/block/{block}.json", {"parent": "minecraft:block/cube_bottom_top", "textures": {
+            "side": m(f"block/{block}"), "top": m(f"block/{block}_top"), "bottom": m(f"block/{block}_top")}})
+        write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}")})
+        write_json(ASSETS / f"blockstates/{block}.json", {"variants": {"": {"model": m(f"block/{block}")}}})
+        lang[f"block.{MOD}.{block}"] = english
+        self_drop(block)
+        out.append(m(block))
+    # the decayer: tall stacks look like one chamber (state 0 alone, 1 one above, 2 both, 3 one below, 4 top and bottom)
+    block = "waste_decayer"
+    for state in range(5):
+        if ORIG_BLOCKS.exists():
+            copy_png(ORIG_BLOCKS / f"wastedecayer_#{state}.png", ASSETS / f"textures/block/{block}_{state}.png")
+    for state in range(4):
+        write_json(ASSETS / f"models/block/{block}_{state}.json", {"parent": "minecraft:block/cube_bottom_top", "textures": {
+            "side": m(f"block/{block}_{state}"), "top": m(f"block/{block}_4"), "bottom": m(f"block/{block}_4")}})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}_0")})
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {
+        "above=false,below=false": {"model": m(f"block/{block}_0")}, "above=true,below=false": {"model": m(f"block/{block}_1")},
+        "above=true,below=true": {"model": m(f"block/{block}_2")}, "above=false,below=true": {"model": m(f"block/{block}_3")}}})
+    if GUI_TEX.exists():
+        copy_png(GUI_TEX / "wastedecayer.png", ASSETS / f"textures/gui/{block}.png")
+    lang[f"block.{MOD}.{block}"] = "Forced Fission Chamber"
+    self_drop(block)
+    out.append(m(block))
+    return out
 
 
 SILK = {"condition": "minecraft:match_tool", "predicate": {"predicates": {"minecraft:enchantments": [
@@ -310,6 +395,20 @@ def recipes():
         write_json(DATA / f"recipe/blast_crafting/ferromagnetic_ingot_{n}.json", {
             "type": R + "blast_crafting", "pattern": ["ABC"], "key": {k: ing(v) for k, v in zip("ABC", order)},
             "result": {"id": m("ferromagnetic_ingot"), "count": 1}, "temperature": 1200, "speed": 1, "xp": 1.0})
+    # ReactorRecipes.addMachines (the machines in this milestone)
+    P, PIPE, GLASS = R + "base_panel", R + "pipe", "#c:glass_blocks/colorless"
+    shaped("fluid_extractor", m("fluid_extractor"), ["PpP", "GIG", "PSP"],
+           {"P": P, "p": PIPE, "G": GLASS, "I": R + "impeller", "S": R + "shaft_core"})
+    shaped("isotope_centrifuge", m("isotope_centrifuge"), ["SPS", "B B", "PGP"],
+           {"B": R + "bedrock_ingot", "P": P, "S": STEEL, "G": R + "bedrock_gear_unit_16"})
+    shaped("uranium_processor", m("uranium_processor"), ["POP", "OMO"], {"O": m("obsidian_tank"), "M": R + "mixer", "P": PIPE})
+    shaped("waste_container", m("waste_container"), ["SCS", "CcC", "SCS"], {"S": STEEL, "C": R + "cooling_fin", "c": "#c:chests/wooden"})
+    shaped("fluid_synthesizer", m("fluid_synthesizer"), ["SpS", "pMp", "ShS"], {"S": STEEL, "M": R + "mixer", "p": P, "h": R + "igniter"})
+    shaped("waste_decayer", m("waste_decayer"), ["SHS", "GPG", "SHS"],
+           {"H": "minecraft:hopper", "G": R + "blast_glass", "P": m("waste_container"), "S": R + "silumin_ingot"})
+    shaped("electrolyzer", m("electrolyzer"), ["SPS", "PRP", "BPB"], {"P": PIPE, "B": P, "S": STEEL, "R": R + "reservoir"})
+    shaped("waste_storage", m("waste_storage"), ["SPS", "PCP", "SPS"], {"S": STEEL, "P": P, "C": "#c:chests/wooden"})
+    shaped("gas_collector", m("gas_collector"), [" p ", "SpS", "PpP"], {"p": PIPE, "P": P, "S": STEEL})
     # RotaryCraft grinder
     write_json(DATA / "recipe/grinding/emerald_dust.json", {"type": R + "grinding", "ingredient": ing("#c:gems/emerald"),
                                                            "result": {"id": m("emerald_dust"), "count": 1}})

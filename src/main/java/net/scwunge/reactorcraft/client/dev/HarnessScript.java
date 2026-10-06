@@ -9,7 +9,20 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.scwunge.reactorcraft.content.block.FluoriteBlock;
+import net.scwunge.reactorcraft.content.machine.ElectrolyzerBlockEntity;
+import net.scwunge.reactorcraft.content.machine.FluidSynthesizerBlockEntity;
+import net.scwunge.reactorcraft.content.machine.IsotopeCentrifugeBlockEntity;
+import net.scwunge.reactorcraft.content.machine.ReactorMachineBlockEntity;
+import net.scwunge.reactorcraft.content.machine.ReactorMenu;
+import net.scwunge.reactorcraft.content.machine.UraniumProcessorBlockEntity;
+import net.scwunge.reactorcraft.content.machine.WasteStorageBlockEntity;
 import net.scwunge.reactorcraft.content.material.FluoriteColor;
+import net.scwunge.reactorcraft.content.waste.Isotope;
+import net.scwunge.reactorcraft.content.waste.WasteManager;
+import net.scwunge.reactorcraft.registry.ReactorFluids;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluids;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.scwunge.reactorcraft.registry.ReactorBlocks;
 import net.scwunge.reactorcraft.registry.ReactorItems;
 import net.scwunge.reactorcraft.registry.ReactorTabs;
@@ -38,6 +51,9 @@ final class HarnessScript {
         if (only.isEmpty() || only.equals("materials")) {
             materials();
             creativeTab();
+        }
+        if (only.isEmpty() || only.equals("machines")) {
+            machines();
         }
     }
 
@@ -72,6 +88,81 @@ final class HarnessScript {
         server(5, server -> level(server).setDayTime(6000));
     }
 
+    private static void fill(net.neoforged.neoforge.fluids.capability.templates.FluidTank tank, net.minecraft.world.level.material.Fluid fluid, int amount) {
+        tank.setFluid(new FluidStack(fluid, amount));
+    }
+
+    /** One of each machine, some with fluid in them, then each GUI opened in turn. */
+    private static void machines() {
+        BlockPos[] spots = new BlockPos[9];
+        for (int i = 0; i < spots.length; i++) {
+            spots[i] = new BlockPos(i * 2, Y + 1, 6);
+        }
+        server(40, server -> {
+            ServerLevel level = level(server);
+            ServerPlayer player = player(server);
+            player.setGameMode(GameType.CREATIVE);
+            level.setBlockAndUpdate(spots[0], ReactorBlocks.FLUID_EXTRACTOR.get().defaultBlockState());
+            level.setBlockAndUpdate(spots[1], ReactorBlocks.ISOTOPE_CENTRIFUGE.get().defaultBlockState());
+            level.setBlockAndUpdate(spots[2], ReactorBlocks.URANIUM_PROCESSOR.get().defaultBlockState());
+            level.setBlockAndUpdate(spots[3], ReactorBlocks.ELECTROLYZER.get().defaultBlockState());
+            level.setBlockAndUpdate(spots[4], ReactorBlocks.FLUID_SYNTHESIZER.get().defaultBlockState());
+            level.setBlockAndUpdate(spots[5], ReactorBlocks.WASTE_CONTAINER.get().defaultBlockState());
+            level.setBlockAndUpdate(spots[6], ReactorBlocks.WASTE_STORAGE.get().defaultBlockState());
+            level.setBlockAndUpdate(spots[7], ReactorBlocks.GAS_COLLECTOR.get().defaultBlockState());
+            for (int h = 0; h < 3; h++) {
+                level.setBlockAndUpdate(spots[8].above(h), ReactorBlocks.WASTE_DECAYER.get().defaultBlockState());
+            }
+            level.setBlockAndUpdate(spots[7].south(), net.minecraft.world.level.block.Blocks.FURNACE.defaultBlockState());
+            UraniumProcessorBlockEntity processor = (UraniumProcessorBlockEntity) level.getBlockEntity(spots[2]);
+            fill(processor.inputTank(), Fluids.WATER, 2000);
+            fill(processor.intermediateTank(), ReactorFluids.HYDROFLUORIC_ACID.get(), 1200);
+            fill(processor.outputTank(), ReactorFluids.URANIUM_HEXAFLUORIDE.get(), 2500);
+            ElectrolyzerBlockEntity electrolyzer = (ElectrolyzerBlockEntity) level.getBlockEntity(spots[3]);
+            fill(electrolyzer.inputTank(), ReactorFluids.HEAVY_WATER.get(), 7000);
+            fill(electrolyzer.lightTank(), ReactorFluids.DEUTERIUM.get(), 3000);
+            fill(electrolyzer.heavyTank(), ReactorFluids.OXYGEN.get(), 1500);
+            FluidSynthesizerBlockEntity synthesizer = (FluidSynthesizerBlockEntity) level.getBlockEntity(spots[4]);
+            fill(synthesizer.waterTank(), Fluids.WATER, 15000);
+            fill(synthesizer.productTank(), ReactorFluids.AMMONIA.get(), 6000);
+            IsotopeCentrifugeBlockEntity centrifuge = (IsotopeCentrifugeBlockEntity) level.getBlockEntity(spots[1]);
+            fill(centrifuge.tank(), ReactorFluids.URANIUM_HEXAFLUORIDE.get(), 8000);
+            WasteStorageBlockEntity storage = (WasteStorageBlockEntity) level.getBlockEntity(spots[6]);
+            storage.items().setStackInSlot(0, WasteManager.waste(Isotope.CS137, 5));
+            storage.items().setStackInSlot(3, WasteManager.waste(Isotope.U238, 12));
+            storage.items().setStackInSlot(7, WasteManager.mixedWaste(Isotope.ElementGroup.ALKALI));
+            level.setDayTime(6000);
+            look(player, 0.5, Y + 2.2, 2.6, 0, 12);
+        });
+        String[] model = {"fluid-extractor", "isotope-centrifuge", "uranium-processor", "electrolyzer", "fluid-synthesizer", "waste-container",
+                "waste-storage", "gas-collector", "waste-decayer"};
+        for (int i = 0; i < spots.length; i++) {
+            BlockPos at = spots[i];
+            server(i == 0 ? 15 : 10, server -> look(player(server), at.getX() + 0.5, Y + (at.getX() == 16 ? 3.2 : 2.2), 2.6, 0, at.getX() == 16 ? 0 : 12));
+            shot("machine-" + model[i]);
+        }
+        // the dropped items: nuclear waste and the machine items in the hand-held pose
+        String[] names = {"fluid-extractor", "isotope-centrifuge", "uranium-processor", "electrolyzer", "fluid-synthesizer", "waste-container",
+                "waste-storage", "gas-collector", "waste-decayer"};
+        for (int i = 0; i < names.length; i++) {
+            if (i == 0 || i == 7) {
+                continue; // these have no GUI
+            }
+            BlockPos at = spots[i];
+            server(5, server -> {
+                if (level(server).getBlockEntity(at) instanceof ReactorMachineBlockEntity machine) {
+                    ReactorMenu.open(player(server), machine);
+                }
+            });
+            add((mc, server) -> 10);
+            shot("gui-" + names[i]);
+            add((mc, server) -> {
+                mc.player.closeContainer();
+                return 5;
+            });
+        }
+    }
+
     /** All mod items in the creative tab, page by page. */
     private static void creativeTab() {
         add((mc, server) -> {
@@ -87,7 +178,7 @@ final class HarnessScript {
             return 10;
         });
         add((mc, server) -> {
-            check("creative tab lists every item", ReactorTabs.MAIN.get().getDisplayItems().size() == ReactorItems.TAB.size());
+            check("creative tab lists every item", ReactorTabs.MAIN.get().getDisplayItems().size() == ReactorItems.TAB.size() + WasteManager.creativeStacks().size());
             return 1;
         });
         int rows = (ReactorItems.TAB.size() + 8) / 9;
