@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MCM",
+    "CHC",
+    "MCM"
+  ],
+  "key": {
+    "H": {
+      "item": "reactorcraft:hysteresis_ring"
+    },
+    "M": {
+      "item": "reactorcraft:magnetic_core"
+    },
+    "C": {
+      "item": "reactorcraft:coolant_pack"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:toroid_magnet",
+    "count": 1
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "OSO",
+    "SSS",
+    "OSO"
+  ],
+  "key": {
+    "O": {
+      "item": "reactorcraft:heater_multi_1"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:heater_multi_3",
+    "count": 1
+  }
+}

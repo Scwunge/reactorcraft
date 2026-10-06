@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "SBS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "reactorcraft:ferromagnetic_ingot"
+    },
+    "B": {
+      "tag": "c:ingots/steel"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:solenoid_multi_1",
+    "count": 1
+  }
+}

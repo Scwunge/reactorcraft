@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "MMM",
+    "SSS"
+  ],
+  "key": {
+    "M": {
+      "item": "reactorcraft:ferromagnetic_ingot"
+    },
+    "S": {
+      "item": "reactorcraft:hysteresis_plate"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:solenoid_multi_4",
+    "count": 1
+  }
+}

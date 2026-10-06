@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MWM",
+    "MHM",
+    "MMM"
+  ],
+  "key": {
+    "H": {
+      "item": "reactorcraft:hysteresis_plate"
+    },
+    "M": {
+      "item": "reactorcraft:ferromagnetic_plate"
+    },
+    "W": {
+      "item": "reactorcraft:heater_multi_1"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:injector_multi_1",
+    "count": 1
+  }
+}

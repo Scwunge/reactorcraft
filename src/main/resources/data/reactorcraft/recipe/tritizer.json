@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SPS",
+    "GPG",
+    "SPS"
+  ],
+  "key": {
+    "G": {
+      "item": "rotarycraft:blast_glass"
+    },
+    "P": {
+      "item": "rotarycraft:pipe"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:tritizer",
+    "count": 1
+  }
+}

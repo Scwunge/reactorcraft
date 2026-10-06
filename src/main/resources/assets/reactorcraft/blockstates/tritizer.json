@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "above=false,below=false": {
+      "model": "reactorcraft:block/tritizer_0"
+    },
+    "above=true,below=false": {
+      "model": "reactorcraft:block/tritizer_1"
+    },
+    "above=true,below=true": {
+      "model": "reactorcraft:block/tritizer_2"
+    },
+    "above=false,below=true": {
+      "model": "reactorcraft:block/tritizer_3"
+    }
+  }
+}

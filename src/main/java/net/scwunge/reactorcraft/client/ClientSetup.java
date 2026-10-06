@@ -19,6 +19,8 @@ import net.scwunge.reactorcraft.client.model.ModelGasCollector;
 import net.scwunge.reactorcraft.client.model.ModelReactorPump;
 import net.scwunge.reactorcraft.client.model.ModelSteamGrate;
 import net.scwunge.reactorcraft.client.model.ModelHeavyPump;
+import net.scwunge.reactorcraft.client.model.ModelMagnet;
+import net.scwunge.reactorcraft.client.model.ModelSolenoid;
 import net.scwunge.reactorcraft.client.model.ModelProcessor;
 import net.scwunge.reactorcraft.client.model.ModelWasteStorage;
 import net.scwunge.reactorcraft.client.model.ModelControl;
@@ -26,6 +28,9 @@ import net.scwunge.reactorcraft.client.render.ControlRodRenderer;
 import net.scwunge.reactorcraft.client.render.GasCollectorRenderer;
 import net.scwunge.reactorcraft.client.render.MachineItemRenderer;
 import net.scwunge.reactorcraft.client.render.ModelMachineRenderer;
+import net.scwunge.reactorcraft.client.render.FusionMarkerRenderer;
+import net.scwunge.reactorcraft.client.render.SolenoidRenderer;
+import net.scwunge.reactorcraft.client.render.ToroidMagnetRenderer;
 import net.scwunge.reactorcraft.client.render.NeutronRenderer;
 import net.scwunge.reactorcraft.client.render.ProcessorRenderer;
 import net.scwunge.reactorcraft.client.render.TurbineRenderer;
@@ -53,6 +58,8 @@ public final class ClientSetup {
     private static final ModelLayerLocation STEAM_GRATE = layer("steam_grate");
     private static final ModelLayerLocation CONDENSER = layer("condenser");
     private static final ModelLayerLocation REACTOR_PUMP = layer("reactor_pump");
+    private static final ModelLayerLocation TOROID_MAGNET = layer("toroid_magnet");
+    private static final ModelLayerLocation SOLENOID = layer("solenoid_magnet");
     private static final ModelLayerLocation[] TURBINE_STAGES = new ModelLayerLocation[TurbineRenderer.STAGES];
 
     static {
@@ -80,6 +87,8 @@ public final class ClientSetup {
         event.registerLayerDefinition(STEAM_GRATE, ModelSteamGrate::create);
         event.registerLayerDefinition(CONDENSER, ModelCondenser::create);
         event.registerLayerDefinition(REACTOR_PUMP, ModelReactorPump::create);
+        event.registerLayerDefinition(TOROID_MAGNET, ModelMagnet::create);
+        event.registerLayerDefinition(SOLENOID, ModelSolenoid::create);
         for (int i = 0; i < TURBINE_STAGES.length; i++) {
             int stage = i;
             event.registerLayerDefinition(TURBINE_STAGES[i], () -> TurbineRenderer.createLayer(stage));
@@ -108,6 +117,9 @@ public final class ClientSetup {
                 new ModelMachineRenderer<>(context, REACTOR_PUMP, "reactor_pump", ModelReactorPump.PARTS,
                         java.util.Arrays.stream(ModelReactorPump.PARTS).filter(n -> n.startsWith("shape2") || n.startsWith("shape3")).toArray(String[]::new)));
         event.registerBlockEntityRenderer(ReactorBlockEntities.TURBINE_CORE.get(), context -> new TurbineRenderer(context, TURBINE_STAGES, "turbine_core"));
+        event.registerBlockEntityRenderer(ReactorBlockEntities.TOROID_MAGNET.get(), context -> new ToroidMagnetRenderer(context, TOROID_MAGNET));
+        event.registerBlockEntityRenderer(ReactorBlockEntities.SOLENOID.get(), context -> new SolenoidRenderer(context, SOLENOID));
+        event.registerBlockEntityRenderer(ReactorBlockEntities.FUSION_MARKER.get(), FusionMarkerRenderer::new);
         event.registerBlockEntityRenderer(ReactorBlockEntities.WASTE_STORAGE.get(), context ->
                 new ModelMachineRenderer<>(context, WASTE_STORAGE, "waste_storage", ModelWasteStorage.PARTS));
     }
@@ -115,6 +127,7 @@ public final class ClientSetup {
     @SubscribeEvent
     static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ReactorEntities.NEUTRON.get(), NeutronRenderer::new);
+        event.registerEntityRenderer(ReactorEntities.PLASMA.get(), net.scwunge.reactorcraft.client.render.PlasmaRenderer::new);
         event.registerEntityRenderer(ReactorEntities.RADIATION.get(), net.scwunge.reactorcraft.client.render.RadiationRenderer::new);
         event.registerEntityRenderer(ReactorEntities.NUCLEAR_WASTE_ITEM.get(), net.minecraft.client.renderer.entity.ItemEntityRenderer::new);
     }
@@ -142,7 +155,7 @@ public final class ClientSetup {
         event.registerItem(new MachineItemRenderer(), ReactorBlocks.FLUID_EXTRACTOR.asItem(), ReactorBlocks.ISOTOPE_CENTRIFUGE.asItem(),
                 ReactorBlocks.URANIUM_PROCESSOR.asItem(), ReactorBlocks.ELECTROLYZER.asItem(), ReactorBlocks.GAS_COLLECTOR.asItem(),
                 ReactorBlocks.CONTROL_ROD.asItem(), ReactorBlocks.STEAM_GRATE.asItem(), ReactorBlocks.CONDENSER.asItem(), ReactorBlocks.REACTOR_PUMP.asItem(), ReactorBlocks.TURBINE_CORE.asItem(),
-                ReactorBlocks.WASTE_STORAGE.asItem());
+                ReactorBlocks.WASTE_STORAGE.asItem(), ReactorBlocks.TOROID_MAGNET.asItem(), ReactorBlocks.SOLENOID.asItem());
         for (ReactorFluids.Entry fluid : ReactorFluids.ALL) {
             ResourceLocation still = fluid.texture == null
                     ? ResourceLocation.withDefaultNamespace("block/water_still") : ReactorCraft.id("block/fluid/" + fluid.texture);

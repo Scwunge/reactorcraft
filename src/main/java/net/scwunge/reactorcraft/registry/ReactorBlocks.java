@@ -19,7 +19,15 @@ import net.scwunge.reactorcraft.content.machine.ControlRodBlock;
 import net.scwunge.reactorcraft.content.machine.SteamGrateBlock;
 import net.scwunge.reactorcraft.content.machine.TurbineCoreBlock;
 import net.scwunge.reactorcraft.content.machine.TurbineMeterBlock;
+import net.scwunge.reactorcraft.content.machine.GasDuctBlockEntity;
 import net.scwunge.reactorcraft.content.machine.HeatPipeBlock;
+import net.scwunge.reactorcraft.content.machine.SolenoidBlock;
+import net.scwunge.reactorcraft.content.multi.FusionStructures;
+import net.scwunge.reactorcraft.content.multi.MultiPartBlock;
+import net.scwunge.reactorcraft.content.multi.MultiStructure;
+import net.scwunge.reactorcraft.content.machine.MagneticPipeBlockEntity;
+import net.scwunge.reactorcraft.content.machine.ReactorPipeBlock;
+import net.scwunge.reactorcraft.content.machine.ToroidMagnetBlock;
 import net.scwunge.reactorcraft.content.machine.SteamLineBlock;
 import net.scwunge.reactorcraft.content.machine.CpuBlock;
 import net.scwunge.reactorcraft.content.machine.CoolantCellBlock;
@@ -30,6 +38,8 @@ import net.scwunge.reactorcraft.content.material.FluoriteColor;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 /** ReactorCraft's blocks; each gets a block item in the creative tab. */
@@ -153,7 +163,43 @@ public final class ReactorBlocks {
             () -> new HeatPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.5F, 1F).sound(SoundType.METAL).noOcclusion(),
                     ReactorBlockEntities.HEAT_PIPE));
 
+    public static final DeferredBlock<ToroidMagnetBlock> TOROID_MAGNET = block("toroid_magnet",
+            () -> new ToroidMagnetBlock(machine().noOcclusion(), ReactorBlockEntities.TOROID_MAGNET));
+    public static final DeferredBlock<ReactorMachineBlock> FUSION_INJECTOR = block("fusion_injector",
+            () -> new ReactorMachineBlock(machine(), ReactorBlockEntities.FUSION_INJECTOR, false, false));
+    public static final DeferredBlock<ReactorPipeBlock> MAGNETIC_PIPE = block("magnetic_pipe",
+            () -> new ReactorPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.GOLD).strength(2F, 10F).sound(SoundType.METAL).noOcclusion(),
+                    ReactorBlockEntities.MAGNETIC_PIPE, (level, pos, other) -> MagneticPipeBlockEntity.interacts(other)));
+    public static final DeferredBlock<ReactorPipeBlock> GAS_DUCT = block("gas_duct",
+            () -> new ReactorPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).strength(1F, 5F).sound(SoundType.STONE).noOcclusion(),
+                    ReactorBlockEntities.GAS_DUCT, (level, pos, other) -> other.getLevel() != null && GasDuctBlockEntity.interacts(other.getLevel(), pos, other)));
+
     private ReactorBlocks() {
+    }
+
+    public static final DeferredBlock<SolenoidBlock> SOLENOID = block("solenoid_magnet",
+            () -> new SolenoidBlock(machine().noOcclusion(), ReactorBlockEntities.SOLENOID));
+    public static final DeferredBlock<ReactorMachineBlock> FUSION_HEATER = block("fusion_heater",
+            () -> new ReactorMachineBlock(machine(), ReactorBlockEntities.FUSION_HEATER, false, false));
+    public static final List<DeferredBlock<MultiPartBlock>> SOLENOID_PARTS = parts("solenoid_multi", FusionStructures.SOLENOID, 6);
+    public static final List<DeferredBlock<MultiPartBlock>> INJECTOR_PARTS = parts("injector_multi", FusionStructures.INJECTOR, 8);
+    public static final List<DeferredBlock<MultiPartBlock>> HEATER_PARTS = parts("heater_multi", FusionStructures.HEATER, 5);
+
+    public static final DeferredBlock<StackableMachineBlock> TRITIZER = block("tritizer",
+            () -> new StackableMachineBlock(machine(), ReactorBlockEntities.TRITIZER));
+    public static final DeferredBlock<ReactorMachineBlock> FUSION_MARKER = block("fusion_marker",
+            () -> new ReactorMachineBlock(machine().noOcclusion().noCollission().strength(0.5F), ReactorBlockEntities.FUSION_MARKER,
+                    net.minecraft.world.level.block.Block.box(4, 0, 4, 12, 16, 12), false, false));
+
+    private static List<DeferredBlock<MultiPartBlock>> parts(String name, MultiStructure structure, int count) {
+        List<DeferredBlock<MultiPartBlock>> list = new ArrayList<>();
+        for (int variant = 0; variant < count; variant++) {
+            int v = variant;
+            DeferredBlock<MultiPartBlock> part = block(name + "_" + variant, () -> new MultiPartBlock(machine().noOcclusion(), structure, v));
+            structure.addPart(part);
+            list.add(part);
+        }
+        return list;
     }
 
     private static BlockBehaviour.Properties machine() {

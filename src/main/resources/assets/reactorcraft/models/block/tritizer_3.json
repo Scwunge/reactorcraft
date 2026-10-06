@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "reactorcraft:block/tritizer_3",
+    "top": "reactorcraft:block/tritizer_4",
+    "bottom": "reactorcraft:block/tritizer_4"
+  }
+}

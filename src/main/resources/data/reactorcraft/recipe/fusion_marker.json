@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "F",
+    "R"
+  ],
+  "key": {
+    "F": {
+      "item": "reactorcraft:blue_fluorite"
+    },
+    "R": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:fusion_marker",
+    "count": 1
+  }
+}

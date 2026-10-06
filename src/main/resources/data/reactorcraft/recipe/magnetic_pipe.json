@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CGC",
+    "CGC",
+    "CGC"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:gold_ingot"
+    },
+    "G": {
+      "item": "rotarycraft:blast_glass"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:magnetic_pipe",
+    "count": 6
+  }
+}

@@ -8,6 +8,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.scwunge.reactorcraft.ReactorCraft;
 import net.scwunge.reactorcraft.content.entity.NeutronEntity;
 import net.scwunge.reactorcraft.content.entity.NuclearWasteEntity;
+import net.scwunge.reactorcraft.content.entity.PlasmaEntity;
 import net.scwunge.reactorcraft.content.entity.RadiationEntity;
 
 public final class ReactorEntities {
@@ -24,6 +25,10 @@ public final class ReactorEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<NuclearWasteEntity>> NUCLEAR_WASTE_ITEM = ENTITIES.register("nuclear_waste_item",
             () -> EntityType.Builder.<NuclearWasteEntity>of(NuclearWasteEntity::new, MobCategory.MISC).sized(0.25F, 0.25F).clientTrackingRange(6)
                     .updateInterval(20).fireImmune().build("nuclear_waste_item"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<PlasmaEntity>> PLASMA = ENTITIES.register("plasma",
+            () -> EntityType.Builder.<PlasmaEntity>of(PlasmaEntity::new, MobCategory.MISC).sized(0.5F, 0.5F).noSummon()
+                    .clientTrackingRange(16).updateInterval(1).fireImmune().build("plasma"));
 
     private ReactorEntities() {
     }

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CGC",
+    "CGC",
+    "CGC"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:terracotta"
+    },
+    "G": {
+      "tag": "c:glass_blocks"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:gas_duct",
+    "count": 6
+  }
+}

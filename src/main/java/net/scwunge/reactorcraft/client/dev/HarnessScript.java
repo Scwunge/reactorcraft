@@ -61,6 +61,9 @@ final class HarnessScript {
         if (only.isEmpty() || only.equals("plant")) {
             plant();
         }
+        if (only.isEmpty() || only.equals("variants")) {
+            variants();
+        }
     }
 
     static void look(ServerPlayer player, double x, double y, double z, float yaw, float pitch) {
@@ -154,6 +157,55 @@ final class HarnessScript {
             if (i == 0 || i == 7) {
                 continue; // these have no GUI
             }
+            BlockPos at = spots[i];
+            server(5, server -> {
+                if (level(server).getBlockEntity(at) instanceof ReactorMachineBlockEntity machine) {
+                    ReactorMenu.open(player(server), machine);
+                }
+            });
+            add((mc, server) -> 10);
+            shot("gui-" + names[i]);
+            add((mc, server) -> {
+                mc.player.closeContainer();
+                return 5;
+            });
+        }
+    }
+
+    /** The other reactor cores and their helpers (milestone 6): each placed in a row, then the GUIs of the ones that have one. */
+    private static void variants() {
+        net.minecraft.world.level.block.Block[] row = {ReactorBlocks.REFLECTOR.get(), ReactorBlocks.ABSORBER.get(), ReactorBlocks.BREEDER_CORE.get(),
+                ReactorBlocks.SODIUM_HEATER.get(), ReactorBlocks.THORIUM_CORE.get(), ReactorBlocks.FUEL_DUMP.get(), ReactorBlocks.PEBBLE_BED.get(),
+                ReactorBlocks.CO2_HEATER.get(), ReactorBlocks.HEAT_EXCHANGER.get()};
+        String[] names = {"reflector", "absorber", "breeder-core", "sodium-heater", "thorium-core", "fuel-dump", "pebble-bed", "co2-heater", "heat-exchanger"};
+        BlockPos[] spots = new BlockPos[row.length];
+        for (int i = 0; i < spots.length; i++) {
+            spots[i] = new BlockPos(i * 2, Y + 1, 6);
+        }
+        server(40, server -> {
+            ServerLevel level = level(server);
+            ServerPlayer player = player(server);
+            player.setGameMode(GameType.CREATIVE);
+            for (int i = 0; i < row.length; i++) {
+                level.setBlockAndUpdate(spots[i], row[i].defaultBlockState());
+            }
+            level.setBlockAndUpdate(spots[7].above(), ReactorBlocks.CO2_HEATER.get().defaultBlockState());
+            level.setBlockAndUpdate(spots[8].east(), ReactorBlocks.HEAT_PIPE.get().defaultBlockState());
+            level.setBlockAndUpdate(spots[8].east().east(), ReactorBlocks.HEAT_PIPE.get().defaultBlockState());
+            if (level.getBlockEntity(spots[6]) instanceof net.scwunge.reactorcraft.content.machine.PebbleBedBlockEntity bed) {
+                for (int slot = 20; slot < 47; slot++) {
+                    bed.items().setStackInSlot(slot, new ItemStack(ReactorItems.TRISO_PELLET.get()));
+                }
+            }
+            level.setDayTime(6000);
+            look(player, 0.5, Y + 2.2, 2.6, 0, 12);
+        });
+        for (int i = 0; i < spots.length; i++) {
+            BlockPos at = spots[i];
+            server(i == 0 ? 15 : 10, server -> look(player(server), at.getX() + 0.5, Y + 2.2, 2.6, 0, 12));
+            shot("variant-" + names[i]);
+        }
+        for (int i : new int[]{2, 4, 6}) {
             BlockPos at = spots[i];
             server(5, server -> {
                 if (level(server).getBlockEntity(at) instanceof ReactorMachineBlockEntity machine) {

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "MWM",
+    "HHH",
+    "MWM"
+  ],
+  "key": {
+    "H": {
+      "item": "reactorcraft:gold_wiring"
+    },
+    "M": {
+      "item": "reactorcraft:ferromagnetic_plate"
+    },
+    "W": {
+      "item": "reactorcraft:heater_multi_1"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:injector_multi_5",
+    "count": 1
+  }
+}

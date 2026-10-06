@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "MMM",
+    "SSS"
+  ],
+  "key": {
+    "M": {
+      "item": "reactorcraft:permanent_magnet_6"
+    },
+    "S": {
+      "item": "reactorcraft:ferromagnetic_plate"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:solenoid_multi_3",
+    "count": 1
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "reactorcraft:block/fusion_injector_front",
+    "side": "reactorcraft:block/fusion_injector_side",
+    "top": "reactorcraft:block/fusion_injector_side"
+  }
+}

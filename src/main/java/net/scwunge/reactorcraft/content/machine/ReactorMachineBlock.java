@@ -164,6 +164,9 @@ public class ReactorMachineBlock extends BaseEntityBlock {
         if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof ReactorMachineBlockEntity machine) {
             machine.dropContents(level, pos);
         }
+        if (!level.isClientSide && !state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof net.scwunge.reactorcraft.content.multi.MultiController controller) {
+            controller.structure().breakAround(level, pos);
+        }
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
 }

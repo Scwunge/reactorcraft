@@ -113,6 +113,16 @@ public final class ReactorItems {
     public static final DeferredItem<Item> CARBIDE_FLAKES = simple("tungsten_carbide_flakes");
     public static final DeferredItem<Item> CARBIDE_INGOT = simple("tungsten_carbide_ingot");
     public static final DeferredItem<Item> TURBINE_CORE = simple("steam_turbine_core");
+    /** The eight permanent magnets, each four times as strong as the one before. */
+    public static final List<DeferredItem<Item>> PERMANENT_MAGNETS = magnets();
+
+    private static List<DeferredItem<Item>> magnets() {
+        List<DeferredItem<Item>> list = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            list.add(simple("permanent_magnet_" + i));
+        }
+        return list;
+    }
 
     private ReactorItems() {
     }

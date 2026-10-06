@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "formed=false": {
+      "model": "reactorcraft:block/solenoid_multi_1"
+    },
+    "formed=true": {
+      "model": "reactorcraft:block/solenoid_multi_1_formed"
+    }
+  }
+}

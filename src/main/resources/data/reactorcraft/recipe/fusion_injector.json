@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PMP",
+    "M M",
+    "PMP"
+  ],
+  "key": {
+    "P": {
+      "item": "reactorcraft:magnetic_pipe"
+    },
+    "M": {
+      "item": "reactorcraft:ferromagnetic_plate"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:fusion_injector",
+    "count": 1
+  }
+}

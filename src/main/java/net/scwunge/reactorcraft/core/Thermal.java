@@ -127,6 +127,13 @@ public final class Thermal {
         return false;
     }
 
+    /** Sets fire around the flammable block at {@code at}, if hot blocks may change the world here. */
+    public static void igniteAt(Level level, BlockPos at, @Nullable UUID owner) {
+        if (!level.isClientSide && ReactorConfig.HOT_BLOCKS_AFFECT_WORLD.get() && WorldSafety.griefingAllowed(level)) {
+            ignite(level, at, owner);
+        }
+    }
+
     /** ReikaWorldHelper.ignite: fire in every air block around a flammable block. */
     private static void ignite(Level level, BlockPos at, @Nullable UUID owner) {
         if (!level.getBlockState(at).isFlammable(level, at, Direction.UP)) {

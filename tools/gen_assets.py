@@ -111,6 +111,9 @@ ITEMS = {
     "tungsten_carbide_ingot": (161, "Tungsten Carbide Ingot"),
     "steam_turbine_core": (162, "Steam Turbine Core"),
 }
+MAGNET_STRENGTHS = ["1.000 mT", "4.000 mT", "16.000 mT", "64.000 mT", "256.000 mT", "1.024 T", "4.096 T", "16.384 T"]
+for i, strength in enumerate(MAGNET_STRENGTHS):
+    ITEMS[f"permanent_magnet_{i}"] = (100, f"Permanent Magnet ({strength})")
 for i, c in enumerate(FLUORITE):
     ITEMS[f"{c}_fluorite"] = (16 + i, f"{c.capitalize()} Fluorite Crystal")
 
@@ -236,6 +239,8 @@ def blocks():
     pickaxe.extend(core_blocks())
     pickaxe.extend(steam_blocks())
     pickaxe.extend(m6_blocks())
+    pickaxe.extend(m7_blocks())
+    pickaxe.extend(multi_blocks())
     write_json(RES / "data/minecraft/tags/block/mineable/pickaxe.json", {"replace": False, "values": pickaxe})
     write_json(RES / "data/minecraft/tags/block/needs_stone_tool.json", {"replace": False, "values": stone_tool})
     write_json(RES / "data/minecraft/tags/block/needs_iron_tool.json", {"replace": False, "values": iron_tool})
@@ -266,6 +271,7 @@ MODELLED = {
     "condenser": ("Condenser", "condenser", None),
     "reactor_pump": ("Pressurizer", "pump", None),
     "turbine_core": ("Turbine", "turbine", None),
+    "toroid_magnet": ("Toroid Magnet", "magnet", None),
 }
 # block id -> (English name, side texture, top and bottom texture, GUI texture)
 CUBES = {
@@ -452,6 +458,120 @@ def stacked_cube(block, texture, english, states=5, top_state=None, gui=None):
     lang[f"block.{MOD}.{block}"] = english
     self_drop(block)
     return m(block)
+
+
+# per structure, per variant: (top, bottom, side) texture number before the structure is built, and after
+MULTI_TEXTURES = {
+    "solenoid": {
+        "unformed": [(0, 0, 0), (0, 0, 0), (0, 0, 11), (0, 0, 2), (5, 5, 8), (3, 3, 6)],
+        "formed": [(10, 10, 10)] * 6,
+        "names": ["Ferromagnetic Base", "Magnetic Linkage", "Central Permanent Magnet", "Auxiliary Permanent Magnet", "Solenoid Spoke", "Solenoid Hub"],
+    },
+    "injector": {
+        "unformed": [(0, 9, 4), (9, 9, 9), (9, 9, 9), (9, 0, 3), (9, 9, 9), (22, 22, 22), (21, 21, 26), (0, 0, 0)],
+        "formed": [(10, 19, 14), (19, 19, 9), (19, 19, 9), (19, 10, 13), (19, 19, 9), (0, 0, 0), (21, 21, 26), (10, 10, 10)],
+        "names": ["Injector Floor", "Injector Floor Edge", "Injector Wall", "Injector Roof", "Injector Roof Edge", "Injector Hub", "Injector Post", "Injector Filling"],
+    },
+    "heater": {
+        "unformed": [(0, 0, 0), (1, 1, 1), (11, 11, 11), (12, 12, 12), (10, 10, 10)],
+        "formed": [(0, 0, 0), (1, 1, 1), (2, 2, 2), (12, 12, 12), (10, 10, 10)],
+        "names": ["Fusion Heater Lens", "Fusion Heater Lining", "Fusion Heater Corner", "Fusion Heater Edge", "Fusion Heater Wall"],
+    },
+}
+
+
+def multi_blocks():
+    """The parts of the three fusion structures, one block each, plain before the structure is built and lit after."""
+    out = []
+    used = set()
+    for name, spec in MULTI_TEXTURES.items():
+        for variant, english in enumerate(spec["names"]):
+            block = f"{name}_multi_{variant}"
+            states = {}
+            for key in ("unformed", "formed"):
+                up, down, side = spec[key][variant]
+                for tex in (up, down, side):
+                    used.add((name, tex))
+                suffix = "_formed" if key == "formed" else ""
+                write_json(ASSETS / f"models/block/{block}{suffix}.json", {"parent": "minecraft:block/cube_bottom_top", "textures": {
+                    "side": m(f"block/{name}_multi_{side}"), "top": m(f"block/{name}_multi_{up}"), "bottom": m(f"block/{name}_multi_{down}")}})
+                states[f"formed={'true' if key == 'formed' else 'false'}"] = {"model": m(f"block/{block}{suffix}")}
+            write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}")})
+            write_json(ASSETS / f"blockstates/{block}.json", {"variants": states})
+            lang[f"block.{MOD}.{block}"] = english
+            self_drop(block)
+            out.append(m(block))
+    for name, tex in sorted(used):
+        src = CORE_TEXTURES / f"multi/{name}_{tex}.png"
+        if src.exists():
+            copy_png(src, ASSETS / f"textures/block/{name}_multi_{tex}.png")
+    # the solenoid hub: a plain block, then the spinning coil
+    block = "solenoid_magnet"
+    if TILE_TEX.exists():
+        copy_png(TILE_TEX / "solenoid.png", ASSETS / f"textures/entity/{block}.png")
+    write_json(ASSETS / f"models/block/{block}.json", {"parent": "minecraft:block/cube_bottom_top", "textures": {
+        "side": m("block/solenoid_multi_6"), "top": m("block/solenoid_multi_3"), "bottom": m("block/solenoid_multi_3")}})
+    write_json(ASSETS / f"models/block/{block}_formed.json", {"parent": "minecraft:block/block", "textures": {"particle": PARTICLE}})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": "minecraft:builtin/entity", "display": ENTITY_DISPLAY})
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {
+        "formed=false": {"model": m(f"block/{block}")}, "formed=true": {"model": m(f"block/{block}_formed")}}})
+    lang[f"block.{MOD}.{block}"] = "Solenoid Magnet"
+    self_drop(block)
+    out.append(m(block))
+    out.append(plain_cube("fusion_heater", "heater", "Fusion Heater"))
+    return out
+
+
+def pipe_block(block, texture, english):
+    """A thin pipe like the steam line, in one texture."""
+    write_json(ASSETS / f"models/block/{block}_core.json", {"textures": {"all": texture, "particle": texture}, "elements": [
+        {"from": [5, 5, 5], "to": [11, 11, 11], "faces": {d: {"texture": "#all"} for d in ("north", "south", "east", "west", "up", "down")}}]})
+    write_json(ASSETS / f"models/block/{block}_arm.json", {"textures": {"all": texture, "particle": texture}, "elements": [
+        {"from": [5, 5, 0], "to": [11, 11, 5], "faces": {d: {"texture": "#all"} for d in ("north", "east", "west", "up", "down")}}]})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}_core")})
+    arms = {"north": {}, "east": {"y": 90}, "south": {"y": 180}, "west": {"y": 270}, "up": {"x": 270}, "down": {"x": 90}}
+    multipart = [{"apply": {"model": m(f"block/{block}_core")}}]
+    for side, rotation in arms.items():
+        multipart.append({"when": {side: "true"}, "apply": {"model": m(f"block/{block}_arm"), **rotation}})
+    write_json(ASSETS / f"blockstates/{block}.json", {"multipart": multipart})
+    lang[f"block.{MOD}.{block}"] = english
+    self_drop(block)
+    return m(block)
+
+
+def faced_cube(block, front, side, english):
+    """A cube with a front texture, turned to face where it was placed (the model's front is north)."""
+    for name, tex in (("front", front), ("side", side)):
+        if ORIG_BLOCKS.exists():
+            copy_png(ORIG_BLOCKS / f"{tex}.png", ASSETS / f"textures/block/{block}_{name}.png")
+    write_json(ASSETS / f"models/block/{block}.json", {"parent": "minecraft:block/orientable", "textures": {
+        "front": m(f"block/{block}_front"), "side": m(f"block/{block}_side"), "top": m(f"block/{block}_side")}})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}")})
+    rotations = {"north": 0, "east": 90, "south": 180, "west": 270}
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {
+        f"look={look}": {"model": m(f"block/{block}"), "y": y} for look, y in list(rotations.items()) + [("up", 0), ("down", 0)]}})
+    lang[f"block.{MOD}.{block}"] = english
+    self_drop(block)
+    return m(block)
+
+
+def m7_blocks():
+    out = [pipe_block("magnetic_pipe", "minecraft:block/gold_block", "Magnetic Pipe"),
+           pipe_block("gas_duct", "minecraft:block/terracotta", "Gas Duct"),
+           faced_cube("fusion_injector", "injector_#0", "injector_#2", "Fusion Injector"),
+           stacked_cube("tritizer", "tritizer", "Tritizer", 5)]
+    block = "fusion_marker"
+    torch = "minecraft:block/soul_torch"
+    plane = lambda axis: {"from": [0, 0, 8] if axis == "z" else [8, 0, 0], "to": [16, 16, 8] if axis == "z" else [8, 16, 16],
+                          "faces": {d: {"texture": "#all"} for d in (("north", "south") if axis == "z" else ("east", "west"))}}
+    write_json(ASSETS / f"models/block/{block}.json", {"textures": {"all": torch, "particle": torch}, "render_type": "minecraft:cutout",
+                                                       "elements": [plane("z"), plane("x")]})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": "minecraft:item/generated", "textures": {"layer0": torch}})
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {"": {"model": m(f"block/{block}")}}})
+    lang[f"block.{MOD}.{block}"] = "Fusion Reactor Marker"
+    self_drop(block)
+    out.append(m(block))
+    return out
 
 
 def m6_blocks():
@@ -648,6 +768,41 @@ def recipes():
            {"t": R + "tungsten_ingot", "a": R + "silumin_ingot", "P": P, "S": STEEL, "C": m("fuel_rod")})
     shaped("fuel_dump", m("fuel_dump"), ["pIp", "BPB", "pbp"],
            {"b": "minecraft:iron_bars", "p": PIPE, "P": R + "bedrock_pipe", "B": P, "I": R + "impeller"})
+    # the structures' blocks (addMultiblocks); the insulating core is the second heater block
+    ins = m("heater_multi_1")
+    shaped("heater_multi_1", ins, ["WWW", "WSW", "WWW"], {"W": "#minecraft:wool", "S": STEEL})
+    shaped("heater_multi_0", m("heater_multi_0"), ["SBS", "BLB", "SBS"], {"B": R + "blast_glass", "S": R + "tungsten_ingot", "L": R + "lens"})
+    shaped("heater_multi_2", m("heater_multi_2"), ["SOS", "OSO", "SOS"], {"O": ins, "S": STEEL})
+    shaped("heater_multi_3", m("heater_multi_3"), ["OSO", "SSS", "OSO"], {"O": ins, "S": STEEL})
+    shaped("heater_multi_4", m("heater_multi_4"), ["SSS", "SOS", "SSS"], {"O": ins, "S": STEEL})
+    H, M, W = m("hysteresis_plate"), m("ferromagnetic_plate"), ins
+    for variant, pattern in enumerate([["WWW", "HHH", "MMM"], ["MWM", "MHM", "MMM"], ["WMW", "MHM", "WMW"], ["MMM", "HHH", "WWW"],
+                                       ["MMM", "MHM", "MWM"], ["MWM", "HHH", "MWM"], ["MWM", "MHM", "MWM"], ["HWH", "WMW", "HWH"]]):
+        key = {"H": m("gold_wiring") if variant == 5 else H, "M": M, "W": W}
+        shaped(f"injector_multi_{variant}", m(f"injector_multi_{variant}"), pattern, key)
+    F = m("ferromagnetic_ingot")
+    shaped("solenoid_multi_0", m("solenoid_multi_0"), ["SSS", "SSS", "SSS"], {"S": F})
+    shaped("solenoid_multi_1", m("solenoid_multi_1"), ["SSS", "SBS", "SSS"], {"S": F, "B": STEEL})
+    shaped("solenoid_multi_2", m("solenoid_multi_2"), ["SSS", "MMM", "SSS"], {"M": m("permanent_magnet_7"), "S": M})
+    shaped("solenoid_multi_3", m("solenoid_multi_3"), ["SSS", "MMM", "SSS"], {"M": m("permanent_magnet_6"), "S": M})
+    shaped("solenoid_multi_4", m("solenoid_multi_4"), ["SSS", "MMM", "SSS"], {"M": F, "S": H})
+    shaped("solenoid_multi_5", m("solenoid_multi_5"), ["SSS", "WPW", "SSS"], {"W": m("gold_wiring"), "P": M, "S": F})
+    shaped("solenoid_magnet", m("solenoid_magnet"), ["SPS", "MCM", "IGI"], {"S": STEEL, "P": R + "base_panel", "M": M, "C": m("magnetic_core"), "I": F,
+                                                                         "G": R + "tungsten_gear_unit_16"})
+    shaped("fusion_heater", m("fusion_heater"), ["MPM", "P P", "MPM"], {"M": F, "P": R + "blast_glass"})
+    # permanent magnets are pressed from lodestone, each from the one before
+    write_json(DATA / "recipe/compacting/permanent_magnet_0.json", {"type": R + "compacting", "ingredient": ing(m("magnetite")),
+                                                                      "result": {"id": m("permanent_magnet_0"), "count": 2}, "pressure": 5000, "temperature": 100, "stage": 1})
+    for i in range(7):
+        write_json(DATA / f"recipe/compacting/permanent_magnet_{i + 1}.json", {"type": R + "compacting", "ingredient": ing(m(f"permanent_magnet_{i}")),
+                                                                                "result": {"id": m(f"permanent_magnet_{i + 1}"), "count": 2},
+                                                                                "pressure": 10000 * (1 + i), "temperature": 100, "stage": 1})
+    shaped("tritizer", m("tritizer"), ["SPS", "GPG", "SPS"], {"G": R + "blast_glass", "P": PIPE, "S": STEEL})
+    shaped("fusion_marker", m("fusion_marker"), ["F", "R"], {"F": m("blue_fluorite"), "R": "minecraft:redstone_torch"})
+    shaped("toroid_magnet", m("toroid_magnet"), ["MCM", "CHC", "MCM"], {"H": m("hysteresis_ring"), "M": m("magnetic_core"), "C": m("coolant_pack")})
+    shaped("fusion_injector", m("fusion_injector"), ["PMP", "M M", "PMP"], {"P": m("magnetic_pipe"), "M": m("ferromagnetic_plate")})
+    shaped("magnetic_pipe", m("magnetic_pipe"), ["CGC", "CGC", "CGC"], {"C": "minecraft:gold_ingot", "G": R + "blast_glass"}, 6)
+    shaped("gas_duct", m("gas_duct"), ["CGC", "CGC", "CGC"], {"C": "minecraft:terracotta", "G": "#c:glass_blocks"}, 6)
     shaped("heat_exchanger", m("heat_exchanger"), ["FPF", "GIG", "FPF"],
            {"P": PIPE, "I": R + "impeller", "G": "minecraft:gold_ingot", "F": R + "cooling_fin"})
     shaped("heat_pipe", m("heat_pipe"), [" NP", "NPN", "PN "], {"N": "#minecraft:wool", "P": "minecraft:gold_ingot"}, 6)
@@ -686,7 +841,11 @@ def radiation_assets():
 def radiation_data():
     """The radiation damage type (it ignores armor) and what protects against each strength of radiation."""
     write_json(DATA / "damage_type/radiation.json", {"message_id": "radiation", "scaling": "never", "exhaustion": 0.0})
-    write_json(RES / "data/minecraft/tags/damage_type/bypasses_armor.json", {"replace": False, "values": [m("radiation")]})
+    write_json(DATA / "damage_type/fusion.json", {"message_id": "fusion", "scaling": "never", "exhaustion": 0.0})
+    write_json(RES / "data/minecraft/tags/damage_type/bypasses_armor.json", {"replace": False, "values": [m("radiation"), m("fusion")]})
+    lang["death.attack.fusion"] = "%1$s was vaporized by fusion plasma"
+    lang["death.attack.fusion.player"] = "%1$s was vaporized by fusion plasma while fleeing %2$s"
+    lang["entity.reactorcraft.plasma"] = "Fusion Plasma"
     lang["death.attack.radiation"] = "%1$s died of radiation poisoning"
     lang["death.attack.radiation.player"] = "%1$s died of radiation poisoning while fleeing %2$s"
     lang["effect.reactorcraft.radiation"] = "Radiation Sickness"

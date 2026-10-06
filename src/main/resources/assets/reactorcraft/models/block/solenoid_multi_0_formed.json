@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "reactorcraft:block/solenoid_multi_10",
+    "top": "reactorcraft:block/solenoid_multi_10",
+    "bottom": "reactorcraft:block/solenoid_multi_10"
+  }
+}

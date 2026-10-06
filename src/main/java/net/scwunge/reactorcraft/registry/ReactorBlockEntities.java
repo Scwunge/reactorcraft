@@ -22,7 +22,15 @@ import net.scwunge.reactorcraft.content.machine.BreederCoreBlockEntity;
 import net.scwunge.reactorcraft.content.machine.Co2HeaterBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CpuBlockEntity;
 import net.scwunge.reactorcraft.content.machine.HeatExchangerBlockEntity;
+import net.scwunge.reactorcraft.content.machine.FusionInjectorBlockEntity;
+import net.scwunge.reactorcraft.content.machine.GasDuctBlockEntity;
+import net.scwunge.reactorcraft.content.machine.FusionHeaterBlockEntity;
+import net.scwunge.reactorcraft.content.machine.FusionMarkerBlockEntity;
+import net.scwunge.reactorcraft.content.machine.TritizerBlockEntity;
 import net.scwunge.reactorcraft.content.machine.HeatPipeBlockEntity;
+import net.scwunge.reactorcraft.content.machine.SolenoidBlockEntity;
+import net.scwunge.reactorcraft.content.machine.MagneticPipeBlockEntity;
+import net.scwunge.reactorcraft.content.machine.ToroidMagnetBlockEntity;
 import net.scwunge.reactorcraft.content.machine.PebbleBedBlockEntity;
 import net.scwunge.reactorcraft.content.machine.FuelDumpBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ThoriumCoreBlockEntity;
@@ -119,6 +127,25 @@ public final class ReactorBlockEntities {
             register("heat_exchanger", HeatExchangerBlockEntity::new, ReactorBlocks.HEAT_EXCHANGER);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<HeatPipeBlockEntity>> HEAT_PIPE =
             register("heat_pipe", HeatPipeBlockEntity::new, ReactorBlocks.HEAT_PIPE);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ToroidMagnetBlockEntity>> TOROID_MAGNET =
+            register("toroid_magnet", ToroidMagnetBlockEntity::new, ReactorBlocks.TOROID_MAGNET);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FusionInjectorBlockEntity>> FUSION_INJECTOR =
+            register("fusion_injector", FusionInjectorBlockEntity::new, ReactorBlocks.FUSION_INJECTOR);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MagneticPipeBlockEntity>> MAGNETIC_PIPE =
+            register("magnetic_pipe", MagneticPipeBlockEntity::new, ReactorBlocks.MAGNETIC_PIPE);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GasDuctBlockEntity>> GAS_DUCT =
+            register("gas_duct", GasDuctBlockEntity::new, ReactorBlocks.GAS_DUCT);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SolenoidBlockEntity>> SOLENOID =
+            register("solenoid_magnet", SolenoidBlockEntity::new, ReactorBlocks.SOLENOID);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FusionHeaterBlockEntity>> FUSION_HEATER =
+            register("fusion_heater", FusionHeaterBlockEntity::new, ReactorBlocks.FUSION_HEATER);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TritizerBlockEntity>> TRITIZER =
+            register("tritizer", TritizerBlockEntity::new, ReactorBlocks.TRITIZER);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FusionMarkerBlockEntity>> FUSION_MARKER =
+            register("fusion_marker", FusionMarkerBlockEntity::new, ReactorBlocks.FUSION_MARKER);
 
     private ReactorBlockEntities() {
     }

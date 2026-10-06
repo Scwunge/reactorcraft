@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "reactorcraft:block/injector_multi_14",
+    "top": "reactorcraft:block/injector_multi_10",
+    "bottom": "reactorcraft:block/injector_multi_19"
+  }
+}

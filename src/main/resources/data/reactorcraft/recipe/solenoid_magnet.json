@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SPS",
+    "MCM",
+    "IGI"
+  ],
+  "key": {
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "P": {
+      "item": "rotarycraft:base_panel"
+    },
+    "M": {
+      "item": "reactorcraft:ferromagnetic_plate"
+    },
+    "C": {
+      "item": "reactorcraft:magnetic_core"
+    },
+    "I": {
+      "item": "reactorcraft:ferromagnetic_ingot"
+    },
+    "G": {
+      "item": "rotarycraft:tungsten_gear_unit_16"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:solenoid_magnet",
+    "count": 1
+  }
+}

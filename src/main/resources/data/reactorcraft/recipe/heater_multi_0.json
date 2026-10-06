@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SBS",
+    "BLB",
+    "SBS"
+  ],
+  "key": {
+    "B": {
+      "item": "rotarycraft:blast_glass"
+    },
+    "S": {
+      "item": "rotarycraft:tungsten_ingot"
+    },
+    "L": {
+      "item": "rotarycraft:lens"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:heater_multi_0",
+    "count": 1
+  }
+}

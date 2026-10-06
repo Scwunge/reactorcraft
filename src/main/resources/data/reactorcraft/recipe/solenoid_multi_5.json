@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS",
+    "WPW",
+    "SSS"
+  ],
+  "key": {
+    "W": {
+      "item": "reactorcraft:gold_wiring"
+    },
+    "P": {
+      "item": "reactorcraft:ferromagnetic_plate"
+    },
+    "S": {
+      "item": "reactorcraft:ferromagnetic_ingot"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:solenoid_multi_5",
+    "count": 1
+  }
+}

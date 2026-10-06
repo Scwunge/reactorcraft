@@ -1,0 +1,13 @@
+{
+  "type": "rotarycraft:compacting",
+  "ingredient": {
+    "item": "reactorcraft:magnetite"
+  },
+  "result": {
+    "id": "reactorcraft:permanent_magnet_0",
+    "count": 2
+  },
+  "pressure": 5000,
+  "temperature": 100,
+  "stage": 1
+}
