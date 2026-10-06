@@ -141,7 +141,7 @@ public final class PowerTests {
         });
         helper.runAfterDelay(120, () -> {
             helper.assertTrue(first.stage() == 0 && second.stage() == 1 && first.totalStages() == 2, "two stages: " + first.stage() + "/" + second.stage());
-            helper.assertTrue(first.lubricantTank().getFluidAmount() > 0, "the first stage drew lubricant from the injector");
+            helper.assertTrue(injector.lubricant() < 1000, "the first stage drew lubricant from the injector: " + injector.lubricant());
             helper.assertTrue(first.omega() > 1000, "spinning: " + first.omega());
             helper.assertTrue(second.omega() > 1000, "the second stage follows: " + second.omega());
             helper.assertTrue(second.getTorqueOut(Direction.EAST) > 0 && second.getOmegaOut(Direction.EAST) > 0, "power out of the far end");
