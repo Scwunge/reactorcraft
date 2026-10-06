@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "reactorcraft:block/sodium_heater_3",
+    "top": "reactorcraft:block/sodium_heater_0",
+    "bottom": "reactorcraft:block/sodium_heater_0"
+  }
+}

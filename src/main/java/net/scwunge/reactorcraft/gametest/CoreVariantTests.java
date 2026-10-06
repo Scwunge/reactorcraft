@@ -51,6 +51,47 @@ public final class CoreVariantTests {
     }
 
     @GameTest(template = EMPTY)
+    public static void aBreederTurnsBreederFuelIntoPlutonium(GameTestHelper helper) {
+        BlockPos at = new BlockPos(2, 1, 2);
+        helper.setBlock(at, ReactorBlocks.BREEDER_CORE.get());
+        net.scwunge.reactorcraft.content.machine.BreederCoreBlockEntity breeder = helper.getBlockEntity(at);
+        breeder.items().setStackInSlot(3, new net.minecraft.world.item.ItemStack(net.scwunge.reactorcraft.registry.ReactorItems.BREEDER_FUEL.get()));
+        helper.assertTrue(breeder.isFissile(), "breeder fuel makes it fissile");
+        helper.assertTrue(!breeder.isItemValid(0, new net.minecraft.world.item.ItemStack(net.scwunge.reactorcraft.registry.ReactorItems.FUEL.get())), "ordinary fuel is refused");
+        boolean plutonium = false;
+        for (int i = 0; i < 40000 && !plutonium; i++) {
+            breeder.onNeutron(neutron(helper, NeutronType.BREEDER), helper.getLevel(), helper.absolutePos(at));
+            for (int s = 0; s < breeder.items().getSlots(); s++) {
+                net.minecraft.world.item.ItemStack in = breeder.items().getStackInSlot(s);
+                plutonium |= in.is(net.scwunge.reactorcraft.registry.ReactorItems.PLUTONIUM.get());
+                if (net.scwunge.reactorcraft.content.waste.WasteManager.isWaste(in)) {
+                    breeder.items().setStackInSlot(s, net.minecraft.world.item.ItemStack.EMPTY); // waste poisons the core, so empty it as a player would
+                }
+            }
+        }
+        helper.assertTrue(plutonium, "twenty conversions should have made a plutonium pellet");
+        helper.succeed();
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 60)
+    public static void aSodiumHeaterMakesHotSodiumAndCools(GameTestHelper helper) {
+        BlockPos at = new BlockPos(2, 1, 2);
+        helper.setBlock(at, ReactorBlocks.SODIUM_HEATER.get());
+        net.scwunge.reactorcraft.content.machine.SodiumHeaterBlockEntity heater = helper.getBlockEntity(at);
+        helper.runAfterDelay(3, () -> {
+            heater.tank().setFluid(new net.neoforged.neoforge.fluids.FluidStack(net.scwunge.reactorcraft.registry.ReactorFluids.SODIUM.get(), 2000));
+            heater.setTemperature(600);
+        });
+        helper.runAfterDelay(30, () -> {
+            helper.assertTrue(!heater.outputTank().isEmpty() && heater.outputTank().getFluid().is(net.scwunge.reactorcraft.registry.ReactorFluids.HOT_SODIUM.get()),
+                    "hot sodium collects: " + heater.outputTank().getFluid());
+            helper.assertTrue(heater.tank().getFluidAmount() < 2000 && heater.getTemperature() < 600, "it used sodium and cooled: "
+                    + heater.tank().getFluidAmount() + " mB, " + heater.getTemperature() + " C");
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY)
     public static void anAbsorberHeatsUpOnFusionNeutronsOnly(GameTestHelper helper) {
         BlockPos at = new BlockPos(2, 1, 2);
         helper.setBlock(at, ReactorBlocks.ABSORBER.get());

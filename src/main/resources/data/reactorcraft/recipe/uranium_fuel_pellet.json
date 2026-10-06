@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "dd",
+    "dd"
+  ],
+  "key": {
+    "d": {
+      "item": "reactorcraft:enriched_uranium_dust"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:uranium_fuel_pellet",
+    "count": 2
+  }
+}

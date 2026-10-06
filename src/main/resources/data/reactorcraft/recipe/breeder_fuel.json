@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " D ",
+    "DED",
+    " D "
+  ],
+  "key": {
+    "D": {
+      "item": "reactorcraft:depleted_uranium"
+    },
+    "E": {
+      "item": "reactorcraft:uranium_fuel_pellet"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:breeder_fuel",
+    "count": 4
+  }
+}

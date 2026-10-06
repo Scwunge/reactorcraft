@@ -18,7 +18,9 @@ import net.scwunge.reactorcraft.content.machine.ControlRodBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CoolantCellBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CondenserBlockEntity;
 import net.scwunge.reactorcraft.content.machine.AbsorberBlockEntity;
+import net.scwunge.reactorcraft.content.machine.BreederCoreBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CpuBlockEntity;
+import net.scwunge.reactorcraft.content.machine.SodiumHeaterBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ReflectorBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ReactorPumpBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ReactorBoilerBlockEntity;
@@ -91,6 +93,11 @@ public final class ReactorBlockEntities {
             register("neutron_reflector", ReflectorBlockEntity::new, ReactorBlocks.REFLECTOR);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AbsorberBlockEntity>> ABSORBER =
             register("neutron_absorber", AbsorberBlockEntity::new, ReactorBlocks.ABSORBER);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BreederCoreBlockEntity>> BREEDER_CORE =
+            register("breeder_core", BreederCoreBlockEntity::new, ReactorBlocks.BREEDER_CORE);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SodiumHeaterBlockEntity>> SODIUM_HEATER =
+            register("sodium_heater", SodiumHeaterBlockEntity::new, ReactorBlocks.SODIUM_HEATER);
 
     private ReactorBlockEntities() {
     }

@@ -49,6 +49,7 @@ ITEMS = {
     "heavy_water_bucket": (3, "Heavy Water Bucket"),
     "uranium_fuel_pellet": (1, "Uranium Fuel Pellet"),
     "depleted_uranium": (2, "Depleted Uranium"),
+    "breeder_fuel": (98, "Breeder Reactor Fuel"),
     "remote_control": (101, "Remote Reactor Control"),
     "geiger_counter": (116, "Geiger Counter"),
     "radiation_cleaner": (99, "Radiation Cleanup Tool"),
@@ -453,6 +454,8 @@ def stacked_cube(block, texture, english, states=5, top_state=None, gui=None):
 
 def m6_blocks():
     out = [plain_cube("neutron_reflector", "reflector", "Neutron Reflector"), plain_cube("neutron_absorber", "absorber", "Neutron Absorber")]
+    out.append(stacked_cube("breeder_core", "breeder", "Breeder Reactor Core", 5, gui="fuelrod"))
+    out.append(stacked_cube("sodium_heater", "sodiumboiler", "Sodium Heater", 4, top_state=0))
     return out
 
 
@@ -595,6 +598,11 @@ def recipes():
     # ReactorRecipes.addMachines: reflector and absorber
     shaped("neutron_reflector", m("neutron_reflector"), ["GGG", "GSG", "GGG"], {"G": m("graphite"), "S": "#c:storage_blocks/steel"})
     shaped("neutron_absorber_depleted", m("neutron_absorber"), [" P ", "PCP", " P "], {"C": "#c:storage_blocks/steel", "P": m("depleted_uranium")})
+    # ReactorRecipes: the breeder
+    shaped("uranium_fuel_pellet", m("uranium_fuel_pellet"), ["dd", "dd"], {"d": m("enriched_uranium_dust")}, 2)
+    shaped("breeder_fuel", m("breeder_fuel"), [" D ", "DED", " D "], {"D": m("depleted_uranium"), "E": m("uranium_fuel_pellet")}, 4)
+    shaped("breeder_core", m("breeder_core"), ["SPS", "PCP", "SPS"], {"P": P, "S": STEEL, "C": m("fuel_rod")})
+    shaped("sodium_heater", m("sodium_heater"), [" i ", "ibi", " i "], {"b": m("reactor_boiler"), "i": "minecraft:iron_ingot"})
     # RotaryCraft grinder
     write_json(DATA / "recipe/grinding/emerald_dust.json", {"type": R + "grinding", "ingredient": ing("#c:gems/emerald"),
                                                            "result": {"id": m("emerald_dust"), "count": 1}})

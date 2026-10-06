@@ -127,6 +127,11 @@ public final class ReactorBlocks {
     public static final DeferredBlock<ReactorMachineBlock> ABSORBER = block("neutron_absorber",
             () -> new ReactorMachineBlock(machine(), ReactorBlockEntities.ABSORBER, false, false));
 
+    public static final DeferredBlock<StackableMachineBlock> BREEDER_CORE = block("breeder_core",
+            () -> new StackableMachineBlock(machine(), ReactorBlockEntities.BREEDER_CORE));
+    public static final DeferredBlock<StackableMachineBlock> SODIUM_HEATER = block("sodium_heater",
+            () -> new StackableMachineBlock(machine(), ReactorBlockEntities.SODIUM_HEATER));
+
     private ReactorBlocks() {
     }
 

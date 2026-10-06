@@ -6,6 +6,7 @@ import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.scwunge.reactorcraft.ReactorCraft;
+import net.scwunge.reactorcraft.content.item.BreederFuelItem;
 import net.scwunge.reactorcraft.content.item.FluidContainerItem;
 import net.scwunge.reactorcraft.content.item.FuelPelletItem;
 import net.scwunge.reactorcraft.content.item.GeigerCounterItem;
@@ -43,6 +44,7 @@ public final class ReactorItems {
     public static final DeferredItem<Item> UNPROCESSED_WASTE = simple("unprocessed_nuclear_waste");
     public static final DeferredItem<FuelPelletItem> FUEL = add(ITEMS.register("uranium_fuel_pellet", () -> new FuelPelletItem(false)));
     public static final DeferredItem<Item> DEPLETED = simple("depleted_uranium");
+    public static final DeferredItem<BreederFuelItem> BREEDER_FUEL = add(ITEMS.register("breeder_fuel", BreederFuelItem::new));
     public static final DeferredItem<RemoteControlItem> REMOTE_CONTROL = add(ITEMS.register("remote_control", RemoteControlItem::new));
     public static final DeferredItem<FuelPelletItem> PLUTONIUM = add(ITEMS.register("plutonium_fuel_pellet", () -> new FuelPelletItem(true)));
     public static final DeferredItem<GeigerCounterItem> GEIGER_COUNTER = add(ITEMS.register("geiger_counter", GeigerCounterItem::new));

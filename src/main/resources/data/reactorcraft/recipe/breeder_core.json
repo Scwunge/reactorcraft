@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SPS",
+    "PCP",
+    "SPS"
+  ],
+  "key": {
+    "P": {
+      "item": "rotarycraft:base_panel"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "C": {
+      "item": "reactorcraft:fuel_rod"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:breeder_core",
+    "count": 1
+  }
+}
