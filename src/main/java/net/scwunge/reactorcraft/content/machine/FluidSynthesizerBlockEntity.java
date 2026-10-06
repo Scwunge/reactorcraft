@@ -69,6 +69,16 @@ public class FluidSynthesizerBlockEntity extends ReactorMachineBlockEntity imple
             this.itemB = b;
         }
 
+        @Nullable
+        public ItemMatch firstItem() {
+            return itemA;
+        }
+
+        @Nullable
+        public ItemMatch secondItem() {
+            return itemB;
+        }
+
         public Fluid inputFluid() {
             return input.get();
         }

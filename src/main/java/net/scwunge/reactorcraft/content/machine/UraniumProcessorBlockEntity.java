@@ -69,6 +69,10 @@ public class UraniumProcessorBlockEntity extends ReactorMachineBlockEntity {
             this.item = item;
         }
 
+        public ItemMatch itemMatch() {
+            return item;
+        }
+
         public Fluid inputFluid() {
             return input.get();
         }

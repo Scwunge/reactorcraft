@@ -33,6 +33,23 @@ public final class ItemMatch {
         return this;
     }
 
+    /** Example stacks that are accepted: each listed item, and the items under each tag (for recipe viewers). */
+    public List<ItemStack> examples() {
+        List<ItemStack> list = new ArrayList<>();
+        for (Supplier<? extends Item> item : items) {
+            list.add(new ItemStack(item.get()));
+        }
+        for (TagKey<Item> tag : tags) {
+            net.minecraft.core.registries.BuiltInRegistries.ITEM.getTagOrEmpty(tag).forEach(holder -> {
+                ItemStack stack = new ItemStack(holder.value());
+                if (list.stream().noneMatch(other -> ItemStack.isSameItem(other, stack))) {
+                    list.add(stack);
+                }
+            });
+        }
+        return list;
+    }
+
     public boolean matches(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;

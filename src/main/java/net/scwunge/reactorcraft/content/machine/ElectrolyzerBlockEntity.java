@@ -63,6 +63,16 @@ public class ElectrolyzerBlockEntity extends ReactorMachineBlockEntity implement
             this.requiredTemperature = temperature;
         }
 
+        @Nullable
+        public Fluid inputFluid() {
+            return requiredFluid == null ? null : requiredFluid.get();
+        }
+
+        @Nullable
+        public ItemMatch inputItem() {
+            return requiredItem;
+        }
+
         public Fluid upperFluid() {
             return upper.get();
         }
