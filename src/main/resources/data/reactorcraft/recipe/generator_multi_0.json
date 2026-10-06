@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SsS",
+    "scs",
+    "SsS"
+  ],
+  "key": {
+    "c": {
+      "item": "rotarycraft:bedrock_shaft_core"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "s": {
+      "item": "rotarycraft:shaft_core"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:generator_multi_0",
+    "count": 1
+  }
+}

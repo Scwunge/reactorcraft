@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "formed=false": {
+      "model": "reactorcraft:block/flywheel"
+    },
+    "formed=true": {
+      "model": "reactorcraft:block/flywheel_formed"
+    }
+  }
+}

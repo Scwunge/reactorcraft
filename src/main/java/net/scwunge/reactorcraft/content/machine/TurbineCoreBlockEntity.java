@@ -87,7 +87,8 @@ public class TurbineCoreBlockEntity extends ReactorMachineBlockEntity implements
 
     @Nullable
     private TurbineCoreBlockEntity neighbour(Direction dir) {
-        if (level.getBlockEntity(worldPosition.relative(dir)) instanceof TurbineCoreBlockEntity other && other.steamMovement() == steamMovement()) {
+        if (level.getBlockEntity(worldPosition.relative(dir)) instanceof TurbineCoreBlockEntity other && other.steamMovement() == steamMovement()
+                && other.getType() == getType()) {
             return other;
         }
         return null;
@@ -133,16 +134,58 @@ public class TurbineCoreBlockEntity extends ReactorMachineBlockEntity implements
 
     // ---- ticking ----
 
+    /** needsMultiblock: whether the turbine works only inside a formed structure. */
+    protected boolean needsStructure() {
+        return false;
+    }
+
+    /** Whether the structure this turbine needs (if any) stands. */
+    protected boolean structureStands() {
+        return true;
+    }
+
+    /** intakeLubricant: lets a subclass top up its lubricant from elsewhere. */
+    protected void intakeLubricant() {
+    }
+
+    /** dumpSteam: lets a subclass do something with spent steam. */
+    protected void dumpSteam() {
+    }
+
+    /** enabled(): whether the first stage may take steam in. */
+    protected boolean runnable() {
+        return enabled;
+    }
+
+    /** copyDataFrom: what else a stage takes from the stage behind it. */
+    protected void copyDataFrom(TurbineCoreBlockEntity behind) {
+    }
+
+    /** Whether this block of the structure is ignored when the blades look for something in their way. */
+    protected boolean ignoredByBlades(BlockState state) {
+        return false;
+    }
+
     @Override
     protected void tickServer() {
+        if (needsStructure() && !structureStands()) {
+            if (omega != 0 || steam != 0) {
+                omega = 0;
+                steam = 0;
+                markForSync();
+            }
+            return;
+        }
         boolean thermal = thermalStep();
         int before = omega + steam * 1000 + damage;
         stage = calcStage();
+        intakeLubricant();
         distributeLubricant();
         readSurroundings();
         followHead();
         enviroTest();
         if (steam > 0) {
+            dumpSteam();
             if (thermal) {
                 steam -= consumedSteam();
             }
@@ -200,7 +243,7 @@ public class TurbineCoreBlockEntity extends ReactorMachineBlockEntity implements
         interference = null;
         Direction axis = steamMovement();
         int r = 3;
-        double radius = 1.5 + stage / 2;
+        double radius = bladeRadius();
         for (int a = -r; a <= r; a++) {
             for (int b = -r; b <= r; b++) {
                 if (a == 0 && b == 0) {
@@ -211,6 +254,9 @@ public class TurbineCoreBlockEntity extends ReactorMachineBlockEntity implements
                     continue;
                 }
                 BlockState state = level.getBlockState(at);
+                if (ignoredByBlades(state)) {
+                    continue;
+                }
                 if (!isSoft(state)) {
                     omega = 0;
                     if (interference == null || interference.maxSpeed > Interference.JAM.maxSpeed) {
@@ -224,7 +270,7 @@ public class TurbineCoreBlockEntity extends ReactorMachineBlockEntity implements
             }
         }
         if (stage == 0) {
-            boolean accelerate = enabled && intakeSteam();
+            boolean accelerate = runnable() && intakeSteam();
             updateSpeed(accelerate);
         }
     }
@@ -235,6 +281,9 @@ public class TurbineCoreBlockEntity extends ReactorMachineBlockEntity implements
 
     /** intakeSteam: powered steam in the block under the first stage gives it steam (twice as much if it is ammonia). Returns whether to accelerate. */
     protected boolean intakeSteam() {
+        if (!usesSteamBlocks()) {
+            return false;
+        }
         BlockState below = level.getBlockState(worldPosition.below());
         if (stage == 0 && below.is(ReactorBlocks.STEAM.get()) && below.getValue(SteamBlock.POWERED) && !below.getValue(SteamBlock.MOVED)) {
             if (below.getValue(SteamBlock.AMMONIA)) {
@@ -247,6 +296,11 @@ public class TurbineCoreBlockEntity extends ReactorMachineBlockEntity implements
             return true;
         }
         return false;
+    }
+
+    /** Whether the first stage takes its steam from the steam block that rises under it (the small turbine does; the big one has a steam line). */
+    protected boolean usesSteamBlocks() {
+        return true;
     }
 
     /** updateSpeed: without lubricant the shaft does not speed up; it gains about 64 rad/s a tick, and loses a 256th of its speed otherwise. */
@@ -280,6 +334,7 @@ public class TurbineCoreBlockEntity extends ReactorMachineBlockEntity implements
             omega = behind.omega;
             steam = behind.steam;
             ammonia = behind.ammonia;
+            copyDataFrom(behind);
         }
         TurbineCoreBlockEntity ahead = ahead();
         if (ahead != null && ahead.interference != null) {
@@ -326,7 +381,12 @@ public class TurbineCoreBlockEntity extends ReactorMachineBlockEntity implements
 
     // ---- shaft power ----
 
-    private double efficiency() {
+    /** getRadius: how far from the shaft the blades reach. */
+    protected double bladeRadius() {
+        return 1.5 + stage / 2;
+    }
+
+    protected double efficiency() {
         return switch (totalStages()) {
             case 1 -> 0.025;
             case 2 -> 0.1;

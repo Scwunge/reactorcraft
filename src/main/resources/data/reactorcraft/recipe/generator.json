@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "RGR",
+    "GFG",
+    "RGR"
+  ],
+  "key": {
+    "G": {
+      "item": "reactorcraft:gold_wiring"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "F": {
+      "item": "reactorcraft:magnetic_core"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:generator",
+    "count": 1
+  }
+}

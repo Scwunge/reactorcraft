@@ -84,12 +84,25 @@
     "reactorcraft:injector_multi_5",
     "reactorcraft:injector_multi_6",
     "reactorcraft:injector_multi_7",
+    "reactorcraft:turbine_multi_0",
+    "reactorcraft:turbine_multi_1",
+    "reactorcraft:turbine_multi_2",
+    "reactorcraft:flywheel_multi_0",
+    "reactorcraft:flywheel_multi_1",
+    "reactorcraft:flywheel_multi_2",
+    "reactorcraft:generator_multi_0",
+    "reactorcraft:generator_multi_1",
+    "reactorcraft:generator_multi_2",
+    "reactorcraft:generator_multi_3",
     "reactorcraft:heater_multi_0",
     "reactorcraft:heater_multi_1",
     "reactorcraft:heater_multi_2",
     "reactorcraft:heater_multi_3",
     "reactorcraft:heater_multi_4",
     "reactorcraft:solenoid_magnet",
-    "reactorcraft:fusion_heater"
+    "reactorcraft:fusion_heater",
+    "reactorcraft:big_turbine",
+    "reactorcraft:flywheel",
+    "reactorcraft:generator"
   ]
 }

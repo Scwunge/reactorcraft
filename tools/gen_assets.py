@@ -242,6 +242,7 @@ def blocks():
     pickaxe.extend(m6_blocks())
     pickaxe.extend(m7_blocks())
     pickaxe.extend(multi_blocks())
+    pickaxe.extend(m8_blocks())
     write_json(RES / "data/minecraft/tags/block/mineable/pickaxe.json", {"replace": False, "values": pickaxe})
     write_json(RES / "data/minecraft/tags/block/needs_stone_tool.json", {"replace": False, "values": stone_tool})
     write_json(RES / "data/minecraft/tags/block/needs_iron_tool.json", {"replace": False, "values": iron_tool})
@@ -479,6 +480,21 @@ MULTI_TEXTURES = {
         "formed": [(10, 19, 14), (19, 19, 9), (19, 19, 9), (19, 10, 13), (19, 19, 9), (0, 0, 0), (21, 21, 26), (10, 10, 10)],
         "names": ["Injector Floor", "Injector Floor Edge", "Injector Wall", "Injector Roof", "Injector Roof Edge", "Injector Hub", "Injector Post", "Injector Filling"],
     },
+    "turbine": {
+        "unformed": [(0, 0, 0), (1, 1, 1), (2, 2, 2)],
+        "formed": [(5, 5, 5)] * 3,
+        "names": ["Turbine Blades", "Turbine Housing", "Steam Injector"],
+    },
+    "flywheel": {
+        "unformed": [(0, 0, 0), (1, 1, 1), (2, 2, 2)],
+        "formed": [(3, 3, 3)] * 3,
+        "names": ["Turbine Flywheel Core", "Flywheel Vibration Dampeners", "Turbine Flywheel Frame"],
+    },
+    "generator": {
+        "unformed": [(0, 0, 0), (1, 1, 1), (2, 2, 2), (5, 5, 5)],
+        "formed": [(9, 9, 9)] * 4,
+        "names": ["Generator Rotor Core", "Generator Rotor Winding", "Generator Housing", "Steam Bypass"],
+    },
     "heater": {
         "unformed": [(0, 0, 0), (1, 1, 1), (11, 11, 11), (12, 12, 12), (10, 10, 10)],
         "formed": [(0, 0, 0), (1, 1, 1), (2, 2, 2), (12, 12, 12), (10, 10, 10)],
@@ -527,6 +543,56 @@ def multi_blocks():
     out.append(m(block))
     out.append(plain_cube("fusion_heater", "heater", "Fusion Heater"))
     return out
+
+
+def m8_blocks():
+    """The big turbine, the flywheel and the generator: the turbine always shows its model; the other two are a plain block until their casing stands."""
+    out = []
+    # the big turbine: a model block like the small turbine
+    block = "big_turbine"
+    if TILE_TEX.exists():
+        copy_png(TILE_TEX / "bigturbine.png", ASSETS / f"textures/entity/{block}.png")
+    write_json(ASSETS / f"models/block/{block}.json", {"parent": "minecraft:block/block", "textures": {"particle": PARTICLE}})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": "minecraft:builtin/entity", "display": ENTITY_DISPLAY})
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {"": {"model": m(f"block/{block}")}}})
+    lang[f"block.{MOD}.{block}"] = "High-Pressure Turbine"
+    self_drop(block)
+    out.append(m(block))
+    # the flywheel and the generator: the plain block (the casing texture) before, the model after
+    for block, entity, english, plain in (("flywheel", "flywheel", "Turbine Flywheel", "flywheel_multi_1"), ("generator", "generator0", "Turbine Generator", "generator_multi_10")):
+        if TILE_TEX.exists():
+            copy_png(TILE_TEX / f"{entity}.png", ASSETS / f"textures/entity/{block}.png")
+        if block == "generator" and CORE_TEXTURES.exists():
+            copy_png(CORE_TEXTURES / "multi/generator_10.png", ASSETS / "textures/block/generator_multi_10.png")
+        write_json(ASSETS / f"models/block/{block}.json", {"parent": "minecraft:block/cube_all", "textures": {"all": m(f"block/{plain}")}})
+        write_json(ASSETS / f"models/block/{block}_formed.json", {"parent": "minecraft:block/block", "textures": {"particle": PARTICLE}})
+        write_json(ASSETS / f"models/item/{block}.json", {"parent": "minecraft:builtin/entity", "display": ENTITY_DISPLAY})
+        write_json(ASSETS / f"blockstates/{block}.json", {"variants": {
+            "formed=false": {"model": m(f"block/{block}")}, "formed=true": {"model": m(f"block/{block}_formed")}}})
+        lang[f"block.{MOD}.{block}"] = english
+        self_drop(block)
+        out.append(m(block))
+    return out
+
+
+def m8_recipes():
+    """ReactorRecipes: the big turbine, flywheel and generator, and the casings round them."""
+    wire = m("gold_wiring")
+    shaped("big_turbine", m("big_turbine"), ["BBB", "BCB", "BBB"], {"B": R + "propeller", "C": m("turbine_core")})
+    shaped("flywheel", m("flywheel"), ["BBB", "STS", "BBB"], {"B": "#c:storage_blocks/steel", "S": R + "shaft_core", "T": R + "tungsten_shaft_core"})
+    shaped("generator", m("generator"), ["RGR", "GFG", "RGR"], {"G": wire, "R": "minecraft:redstone", "F": m("magnetic_core")})
+    P, STEEL_INGOT = R + "base_panel", "#c:ingots/steel"
+    shaped("generator_multi_0", m("generator_multi_0"), ["SsS", "scs", "SsS"], {"c": R + "bedrock_shaft_core", "S": STEEL_INGOT, "s": R + "shaft_core"})
+    shaped("generator_multi_1", m("generator_multi_1"), ["SSS", "SBS", "SSS"], {"S": wire, "B": STEEL_INGOT})
+    shaped("generator_multi_2", m("generator_multi_2"), ["SSS", "MMM", "SSS"], {"M": wire, "S": STEEL_INGOT})
+    shaped("generator_multi_3", m("generator_multi_3"), ["W W", " S ", "W W"], {"W": "minecraft:black_wool", "S": STEEL_INGOT})
+    shaped("turbine_multi_0", m("turbine_multi_0"), ["sis", "ici", "sis"], {"s": R + "propeller", "c": R + "spring_tungsten_ingot", "i": R + "silumin_ingot"})
+    shaped("turbine_multi_1", m("turbine_multi_1"), ["BBB", "SSS", "ppp"], {"B": P, "S": STEEL_INGOT, "p": R + "propeller"})
+    # the original takes a pipe pump here; RotaryCraft's pump stands in until that machine is ported
+    shaped("turbine_multi_2", m("turbine_multi_2"), ["PbP", "bIb", "PbP"], {"P": R + "pipe", "b": P, "I": R + "pump"})
+    shaped("flywheel_multi_0", m("flywheel_multi_0"), ["sSs", "SCS", "sSs"], {"s": R + "spring_tungsten_ingot", "S": "#c:storage_blocks/steel", "C": R + "bedrock_gear_unit_16"})
+    shaped("flywheel_multi_1", m("flywheel_multi_1"), ["WWW", "SSS", "WWW"], {"W": "#minecraft:wool", "S": STEEL_INGOT})
+    shaped("flywheel_multi_2", m("flywheel_multi_2"), ["sSs", "SSS", "sSs"], {"s": P, "S": R + "spring_steel_ingot"})
 
 
 def pipe_block(block, texture, english):
@@ -1093,6 +1159,7 @@ blocks()
 fluids()
 handbook()
 recipes()
+m8_recipes()
 tags()
 radiation_data()
 radiation_assets()

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "reactorcraft:block/generator_multi_1",
+    "top": "reactorcraft:block/generator_multi_1",
+    "bottom": "reactorcraft:block/generator_multi_1"
+  }
+}

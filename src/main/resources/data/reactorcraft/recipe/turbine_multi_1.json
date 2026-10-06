@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "BBB",
+    "SSS",
+    "ppp"
+  ],
+  "key": {
+    "B": {
+      "item": "rotarycraft:base_panel"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "p": {
+      "item": "rotarycraft:propeller"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:turbine_multi_1",
+    "count": 1
+  }
+}

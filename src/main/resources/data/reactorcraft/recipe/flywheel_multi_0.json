@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "sSs",
+    "SCS",
+    "sSs"
+  ],
+  "key": {
+    "s": {
+      "item": "rotarycraft:spring_tungsten_ingot"
+    },
+    "S": {
+      "tag": "c:storage_blocks/steel"
+    },
+    "C": {
+      "item": "rotarycraft:bedrock_gear_unit_16"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:flywheel_multi_0",
+    "count": 1
+  }
+}

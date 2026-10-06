@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "BBB",
+    "BCB",
+    "BBB"
+  ],
+  "key": {
+    "B": {
+      "item": "rotarycraft:propeller"
+    },
+    "C": {
+      "item": "reactorcraft:turbine_core"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:big_turbine",
+    "count": 1
+  }
+}
