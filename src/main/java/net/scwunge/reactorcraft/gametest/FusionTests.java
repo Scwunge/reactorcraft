@@ -259,7 +259,7 @@ public final class FusionTests {
         });
         helper.runAfterDelay(10, () -> {
             helper.assertTrue(heater.plasmaTank().isEmpty(), "cold, it makes nothing");
-            heater.setTemperature(FusionHeaterBlockEntity.PLASMA_TEMPERATURE + 1000);
+            heater.setTemperature(200_000_000);
         });
         helper.runAfterDelay(30, () -> {
             helper.assertTrue(!heater.plasmaTank().isEmpty(), "hot, it makes plasma");
