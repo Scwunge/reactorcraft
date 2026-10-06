@@ -267,4 +267,19 @@ public final class FusionTests {
             helper.succeed();
         });
     }
+
+    @GameTest(template = EMPTY, timeoutTicks = 60)
+    public static void aLaserBeamHeatsABuiltFusionHeater(GameTestHelper helper) {
+        BlockPos origin = helper.absolutePos(new BlockPos(6, 4, 6));
+        build(helper, FusionStructures.HEATER, origin, 0, null);
+        helper.getLevel().setBlock(origin.offset(1, 1, 1), FusionStructures.HEATER.part(0).defaultBlockState(), 3);
+        FusionHeaterBlockEntity heater = (FusionHeaterBlockEntity) helper.getLevel().getBlockEntity(origin.offset(2, 2, 2));
+        helper.runAfterDelay(3, () -> {
+            int before = heater.getTemperature();
+            heater.whenInBeam(helper.getLevel(), origin.offset(2, 2, 2), 2_097_152L, 1);
+            helper.assertTrue(heater.getTemperature() - before == 640 * 21, "a 2 MW beam adds 640 degrees per bit of its log: " + (heater.getTemperature() - before));
+            helper.assertTrue(heater.blockBeam(helper.getLevel(), origin.offset(2, 2, 2), 2_097_152L), "and a built heater stops the beam");
+            helper.succeed();
+        });
+    }
 }

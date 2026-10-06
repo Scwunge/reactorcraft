@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
@@ -13,6 +14,7 @@ import net.scwunge.reactorcraft.content.multi.MultiStructure;
 import net.scwunge.reactorcraft.core.Thermal;
 import net.scwunge.reactorcraft.registry.ReactorBlockEntities;
 import net.scwunge.reactorcraft.registry.ReactorFluids;
+import net.scwunge.rotarycraft.api.Laserable;
 import net.scwunge.rotarycraft.pipe.FluidAccess;
 import net.scwunge.rotarycraft.power.Heatable;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +26,7 @@ import java.util.List;
  * 150 million degrees, and then turns deuterium and tritium, fifty mB of each a tick, into a hundred mB of fusion plasma, which leaves by a magnetic pipe
  * on top. The chamber has to be built round it and sealed.
  */
-public class FusionHeaterBlockEntity extends ReactorMachineBlockEntity implements MultiController, Heatable, PlasmaPort {
+public class FusionHeaterBlockEntity extends ReactorMachineBlockEntity implements MultiController, Heatable, PlasmaPort, Laserable {
     public static final int PLASMA_TEMPERATURE = 150_000_000;
     public static final int FEED_PER_BATCH = 50;
     public static final int PLASMA_PER_BATCH = 100;
@@ -81,6 +83,18 @@ public class FusionHeaterBlockEntity extends ReactorMachineBlockEntity implement
         if (isBuilt() && power > 1) {
             temperature += (int) (640 * (Math.log(power) / Math.log(2)));
         }
+    }
+
+    /** A Heat Ray or Laser Gun beam hits it: heats it, but only while the chamber is built round it. */
+    @Override
+    public void whenInBeam(Level level, BlockPos pos, long power, int step) {
+        whenInBeam(power);
+    }
+
+    /** A built heater stops the beam. */
+    @Override
+    public boolean blockBeam(Level level, BlockPos pos, long power) {
+        return isBuilt();
     }
 
     public FluidTank plasmaTank() {
