@@ -253,6 +253,7 @@ MODELLED = {
     "steam_grate": ("Steam Grate", "steamgrate", None),
     "condenser": ("Condenser", "condenser", None),
     "reactor_pump": ("Pressurizer", "pump", None),
+    "turbine_core": ("Turbine", "turbine", None),
 }
 # block id -> (English name, side texture, top and bottom texture, GUI texture)
 CUBES = {
@@ -521,6 +522,7 @@ def recipes():
     shaped("condenser", m("condenser"), ["SPS", "pRp", "FFF"], {"S": STEEL, "P": P, "p": PIPE, "R": R + "reservoir", "F": R + "cooling_fin"})
     shaped("reactor_pump", m("reactor_pump"), ["PpP", "gCg", "PsP"],
            {"P": P, "g": "minecraft:glass_pane", "p": PIPE, "C": R + "compressor", "s": R + "shaft_core"})
+    shaped("turbine_core", m("turbine_core"), ["BBB", "BCB", "BBB"], {"B": R + "propeller", "C": m("steam_turbine_core")})
     # RotaryCraft grinder
     write_json(DATA / "recipe/grinding/emerald_dust.json", {"type": R + "grinding", "ingredient": ing("#c:gems/emerald"),
                                                            "result": {"id": m("emerald_dust"), "count": 1}})

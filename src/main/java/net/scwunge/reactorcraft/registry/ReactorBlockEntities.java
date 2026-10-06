@@ -21,6 +21,7 @@ import net.scwunge.reactorcraft.content.machine.CpuBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ReactorPumpBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ReactorBoilerBlockEntity;
 import net.scwunge.reactorcraft.content.machine.SteamGrateBlockEntity;
+import net.scwunge.reactorcraft.content.machine.TurbineCoreBlockEntity;
 import net.scwunge.reactorcraft.content.machine.SteamLineBlockEntity;
 import net.scwunge.reactorcraft.content.machine.WasteContainerBlockEntity;
 import net.scwunge.reactorcraft.content.machine.WasteDecayerBlockEntity;
@@ -76,6 +77,9 @@ public final class ReactorBlockEntities {
             register("condenser", CondenserBlockEntity::new, ReactorBlocks.CONDENSER);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReactorPumpBlockEntity>> REACTOR_PUMP =
             register("reactor_pump", ReactorPumpBlockEntity::new, ReactorBlocks.REACTOR_PUMP);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurbineCoreBlockEntity>> TURBINE_CORE =
+            register("turbine_core", TurbineCoreBlockEntity::new, ReactorBlocks.TURBINE_CORE);
 
     private ReactorBlockEntities() {
     }

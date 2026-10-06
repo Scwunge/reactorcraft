@@ -299,6 +299,69 @@ public final class FissionTests {
         });
     }
 
+    private static net.scwunge.reactorcraft.content.machine.TurbineCoreBlockEntity placeTurbine(GameTestHelper helper, BlockPos pos, Direction facing) {
+        helper.setBlock(pos, ReactorBlocks.TURBINE_CORE.get().defaultBlockState()
+                .setValue(net.scwunge.reactorcraft.content.machine.ReactorMachineBlock.LOOK, facing));
+        net.scwunge.reactorcraft.content.machine.TurbineCoreBlockEntity turbine = helper.getBlockEntity(pos);
+        net.minecraft.world.level.material.Fluid lube = net.minecraft.core.registries.BuiltInRegistries.FLUID.get(
+                net.minecraft.resources.ResourceLocation.parse("rotarycraft:lubricant"));
+        turbine.lubricantTank().setFluid(new net.neoforged.neoforge.fluids.FluidStack(lube, 5000));
+        return turbine;
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 100)
+    public static void steamSpinsATurbineAndItsShaftGivesPower(GameTestHelper helper) {
+        BlockPos first = new BlockPos(1, 2, 2);
+        BlockPos second = new BlockPos(2, 2, 2);
+        BlockPos steamPos = new BlockPos(1, 1, 2);
+        net.scwunge.reactorcraft.content.machine.TurbineCoreBlockEntity inlet = placeTurbine(helper, first, Direction.EAST);
+        net.scwunge.reactorcraft.content.machine.TurbineCoreBlockEntity outlet = placeTurbine(helper, second, Direction.EAST);
+        helper.onEachTick(() -> {
+            if (!helper.getBlockState(steamPos).is(ReactorBlocks.STEAM.get())) {
+                helper.setBlock(steamPos, net.scwunge.reactorcraft.content.block.SteamBlock.grateSteam(false));
+            }
+        });
+        helper.runAfterDelay(70, () -> {
+            helper.assertTrue(inlet.stage() == 0 && outlet.stage() == 1 && inlet.totalStages() == 2 && outlet.totalStages() == 2,
+                    "two stages in a line: " + inlet.stage() + "/" + outlet.stage());
+            helper.assertTrue(inlet.omega() > 1000, "the first stage should be spinning: " + inlet.omega());
+            helper.assertTrue(outlet.omega() > 1000, "and the second follows it: " + outlet.omega());
+            helper.assertTrue(outlet.getTorqueOut(Direction.EAST) > 0 && outlet.getOmegaOut(Direction.EAST) > 0,
+                    "the far end gives shaft power: " + outlet.getTorqueOut(Direction.EAST));
+            helper.assertTrue(outlet.getTorqueOut(Direction.WEST) == 0 && outlet.getTorqueOut(Direction.UP) == 0, "and only there");
+            helper.assertTrue(outlet.generatedTorque() <= 32768 && outlet.generatedPower() == (long) outlet.generatedTorque() * outlet.omega(), "power is torque times speed");
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 100)
+    public static void aTurbineNeedsLubricantAndRoomForItsBlades(GameTestHelper helper) {
+        BlockPos first = new BlockPos(2, 2, 2);
+        BlockPos steamPos = new BlockPos(2, 1, 2);
+        net.scwunge.reactorcraft.content.machine.TurbineCoreBlockEntity turbine = placeTurbine(helper, first, Direction.EAST);
+        turbine.lubricantTank().setFluid(net.neoforged.neoforge.fluids.FluidStack.EMPTY);
+        helper.onEachTick(() -> {
+            if (!helper.getBlockState(steamPos).is(ReactorBlocks.STEAM.get())) {
+                helper.setBlock(steamPos, net.scwunge.reactorcraft.content.block.SteamBlock.grateSteam(false));
+            }
+        });
+        helper.runAfterDelay(30, () -> {
+            helper.assertTrue(turbine.omega() == 0, "no lubricant, no spin: " + turbine.omega());
+            net.minecraft.world.level.material.Fluid lube = net.minecraft.core.registries.BuiltInRegistries.FLUID.get(
+                    net.minecraft.resources.ResourceLocation.parse("rotarycraft:lubricant"));
+            turbine.lubricantTank().setFluid(new net.neoforged.neoforge.fluids.FluidStack(lube, 5000));
+        });
+        helper.runAfterDelay(60, () -> {
+            helper.assertTrue(turbine.omega() > 500, "with lubricant it spins up: " + turbine.omega());
+            helper.setBlock(new BlockPos(2, 3, 2), net.minecraft.world.level.block.Blocks.STONE);
+        });
+        helper.runAfterDelay(66, () -> {
+            helper.assertTrue(turbine.omega() == 0 && turbine.interference() == net.scwunge.reactorcraft.content.machine.TurbineCoreBlockEntity.Interference.JAM,
+                    "a block in the blades' way jams it: " + turbine.omega());
+            helper.succeed();
+        });
+    }
+
     @GameTest(template = EMPTY, timeoutTicks = 80)
     public static void ammoniaAtSixHundredFiftyBlowsTheBoilerUp(GameTestHelper helper) {
         BlockPos boilerPos = new BlockPos(2, 1, 2);

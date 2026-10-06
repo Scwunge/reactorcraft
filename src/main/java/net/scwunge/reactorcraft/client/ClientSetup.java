@@ -28,6 +28,7 @@ import net.scwunge.reactorcraft.client.render.MachineItemRenderer;
 import net.scwunge.reactorcraft.client.render.ModelMachineRenderer;
 import net.scwunge.reactorcraft.client.render.NeutronRenderer;
 import net.scwunge.reactorcraft.client.render.ProcessorRenderer;
+import net.scwunge.reactorcraft.client.render.TurbineRenderer;
 import net.scwunge.reactorcraft.client.screen.CpuScreen;
 import net.scwunge.reactorcraft.client.screen.ReactorMachineScreen;
 import net.scwunge.reactorcraft.content.machine.CpuBlockEntity;
@@ -52,6 +53,13 @@ public final class ClientSetup {
     private static final ModelLayerLocation STEAM_GRATE = layer("steam_grate");
     private static final ModelLayerLocation CONDENSER = layer("condenser");
     private static final ModelLayerLocation REACTOR_PUMP = layer("reactor_pump");
+    private static final ModelLayerLocation[] TURBINE_STAGES = new ModelLayerLocation[TurbineRenderer.STAGES];
+
+    static {
+        for (int i = 0; i < TURBINE_STAGES.length; i++) {
+            TURBINE_STAGES[i] = layer("turbine_stage_" + i);
+        }
+    }
 
     private ClientSetup() {
     }
@@ -72,6 +80,10 @@ public final class ClientSetup {
         event.registerLayerDefinition(STEAM_GRATE, ModelSteamGrate::create);
         event.registerLayerDefinition(CONDENSER, ModelCondenser::create);
         event.registerLayerDefinition(REACTOR_PUMP, ModelReactorPump::create);
+        for (int i = 0; i < TURBINE_STAGES.length; i++) {
+            int stage = i;
+            event.registerLayerDefinition(TURBINE_STAGES[i], () -> TurbineRenderer.createLayer(stage));
+        }
     }
 
     @SubscribeEvent
@@ -95,6 +107,7 @@ public final class ClientSetup {
         event.registerBlockEntityRenderer(ReactorBlockEntities.REACTOR_PUMP.get(), context ->
                 new ModelMachineRenderer<>(context, REACTOR_PUMP, "reactor_pump", ModelReactorPump.PARTS,
                         java.util.Arrays.stream(ModelReactorPump.PARTS).filter(n -> n.startsWith("shape2") || n.startsWith("shape3")).toArray(String[]::new)));
+        event.registerBlockEntityRenderer(ReactorBlockEntities.TURBINE_CORE.get(), context -> new TurbineRenderer(context, TURBINE_STAGES, "turbine_core"));
         event.registerBlockEntityRenderer(ReactorBlockEntities.WASTE_STORAGE.get(), context ->
                 new ModelMachineRenderer<>(context, WASTE_STORAGE, "waste_storage", ModelWasteStorage.PARTS));
     }
@@ -126,7 +139,7 @@ public final class ClientSetup {
         // the modelled machines are drawn as items by their block entity renderers
         event.registerItem(new MachineItemRenderer(), ReactorBlocks.FLUID_EXTRACTOR.asItem(), ReactorBlocks.ISOTOPE_CENTRIFUGE.asItem(),
                 ReactorBlocks.URANIUM_PROCESSOR.asItem(), ReactorBlocks.ELECTROLYZER.asItem(), ReactorBlocks.GAS_COLLECTOR.asItem(),
-                ReactorBlocks.CONTROL_ROD.asItem(), ReactorBlocks.STEAM_GRATE.asItem(), ReactorBlocks.CONDENSER.asItem(), ReactorBlocks.REACTOR_PUMP.asItem(),
+                ReactorBlocks.CONTROL_ROD.asItem(), ReactorBlocks.STEAM_GRATE.asItem(), ReactorBlocks.CONDENSER.asItem(), ReactorBlocks.REACTOR_PUMP.asItem(), ReactorBlocks.TURBINE_CORE.asItem(),
                 ReactorBlocks.WASTE_STORAGE.asItem());
         for (ReactorFluids.Entry fluid : ReactorFluids.ALL) {
             ResourceLocation still = fluid.texture == null
