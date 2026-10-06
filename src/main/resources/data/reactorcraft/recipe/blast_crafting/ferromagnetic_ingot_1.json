@@ -1,0 +1,24 @@
+{
+  "type": "rotarycraft:blast_crafting",
+  "pattern": [
+    "ABC"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:ingots/steel"
+    },
+    "B": {
+      "item": "reactorcraft:magnetite"
+    },
+    "C": {
+      "tag": "c:ingots/iron"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:ferromagnetic_ingot",
+    "count": 1
+  },
+  "temperature": 1200,
+  "speed": 1,
+  "xp": 1.0
+}

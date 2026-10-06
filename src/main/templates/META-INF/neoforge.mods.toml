@@ -1,0 +1,44 @@
+modLoader = "javafml"
+loaderVersion = "${loader_version_range}"
+license = "${mod_license}"
+issueTrackerURL = "https://github.com/Scwunge/reactorcraft/issues"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+displayURL = "https://github.com/Scwunge/reactorcraft"
+authors = "Reika Kalseki (original), Scwunge (1.21.1 port)"
+credits = "ReactorCraft and DragonAPI by Reika Kalseki. Ported to Minecraft 1.21.1 with permission."
+description = '''
+Nuclear power for RotaryCraft: fission reactors with fuel rods, control rods, coolant and steam turbines, breeder, thorium and pebble-bed
+reactors, radiation and waste, and fusion with plasma, magnets and injectors. A port of Reika's ReactorCraft.
+'''
+
+[[dependencies.${mod_id}]]
+modId = "neoforge"
+type = "required"
+versionRange = "${neo_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+type = "required"
+versionRange = "${minecraft_version_range}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "rotarycraft"
+type = "required"
+versionRange = "${rotarycraft_version_range}"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "jei"
+type = "optional"
+versionRange = "[19,)"
+ordering = "NONE"
+side = "BOTH"

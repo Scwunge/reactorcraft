@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "LDL",
+    "LDL",
+    "LDL"
+  ],
+  "key": {
+    "D": {
+      "tag": "c:ingots/lead"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:radiation_shielding_fabric",
+    "count": 2
+  }
+}

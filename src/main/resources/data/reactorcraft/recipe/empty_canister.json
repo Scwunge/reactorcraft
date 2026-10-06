@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " i ",
+    "igi",
+    " i "
+  ],
+  "key": {
+    "g": {
+      "tag": "c:glass_blocks/colorless"
+    },
+    "i": {
+      "tag": "c:ingots/iron"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:empty_canister",
+    "count": 16
+  }
+}

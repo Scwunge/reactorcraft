@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "reactorcraft:item/cd_in_ag_alloy_ingot"
+  }
+}

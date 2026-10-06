@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CCC",
+    "C C",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "reactorcraft:hysteresis_plate"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:hysteresis_ring",
+    "count": 1
+  }
+}

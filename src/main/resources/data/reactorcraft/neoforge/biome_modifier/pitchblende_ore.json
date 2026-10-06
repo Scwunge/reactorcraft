@@ -1,0 +1,15 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": {
+    "type": "neoforge:or",
+    "values": [
+      "#minecraft:is_ocean",
+      "#minecraft:is_river",
+      [
+        "minecraft:mushroom_fields"
+      ]
+    ]
+  },
+  "features": "reactorcraft:pitchblende_ore",
+  "step": "underground_ores"
+}

@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:block/cube",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "down": "reactorcraft:block/steam_scrubber_0",
+    "up": "reactorcraft:block/steam_scrubber_1",
+    "north": "reactorcraft:block/steam_scrubber_2",
+    "south": "reactorcraft:block/steam_scrubber_3",
+    "west": "reactorcraft:block/steam_scrubber_4",
+    "east": "reactorcraft:block/steam_scrubber_5",
+    "particle": "reactorcraft:block/steam_scrubber_2"
+  }
+}

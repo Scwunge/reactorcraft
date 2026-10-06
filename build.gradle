@@ -1,0 +1,133 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'net.neoforged.moddev' version "${moddev_version}"
+}
+
+version = "${minecraft_version}-${mod_version}"
+group = mod_group_id
+base.archivesName = 'ReactorCraft'
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(java_version as int)
+
+sourceSets.main.resources.srcDir 'src/generated/resources'
+
+neoForge {
+    version = neo_version
+
+    parchment {
+        mappingsVersion = parchment_mappings_version
+        minecraftVersion = parchment_minecraft_version
+    }
+
+    runs {
+        configureEach {
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            logLevel = org.slf4j.event.Level.INFO
+            // keep dev runs light: this machine is shared
+            jvmArguments.addAll("-Xmx${findProperty('devXmx') ?: '2G'}", '-Xms256M')
+        }
+        client {
+            client()
+            gameDirectory = file('runs/client')
+            programArguments.addAll('--width', '854', '--height', '480')
+            systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+            // -Pharness runs the scripted screenshot checks (client/dev) and quits; -PharnessOnly=<section> runs one part
+            if (project.hasProperty('harness')) {
+                systemProperty 'reactorcraft.harness', 'true'
+                if (project.hasProperty('harnessOnly')) {
+                    systemProperty 'reactorcraft.harness.only', project.property('harnessOnly')
+                }
+            }
+            // -Pautotest=<script> runs a Cortex autotest script (Cortex jar in runs/client/mods); -PautotestServer=host:port joins a server
+            if (project.hasProperty('autotest')) {
+                systemProperty 'cortex.autotest', file(project.property('autotest')).absolutePath
+                if (project.hasProperty('autotestServer')) {
+                    systemProperty 'cortex.autotest.server', project.property('autotestServer')
+                }
+            }
+        }
+        server {
+            server()
+            gameDirectory = file('runs/server')
+            programArgument '--nogui'
+        }
+        // headless dedicated server that runs the GameTests and exits
+        gameTestServer {
+            type = 'gameTestServer'
+            gameDirectory = file("runs/${findProperty('gametestDir') ?: 'gametest'}")
+            systemProperty 'neoforge.enabledGameTestNamespaces', mod_id
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+repositories {
+    exclusiveContent {
+        forRepository { maven { url = 'https://maven.blamejared.com' } }
+        filter { includeGroup 'mezz.jei' }
+    }
+}
+
+configurations {
+    // dev-run-only mods; not exposed to anything that depends on this project
+    localRuntime
+    runtimeClasspath.extendsFrom localRuntime
+}
+
+dependencies {
+    // RotaryCraft provides shaft power, pipes and its materials; players install it alongside
+    compileOnly files(rotarycraft_jar)
+    localRuntime files(rotarycraft_jar)
+    compileOnly "mezz.jei:jei-1.21.1-neoforge-api:${jei_version}"
+    localRuntime "mezz.jei:jei-1.21.1-neoforge:${jei_version}"
+}
+
+var generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
+    var replaceProperties = [
+            minecraft_version_range  : minecraft_version_range,
+            neo_version_range        : neo_version_range,
+            loader_version_range     : loader_version_range,
+            rotarycraft_version_range: rotarycraft_version_range,
+            mod_id                   : mod_id,
+            mod_name                 : mod_name,
+            mod_license              : mod_license,
+            mod_version              : mod_version,
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from 'src/main/templates'
+    into 'build/generated/sources/modMetadata'
+}
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.named('jar', Jar) {
+    from('LICENSE') { rename { "${it}_reactorcraft" } }
+    // the screenshot harness is for development runs only
+    exclude 'net/scwunge/reactorcraft/client/dev/**'
+    manifest.attributes([
+            'Specification-Title'   : mod_id,
+            'Specification-Vendor'  : 'Scwunge',
+            'Specification-Version' : mod_version,
+            'Implementation-Title'  : project.name,
+            'Implementation-Version': mod_version,
+            'Implementation-Vendor' : 'Scwunge',
+    ])
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": {
+    "item": "reactorcraft:thorite_ore"
+  },
+  "result": {
+    "id": "reactorcraft:thorium_dust",
+    "count": 1
+  },
+  "experience": 0.8,
+  "cookingtime": 200
+}

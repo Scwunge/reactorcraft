@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "#c:ores/uranium",
+    "#c:ores/cadmium",
+    "#c:ores/indium",
+    "#c:ores/silver",
+    "#c:ores/ammonium",
+    "#c:ores/calcite",
+    "#c:ores/magnetite",
+    "#c:ores/thorium",
+    "#c:ores/fluorite"
+  ]
+}

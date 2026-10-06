@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "IWI",
+    "WPW",
+    "IWI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_bars"
+    },
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "P": {
+      "item": "rotarycraft:pipe"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:steam_scrubber",
+    "count": 1
+  }
+}

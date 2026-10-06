@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CCC",
+    "CTC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "reactorcraft:tungsten_carbide_ingot"
+    },
+    "T": {
+      "item": "rotarycraft:compound_turbine"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:steam_turbine_core",
+    "count": 1
+  }
+}

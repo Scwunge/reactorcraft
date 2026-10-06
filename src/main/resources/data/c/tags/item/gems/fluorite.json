@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "reactorcraft:blue_fluorite",
+    "reactorcraft:pink_fluorite",
+    "reactorcraft:orange_fluorite",
+    "reactorcraft:magenta_fluorite",
+    "reactorcraft:green_fluorite",
+    "reactorcraft:red_fluorite",
+    "reactorcraft:white_fluorite",
+    "reactorcraft:yellow_fluorite"
+  ]
+}

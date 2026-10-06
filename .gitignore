@@ -1,0 +1,22 @@
+# build
+.gradle/
+build/
+out/
+bin/
+runs/
+libs/
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# local planning and notes
+reference/
+PLAN.md
+SCOPE.md
+PERMISSION.md
+HANDOFF*.md
+.claude/
+CLAUDE.md

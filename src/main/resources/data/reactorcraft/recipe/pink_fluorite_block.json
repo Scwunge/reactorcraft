@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CCC",
+    "CCC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "reactorcraft:pink_fluorite"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:pink_fluorite_block",
+    "count": 1
+  }
+}

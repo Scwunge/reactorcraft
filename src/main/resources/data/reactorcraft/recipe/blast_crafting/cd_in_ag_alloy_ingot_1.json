@@ -1,0 +1,24 @@
+{
+  "type": "rotarycraft:blast_crafting",
+  "pattern": [
+    "ABC"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:ingots/cadmium"
+    },
+    "B": {
+      "tag": "c:ingots/silver"
+    },
+    "C": {
+      "tag": "c:ingots/indium"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:cd_in_ag_alloy_ingot",
+    "count": 3
+  },
+  "temperature": 1600,
+  "speed": 1,
+  "xp": 0.8
+}

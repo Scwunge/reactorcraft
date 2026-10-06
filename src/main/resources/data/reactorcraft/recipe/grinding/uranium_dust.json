@@ -1,0 +1,10 @@
+{
+  "type": "rotarycraft:grinding",
+  "ingredient": {
+    "tag": "c:ingots/uranium"
+  },
+  "result": {
+    "id": "reactorcraft:uranium_dust",
+    "count": 1
+  }
+}

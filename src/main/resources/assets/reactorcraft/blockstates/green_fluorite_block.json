@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=false": {
+      "model": "reactorcraft:block/green_fluorite_block"
+    },
+    "active=true": {
+      "model": "reactorcraft:block/green_fluorite_block"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "reactorcraft:red_fluorite_block"
+    }
+  ],
+  "result": {
+    "id": "reactorcraft:red_fluorite",
+    "count": 9
+  }
+}

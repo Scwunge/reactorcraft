@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": {
+    "item": "reactorcraft:magenta_fluorite_ore"
+  },
+  "result": {
+    "id": "reactorcraft:magenta_fluorite",
+    "count": 1
+  },
+  "experience": 0.4,
+  "cookingtime": 200
+}

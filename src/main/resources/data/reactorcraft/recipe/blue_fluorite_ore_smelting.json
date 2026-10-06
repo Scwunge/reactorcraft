@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "ingredient": {
+    "item": "reactorcraft:blue_fluorite_ore"
+  },
+  "result": {
+    "id": "reactorcraft:blue_fluorite",
+    "count": 1
+  },
+  "experience": 0.4,
+  "cookingtime": 200
+}

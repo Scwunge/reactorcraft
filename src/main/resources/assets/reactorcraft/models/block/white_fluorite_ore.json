@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "reactorcraft:block/white_fluorite_ore"
+  }
+}

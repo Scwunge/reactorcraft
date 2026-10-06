@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "reactorcraft:quicklime"
+    },
+    {
+      "item": "minecraft:water_bucket"
+    },
+    {
+      "tag": "c:rods/wooden"
+    }
+  ],
+  "result": {
+    "id": "minecraft:paper",
+    "count": 1
+  }
+}

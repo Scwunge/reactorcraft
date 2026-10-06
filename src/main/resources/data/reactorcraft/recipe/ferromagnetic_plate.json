@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "reactorcraft:ferromagnetic_ingot"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:ferromagnetic_plate",
+    "count": 3
+  }
+}

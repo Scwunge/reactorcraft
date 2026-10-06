@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CCC",
+    "CCC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "reactorcraft:magnetite"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:lodestone_block",
+    "count": 1
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "reactorcraft:pitchblende_ore",
+    "reactorcraft:endblende_ore",
+    "reactorcraft:ammonium_chloride_ore",
+    "reactorcraft:magnetite_ore"
+  ]
+}

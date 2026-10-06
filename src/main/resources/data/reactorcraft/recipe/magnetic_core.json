@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CCC",
+    "C C",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "reactorcraft:ferromagnetic_plate"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:magnetic_core",
+    "count": 1
+  }
+}

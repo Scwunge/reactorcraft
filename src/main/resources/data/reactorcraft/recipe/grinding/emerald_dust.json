@@ -1,0 +1,10 @@
+{
+  "type": "rotarycraft:grinding",
+  "ingredient": {
+    "tag": "c:gems/emerald"
+  },
+  "result": {
+    "id": "reactorcraft:emerald_dust",
+    "count": 1
+  }
+}
