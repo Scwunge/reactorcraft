@@ -64,4 +64,22 @@ public final class PowerGenTests {
             helper.succeed();
         });
     }
+
+    @GameTest(template = EMPTY, timeoutTicks = 60)
+    public static void aWasteDuctCarriesNuclearWasteOnly(GameTestHelper helper) {
+        BlockPos a = new BlockPos(1, 1, 1);
+        BlockPos b = new BlockPos(2, 1, 1);
+        helper.setBlock(a, ReactorBlocks.WASTE_PIPE.get());
+        helper.setBlock(b, ReactorBlocks.WASTE_PIPE.get());
+        net.scwunge.reactorcraft.content.machine.WastePipeBlockEntity first = helper.getBlockEntity(a);
+        net.scwunge.reactorcraft.content.machine.WastePipeBlockEntity second = helper.getBlockEntity(b);
+        helper.assertTrue(first.isValidFluid(ReactorFluids.NUCLEAR_WASTE.get()) && !first.isValidFluid(net.minecraft.world.level.material.Fluids.WATER),
+                "only nuclear waste goes in");
+        helper.runAfterDelay(3, () -> first.pipeTank().fill(new net.neoforged.neoforge.fluids.FluidStack(ReactorFluids.NUCLEAR_WASTE.get(), 800),
+                net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE));
+        helper.runAfterDelay(30, () -> {
+            helper.assertTrue(second.pipeTank().getFluidAmount() > 100, "and it flows down the line: " + second.pipeTank().getFluidAmount());
+            helper.succeed();
+        });
+    }
 }
