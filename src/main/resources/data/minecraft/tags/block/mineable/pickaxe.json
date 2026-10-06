@@ -39,11 +39,14 @@
     "reactorcraft:gas_collector",
     "reactorcraft:waste_storage",
     "reactorcraft:control_rod",
+    "reactorcraft:steam_grate",
     "reactorcraft:fluid_synthesizer",
     "reactorcraft:waste_container",
     "reactorcraft:waste_decayer",
     "reactorcraft:fuel_rod",
     "reactorcraft:cpu",
-    "reactorcraft:coolant_cell"
+    "reactorcraft:coolant_cell",
+    "reactorcraft:reactor_boiler",
+    "reactorcraft:steam_line"
   ]
 }

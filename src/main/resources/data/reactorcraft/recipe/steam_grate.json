@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SIS",
+    "p p",
+    "SPS"
+  ],
+  "key": {
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "I": {
+      "item": "minecraft:iron_bars"
+    },
+    "p": {
+      "item": "rotarycraft:base_panel"
+    },
+    "P": {
+      "item": "rotarycraft:pipe"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:steam_grate",
+    "count": 1
+  }
+}

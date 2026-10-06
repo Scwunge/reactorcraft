@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "SPS",
+    "PrP",
+    "SPS"
+  ],
+  "key": {
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "P": {
+      "item": "rotarycraft:base_panel"
+    },
+    "r": {
+      "item": "rotarycraft:reservoir"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:reactor_boiler",
+    "count": 1
+  }
+}

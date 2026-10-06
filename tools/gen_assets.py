@@ -223,6 +223,7 @@ def blocks():
         pickaxe.append(m(block))
     pickaxe.extend(machines())
     pickaxe.extend(core_blocks())
+    pickaxe.extend(steam_blocks())
     write_json(RES / "data/minecraft/tags/block/mineable/pickaxe.json", {"replace": False, "values": pickaxe})
     write_json(RES / "data/minecraft/tags/block/needs_stone_tool.json", {"replace": False, "values": stone_tool})
     write_json(RES / "data/minecraft/tags/block/needs_iron_tool.json", {"replace": False, "values": iron_tool})
@@ -249,6 +250,7 @@ MODELLED = {
     "gas_collector": ("Gas Collector", "co2collector", None),
     "waste_storage": ("Nuclear Waste Disposal Drum", "storage", "wastestorage"),
     "control_rod": ("Control Rod", "control", None),
+    "steam_grate": ("Steam Grate", "steamgrate", None),
 }
 # block id -> (English name, side texture, top and bottom texture, GUI texture)
 CUBES = {
@@ -348,6 +350,49 @@ def core_blocks():
     lang[f"block.{MOD}.{block}"] = "Coolant Cell"
     self_drop(block)
     out.append(m(block))
+    return out
+
+
+def steam_blocks():
+    """The steam side of the plant: the boiler (stackable), the steam line (a pipe that joins to what it can feed) and steam."""
+    out = []
+    block = "reactor_boiler"
+    for state in range(4):
+        if ORIG_BLOCKS.exists():
+            copy_png(ORIG_BLOCKS / f"boiler_#{state}.png", ASSETS / f"textures/block/{block}_{state}.png")
+    for state in range(4):
+        write_json(ASSETS / f"models/block/{block}_{state}.json", {"parent": "minecraft:block/cube_bottom_top", "textures": {
+            "side": m(f"block/{block}_{state}"), "top": m(f"block/{block}_0"), "bottom": m(f"block/{block}_0")}})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}_0")})
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {
+        "above=false,below=false": {"model": m(f"block/{block}_0")}, "above=true,below=false": {"model": m(f"block/{block}_1")},
+        "above=true,below=true": {"model": m(f"block/{block}_2")}, "above=false,below=true": {"model": m(f"block/{block}_3")}}})
+    lang[f"block.{MOD}.{block}"] = "Steam Boiler"
+    self_drop(block)
+    out.append(m(block))
+    block = "steam_line"
+    wool = "minecraft:block/black_wool"
+    write_json(ASSETS / f"models/block/{block}_core.json", {"textures": {"all": wool, "particle": wool}, "elements": [
+        {"from": [5, 5, 5], "to": [11, 11, 11], "faces": {d: {"texture": "#all"} for d in ("north", "south", "east", "west", "up", "down")}}]})
+    write_json(ASSETS / f"models/block/{block}_arm.json", {"textures": {"all": wool, "particle": wool}, "elements": [
+        {"from": [5, 5, 0], "to": [11, 11, 5], "faces": {d: {"texture": "#all"} for d in ("north", "east", "west", "up", "down")}}]})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}_core")})
+    arms = {"north": {}, "east": {"y": 90}, "south": {"y": 180}, "west": {"y": 270}, "up": {"x": 270}, "down": {"x": 90}}
+    multipart = [{"apply": {"model": m(f"block/{block}_core")}}]
+    for side, rotation in arms.items():
+        multipart.append({"when": {side: "true"}, "apply": {"model": m(f"block/{block}_arm"), **rotation}})
+    write_json(ASSETS / f"blockstates/{block}.json", {"multipart": multipart})
+    lang[f"block.{MOD}.{block}"] = "Steam Line"
+    self_drop(block)
+    out.append(m(block))
+    block = "steam"
+    if ORIG_BLOCKS.exists():
+        copy_png(ORIG_BLOCKS / "steam.png", ASSETS / f"textures/block/{block}.png")
+    write_json(ASSETS / f"models/block/{block}.json", {"parent": "minecraft:block/cube_all", "render_type": "minecraft:translucent",
+                                                       "textures": {"all": m(f"block/{block}")}})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}")})
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {"": {"model": m(f"block/{block}")}}})
+    lang[f"block.{MOD}.{block}"] = "Steam"
     return out
 
 
@@ -467,6 +512,10 @@ def recipes():
     shaped("control_rod", m("control_rod"), ["SGS", "RRR", "PPP"],
            {"S": STEEL, "P": P, "R": m("absorption_rod"), "G": R + "steel_gear_unit_2"})
     shaped("coolant_cell", m("coolant_cell"), ["SPS", "GRG", "SPS"], {"S": STEEL, "P": PIPE, "G": "minecraft:glass", "R": R + "reservoir"})
+    # ReactorRecipes.addMachines: the steam side
+    shaped("reactor_boiler", m("reactor_boiler"), ["SPS", "PrP", "SPS"], {"S": STEEL, "P": P, "r": R + "reservoir"})
+    shaped("steam_line", m("steam_line"), ["NPN", "NPN", "NPN"], {"N": "#minecraft:wool", "P": PIPE}, 3)
+    shaped("steam_grate", m("steam_grate"), ["SIS", "p p", "SPS"], {"S": STEEL, "I": "minecraft:iron_bars", "p": P, "P": PIPE})
     # RotaryCraft grinder
     write_json(DATA / "recipe/grinding/emerald_dust.json", {"type": R + "grinding", "ingredient": ing("#c:gems/emerald"),
                                                            "result": {"id": m("emerald_dust"), "count": 1}})

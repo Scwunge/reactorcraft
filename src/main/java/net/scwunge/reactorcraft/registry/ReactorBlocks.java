@@ -12,7 +12,11 @@ import net.scwunge.reactorcraft.ReactorCraft;
 import net.scwunge.reactorcraft.content.block.FluoriteBlock;
 import net.scwunge.reactorcraft.content.block.FluoriteOreBlock;
 import net.scwunge.reactorcraft.content.block.LodestoneBlock;
+import net.scwunge.reactorcraft.content.block.SteamBlock;
+import net.scwunge.reactorcraft.content.machine.BoilerBlock;
 import net.scwunge.reactorcraft.content.machine.ControlRodBlock;
+import net.scwunge.reactorcraft.content.machine.SteamGrateBlock;
+import net.scwunge.reactorcraft.content.machine.SteamLineBlock;
 import net.scwunge.reactorcraft.content.machine.CpuBlock;
 import net.scwunge.reactorcraft.content.machine.CoolantCellBlock;
 import net.scwunge.reactorcraft.content.machine.ReactorMachineBlock;
@@ -93,6 +97,17 @@ public final class ReactorBlocks {
 
     public static final DeferredBlock<CpuBlock> CPU = block("cpu",
             () -> new CpuBlock(machine(), ReactorBlockEntities.CPU));
+
+    public static final DeferredBlock<BoilerBlock> REACTOR_BOILER = block("reactor_boiler",
+            () -> new BoilerBlock(machine(), ReactorBlockEntities.REACTOR_BOILER));
+    public static final DeferredBlock<SteamLineBlock> STEAM_LINE = block("steam_line",
+            () -> new SteamLineBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(0F, 1F).sound(SoundType.WOOL).noOcclusion(),
+                    ReactorBlockEntities.STEAM_LINE));
+    public static final DeferredBlock<SteamGrateBlock> STEAM_GRATE = block("steam_grate",
+            () -> new SteamGrateBlock(machine().noOcclusion(), ReactorBlockEntities.STEAM_GRATE));
+    public static final DeferredBlock<SteamBlock> STEAM = block("steam",
+            () -> new SteamBlock(BlockBehaviour.Properties.of().mapColor(MapColor.NONE).noCollission().noOcclusion().replaceable().strength(0F, 3600000F)
+                    .noLootTable().pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY)));
 
     private ReactorBlocks() {
     }

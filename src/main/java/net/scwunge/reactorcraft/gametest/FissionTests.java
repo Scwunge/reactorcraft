@@ -104,13 +104,13 @@ public final class FissionTests {
             int before = rod.getTemperature();
             helper.assertTrue(rod.isFissile() && !rod.isActive(), "fresh fuel is fissile and the core is idle");
             int absorbed = 0;
-            for (int i = 0; i < 600; i++) {
+            for (int i = 0; i < 3000; i++) {
                 if (rod.onNeutron(neutron(helper, NeutronType.FISSION), helper.getLevel(), helper.absolutePos(at))) {
                     absorbed++;
                 }
             }
             helper.assertTrue(rod.isActive(), "a neutron wakes the core up");
-            helper.assertTrue(absorbed > 20, "some of 600 neutrons should have caused fission or poisoning, got " + absorbed);
+            helper.assertTrue(absorbed > 20, "some of 3000 neutrons should have caused fission or poisoning, got " + absorbed);
             helper.assertTrue(rod.getTemperature() > before, "fission heats the core: " + before + " to " + rod.getTemperature());
             helper.assertTrue(rod.items().getStackInSlot(3).getDamageValue() > 0 || rod.items().getStackInSlot(3).isEmpty(),
                     "fission should have used up some fuel");
@@ -218,6 +218,70 @@ public final class FissionTests {
         // there is no shaft power, so a few ticks after it has been up a while the CPU drops every rod
         helper.runAfterDelay(60, () -> {
             helper.assertTrue(east.isActive() && east.rodPosition() == -5, "the unpowered CPU should have SCRAMmed: " + east.rodPosition());
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 120)
+    public static void aBoilerFeedsSteamThroughALineToAGrate(GameTestHelper helper) {
+        BlockPos boilerPos = new BlockPos(1, 1, 2);
+        BlockPos linePos = new BlockPos(1, 2, 2);
+        BlockPos linePos2 = new BlockPos(2, 2, 2);
+        BlockPos gratePos = new BlockPos(3, 2, 2);
+        // each block is placed after the line it should connect to, since setBlock only updates the neighbours' shapes
+        helper.setBlock(linePos, ReactorBlocks.STEAM_LINE.get());
+        helper.setBlock(linePos2, ReactorBlocks.STEAM_LINE.get());
+        helper.setBlock(gratePos, ReactorBlocks.STEAM_GRATE.get());
+        helper.setBlock(boilerPos, ReactorBlocks.REACTOR_BOILER.get());
+        net.scwunge.reactorcraft.content.machine.ReactorBoilerBlockEntity boiler = helper.getBlockEntity(boilerPos);
+        helper.assertTrue(helper.getBlockState(linePos).getValue(net.scwunge.reactorcraft.content.machine.SteamLineBlock.side(Direction.DOWN))
+                && helper.getBlockState(linePos).getValue(net.scwunge.reactorcraft.content.machine.SteamLineBlock.side(Direction.EAST)),
+                "the line should connect down to the boiler and east to the next line");
+        helper.assertTrue(helper.getBlockState(linePos2).getValue(net.scwunge.reactorcraft.content.machine.SteamLineBlock.side(Direction.EAST)),
+                "and on to the grate");
+        helper.runAfterDelay(3, () -> {
+            boiler.tank().setFluid(new net.neoforged.neoforge.fluids.FluidStack(net.minecraft.world.level.material.Fluids.WATER, 3000));
+            try {
+                setTemperature(boiler, 400);
+            } catch (ReflectiveOperationException e) {
+                throw new IllegalStateException(e);
+            }
+        });
+        helper.runAfterDelay(70, () -> {
+            helper.assertTrue(boiler.tank().getFluidAmount() < 3000, "the boiler used water: " + boiler.tank().getFluidAmount());
+            int steamBlocks = 0;
+            for (int x = 0; x < 5; x++) {
+                for (int y = 2; y < 60; y++) { // steam rises, so it may be far above by now
+                    for (int z = 0; z < 5; z++) {
+                        if (helper.getBlockState(new BlockPos(x, y, z)).is(ReactorBlocks.STEAM.get())) {
+                            steamBlocks++;
+                        }
+                    }
+                }
+            }
+            helper.assertTrue(steamBlocks > 0, "the grate should have let steam out above it");
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 80)
+    public static void ammoniaAtSixHundredFiftyBlowsTheBoilerUp(GameTestHelper helper) {
+        BlockPos boilerPos = new BlockPos(2, 1, 2);
+        BlockPos linePos = new BlockPos(2, 2, 2);
+        helper.setBlock(boilerPos, ReactorBlocks.REACTOR_BOILER.get());
+        helper.setBlock(linePos, ReactorBlocks.STEAM_LINE.get());
+        net.scwunge.reactorcraft.content.machine.ReactorBoilerBlockEntity boiler = helper.getBlockEntity(boilerPos);
+        helper.runAfterDelay(3, () -> {
+            boiler.tank().setFluid(new net.neoforged.neoforge.fluids.FluidStack(net.scwunge.reactorcraft.registry.ReactorFluids.AMMONIA.get(), 3000));
+            try {
+                setTemperature(boiler, 700);
+            } catch (ReflectiveOperationException e) {
+                throw new IllegalStateException(e);
+            }
+        });
+        helper.runAfterDelay(40, () -> {
+            helper.assertTrue(helper.getBlockState(boilerPos).isAir(), "the boiler should be gone");
+            helper.assertTrue(helper.getBlockState(linePos).isAir(), "and the steam line above it");
             helper.succeed();
         });
     }

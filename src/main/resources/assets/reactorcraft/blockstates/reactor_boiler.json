@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "above=false,below=false": {
+      "model": "reactorcraft:block/reactor_boiler_0"
+    },
+    "above=true,below=false": {
+      "model": "reactorcraft:block/reactor_boiler_1"
+    },
+    "above=true,below=true": {
+      "model": "reactorcraft:block/reactor_boiler_2"
+    },
+    "above=false,below=true": {
+      "model": "reactorcraft:block/reactor_boiler_3"
+    }
+  }
+}
