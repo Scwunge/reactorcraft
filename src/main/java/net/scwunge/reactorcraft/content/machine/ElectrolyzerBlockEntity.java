@@ -111,6 +111,9 @@ public class ElectrolyzerBlockEntity extends ReactorMachineBlockEntity implement
 
     @Override
     protected void tickServer() {
+        if (temperature > MAX_TEMPERATURE && MachineHeat.overheat(level, worldPosition, owner())) {
+            return;
+        }
         if (thermalStep()) {
             temperature = MachineHeat.step(level, worldPosition, temperature, MAX_TEMPERATURE, owner());
             setChanged();

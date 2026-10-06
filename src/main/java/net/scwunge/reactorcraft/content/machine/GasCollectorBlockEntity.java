@@ -14,13 +14,14 @@ import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.scwunge.reactorcraft.registry.ReactorBlockEntities;
 import net.scwunge.reactorcraft.registry.ReactorFluids;
 import net.scwunge.rotarycraft.pipe.FluidAccess;
+import net.scwunge.rotarycraft.power.RefrigeratorAttachment;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Gas Collector (TileEntityGasCollector): sits against a lit furnace burning coal or wood and collects 10 mB of carbon
  * dioxide a tick from its smoke, into a 1000 mB tank that drains out of the back. The side it faces is the side it reads.
  */
-public class GasCollectorBlockEntity extends ReactorMachineBlockEntity {
+public class GasCollectorBlockEntity extends ReactorMachineBlockEntity implements RefrigeratorAttachment {
     public static final int CAPACITY = 1000;
     public static final int CO2_PER_TICK = 10;
 
@@ -69,6 +70,7 @@ public class GasCollectorBlockEntity extends ReactorMachineBlockEntity {
     }
 
     /** onCompleteCycle: a refrigerator cycle beside it adds liquid oxygen. */
+    @Override
     public void onCompleteCycle(int liquidNitrogen) {
         addLiquid(tank, ReactorFluids.LIQUID_OXYGEN.get(), liquidNitrogen * 2 / 7);
     }

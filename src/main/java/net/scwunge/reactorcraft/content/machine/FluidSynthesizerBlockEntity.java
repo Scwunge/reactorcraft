@@ -113,6 +113,9 @@ public class FluidSynthesizerBlockEntity extends ReactorMachineBlockEntity imple
 
     @Override
     protected void tickServer() {
+        if (temperature > MAX_TEMPERATURE && MachineHeat.overheat(level, worldPosition, owner())) {
+            return;
+        }
         loadBucket();
         recipe = findRecipe();
         if (recipe != null) {

@@ -71,6 +71,20 @@ final class MachineHeat {
         return temperature;
     }
 
+
+    /**
+     * overheat: a machine above its maximum temperature blows itself up (3 power, with fire), if meltdowns may destroy
+     * blocks here (config, mobGriefing, and the owner's claims); otherwise it just stays at its maximum. Returns whether it blew.
+     */
+    static boolean overheat(Level level, BlockPos pos, @Nullable UUID owner) {
+        if (level.isClientSide || !ReactorConfig.MELTDOWNS_DESTROY_BLOCKS.get() || !WorldSafety.mayChange(level, pos, owner)) {
+            return false;
+        }
+        level.removeBlock(pos, false);
+        level.explode(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 3F, true, Level.ExplosionInteraction.BLOCK);
+        return true;
+    }
+
     private static void melt(Level level, BlockPos at, Block into, @Nullable UUID owner, boolean world) {
         if (world && !level.isClientSide && WorldSafety.mayChange(level, at, owner)) {
             level.setBlockAndUpdate(at, into.defaultBlockState());

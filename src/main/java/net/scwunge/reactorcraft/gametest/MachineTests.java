@@ -168,4 +168,51 @@ public final class MachineTests {
         helper.assertTrue(helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, abs, Direction.NORTH) != null, "no handler on the side");
         helper.succeed();
     }
+
+    @GameTest(template = EMPTY, timeoutTicks = 100)
+    public static void electrolyzerSplitsSaltWhenHot(GameTestHelper helper) {
+        helper.setBlock(AT, ReactorBlocks.ELECTROLYZER.get());
+        ElectrolyzerBlockEntity be = helper.getBlockEntity(AT);
+        be.items().setStackInSlot(0, new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.get(
+                net.minecraft.resources.ResourceLocation.parse("rotarycraft:salt")), 2));
+        helper.runAfterDelay(3, () -> {
+            helper.assertTrue(be.recipe() == null, "salt ran while cold: " + be.recipe());
+            be.addTemperature(900 - be.getTemperature());
+        });
+        helper.runAfterDelay(6, () -> {
+            helper.assertTrue(be.recipe() == ElectrolyzerBlockEntity.Electrolysis.SALT, "no salt recipe: " + be.recipe());
+            for (int i = 0; i < 4; i++) {
+                be.onDischarge(ElectrolyzerBlockEntity.MIN_DISCHARGE + 65536, 4);
+            }
+        });
+        helper.runAfterDelay(9, () -> {
+            helper.assertTrue(be.lightTank().getFluidAmount() == 100 && be.lightTank().getFluid().is(ReactorFluids.CHLORINE.get()),
+                    "chlorine: " + be.lightTank().getFluid());
+            helper.assertTrue(be.heavyTank().getFluidAmount() == 100 && be.heavyTank().getFluid().is(ReactorFluids.SODIUM.get()),
+                    "sodium: " + be.heavyTank().getFluid());
+            helper.assertTrue(be.items().getStackInSlot(0).getCount() == 1, "one salt should be used: " + be.items().getStackInSlot(0));
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 60)
+    public static void overheatedSynthesizerBlowsUp(GameTestHelper helper) {
+        helper.setBlock(AT, ReactorBlocks.FLUID_SYNTHESIZER.get());
+        FluidSynthesizerBlockEntity be = helper.getBlockEntity(AT);
+        helper.runAfterDelay(3, () -> be.addTemperature(2000));
+        helper.runAfterDelay(8, () -> {
+            helper.assertTrue(helper.getBlockState(AT).isAir(), "an overheated synthesizer should be gone");
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY)
+    public static void refrigeratorCyclesGiveLiquidOxygen(GameTestHelper helper) {
+        helper.setBlock(AT, ReactorBlocks.GAS_COLLECTOR.get());
+        GasCollectorBlockEntity be = helper.getBlockEntity(AT);
+        be.onCompleteCycle(70);
+        helper.assertTrue(be.tank().getFluidAmount() == 20 && be.tank().getFluid().is(ReactorFluids.LIQUID_OXYGEN.get()),
+                "liquid oxygen: " + be.tank().getFluid());
+        helper.succeed();
+    }
 }
