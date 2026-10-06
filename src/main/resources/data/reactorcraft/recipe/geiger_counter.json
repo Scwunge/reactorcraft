@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " r ",
+    "sSs",
+    "sgs"
+  ],
+  "key": {
+    "r": {
+      "item": "rotarycraft:radar_unit"
+    },
+    "s": {
+      "tag": "c:ingots/steel"
+    },
+    "S": {
+      "item": "rotarycraft:screen"
+    },
+    "g": {
+      "item": "rotarycraft:steel_gear"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:geiger_counter",
+    "count": 1
+  }
+}

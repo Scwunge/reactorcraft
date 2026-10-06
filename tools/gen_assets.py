@@ -50,6 +50,13 @@ ITEMS = {
     "uranium_fuel_pellet": (1, "Uranium Fuel Pellet"),
     "depleted_uranium": (2, "Depleted Uranium"),
     "remote_control": (101, "Remote Reactor Control"),
+    "geiger_counter": (116, "Geiger Counter"),
+    "radiation_cleaner": (99, "Radiation Cleanup Tool"),
+    "radiation_goggles": (64, "Radiation Goggles"),
+    "hazmat_helmet": (112, "Hazmat Helmet"),
+    "hazmat_chestplate": (113, "Hazmat Chestplate"),
+    "hazmat_leggings": (114, "Hazmat Leggings"),
+    "hazmat_boots": (115, "Hazmat Boots"),
     "plutonium_fuel_pellet": (96, "Plutonium Fuel Pellet"),
     "hydrogen_fluoride": (4, "Hydrogen Fluoride"),
     "enriched_uranium_dust": (5, "Enriched Uranium Dust"),
@@ -539,6 +546,14 @@ def recipes():
            {"S": STEEL, "r": "minecraft:redstone", "P": P, "G": "minecraft:glowstone", "C": R + "circuit_board"})
     shaped("remote_control", m("remote_control"), ["SES", "BCB", "BPB"],
            {"S": STEEL, "E": "minecraft:ender_pearl", "B": "minecraft:stone_button", "C": R + "circuit_board", "P": P})
+    F = m("radiation_shielding_fabric")
+    shaped("hazmat_helmet", m("hazmat_helmet"), ["FFF", "F F"], {"F": F})
+    shaped("hazmat_chestplate", m("hazmat_chestplate"), ["F F", "FFF", "FFF"], {"F": F})
+    shaped("hazmat_leggings", m("hazmat_leggings"), ["FFF", "F F", "F F"], {"F": F})
+    shaped("hazmat_boots", m("hazmat_boots"), ["F F", "F F"], {"F": F})
+    shaped("geiger_counter", m("geiger_counter"), [" r ", "sSs", "sgs"],
+           {"r": R + "radar_unit", "s": STEEL, "S": R + "screen", "g": R + "steel_gear"})
+    shaped("radiation_cleaner", m("radiation_cleaner"), [" sp", "sbs", "ss "], {"b": "minecraft:water_bucket", "s": STEEL, "p": R + "pipe"})
     # RotaryCraft grinder
     write_json(DATA / "recipe/grinding/emerald_dust.json", {"type": R + "grinding", "ingredient": ing("#c:gems/emerald"),
                                                            "result": {"id": m("emerald_dust"), "count": 1}})
@@ -547,6 +562,36 @@ def recipes():
     # RotaryCraft friction heater
     write_json(DATA / "recipe/friction_heating/graphite.json", {"type": R + "friction_heating", "ingredient": ing(R + "coal_dust"),
                                                                "result": {"id": m("graphite"), "count": 1}, "temperature": 400, "duration": 100})
+
+
+
+def radiation_assets():
+    armor = JAR / "assets/reactorcraft/textures/models/armor"
+    if armor.exists():
+        copy_png(armor / "haz_1.png", ASSETS / "textures/models/armor/hazmat_layer_1.png")
+        copy_png(armor / "haz_2.png", ASSETS / "textures/models/armor/hazmat_layer_2.png")
+    cloud = JAR / "Reika/ReactorCraft/Textures/radiation2.png"
+    if cloud.exists():
+        copy_png(cloud, ASSETS / "textures/entity/radiation.png")
+    lang["entity.reactorcraft.radiation"] = "Radiation"
+    lang["entity.reactorcraft.neutron"] = "Neutron"
+    lang["entity.reactorcraft.nuclear_waste_item"] = "Nuclear Waste"
+
+
+def radiation_data():
+    """The radiation damage type (it ignores armor) and what protects against each strength of radiation."""
+    write_json(DATA / "damage_type/radiation.json", {"message_id": "radiation", "scaling": "never", "exhaustion": 0.0})
+    write_json(RES / "data/minecraft/tags/damage_type/bypasses_armor.json", {"replace": False, "values": [m("radiation")]})
+    lang["death.attack.radiation"] = "%1$s died of radiation poisoning"
+    lang["death.attack.radiation.player"] = "%1$s died of radiation poisoning while fleeing %2$s"
+    lang["effect.reactorcraft.radiation"] = "Radiation Sickness"
+    hazmat = [m("hazmat_helmet"), m("hazmat_chestplate"), m("hazmat_leggings"), m("hazmat_boots")]
+    write_json(DATA / "tags/item/radiation_protection/hazmat.json", {"replace": False, "values": hazmat})
+    optional = lambda ids: [{"id": i, "required": False} for i in ids]
+    write_json(DATA / "tags/item/radiation_protection/bedrock.json", {"replace": False, "values": optional(
+        [f"rotarycraft:bedrock_{part}" for part in ("helmet", "chestplate", "leggings", "boots")])})
+    dense = [f"minecraft:{mat}_{part}" for mat in ("iron", "diamond", "netherite") for part in ("helmet", "chestplate", "leggings", "boots")]
+    write_json(DATA / "tags/item/radiation_protection/dense.json", {"replace": False, "values": dense})
 
 
 # ----------------------------------------------------------------------------------------------------------------- tags
@@ -676,6 +721,8 @@ blocks()
 fluids()
 recipes()
 tags()
+radiation_data()
+radiation_assets()
 worldgen()
 misc_lang()
 empty_structure("gametest/empty", 5)

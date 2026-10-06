@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "reactorcraft:hazmat_helmet",
+    "reactorcraft:hazmat_chestplate",
+    "reactorcraft:hazmat_leggings",
+    "reactorcraft:hazmat_boots"
+  ]
+}

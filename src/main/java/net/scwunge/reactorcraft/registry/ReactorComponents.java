@@ -24,6 +24,10 @@ public final class ReactorComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> CHARGE = COMPONENTS.register("charge",
             () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
 
+    /** Water in a radiation cleanup tool, in mB. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> WATER = COMPONENTS.register("water",
+            () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
+
     private ReactorComponents() {
     }
 }

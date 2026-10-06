@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "F F",
+    "F F"
+  ],
+  "key": {
+    "F": {
+      "item": "reactorcraft:radiation_shielding_fabric"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:hazmat_boots",
+    "count": 1
+  }
+}

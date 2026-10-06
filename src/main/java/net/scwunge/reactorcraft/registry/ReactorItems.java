@@ -1,5 +1,6 @@
 package net.scwunge.reactorcraft.registry;
 
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -7,6 +8,9 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.scwunge.reactorcraft.ReactorCraft;
 import net.scwunge.reactorcraft.content.item.FluidContainerItem;
 import net.scwunge.reactorcraft.content.item.FuelPelletItem;
+import net.scwunge.reactorcraft.content.item.GeigerCounterItem;
+import net.scwunge.reactorcraft.content.item.RadiationCleanerItem;
+import net.scwunge.reactorcraft.content.item.RadiationGogglesItem;
 import net.scwunge.reactorcraft.content.item.NuclearWasteItem;
 import net.scwunge.reactorcraft.content.item.RemoteControlItem;
 import net.scwunge.reactorcraft.content.material.FluoriteColor;
@@ -41,6 +45,13 @@ public final class ReactorItems {
     public static final DeferredItem<Item> DEPLETED = simple("depleted_uranium");
     public static final DeferredItem<RemoteControlItem> REMOTE_CONTROL = add(ITEMS.register("remote_control", RemoteControlItem::new));
     public static final DeferredItem<FuelPelletItem> PLUTONIUM = add(ITEMS.register("plutonium_fuel_pellet", () -> new FuelPelletItem(true)));
+    public static final DeferredItem<GeigerCounterItem> GEIGER_COUNTER = add(ITEMS.register("geiger_counter", GeigerCounterItem::new));
+    public static final DeferredItem<RadiationCleanerItem> RADIATION_CLEANER = add(ITEMS.register("radiation_cleaner", RadiationCleanerItem::new));
+    public static final DeferredItem<RadiationGogglesItem> RADIATION_GOGGLES = add(ITEMS.register("radiation_goggles", RadiationGogglesItem::new));
+    public static final DeferredItem<ArmorItem> HAZMAT_HELMET = add(ITEMS.register("hazmat_helmet", () -> hazmat(ArmorItem.Type.HELMET)));
+    public static final DeferredItem<ArmorItem> HAZMAT_CHESTPLATE = add(ITEMS.register("hazmat_chestplate", () -> hazmat(ArmorItem.Type.CHESTPLATE)));
+    public static final DeferredItem<ArmorItem> HAZMAT_LEGGINGS = add(ITEMS.register("hazmat_leggings", () -> hazmat(ArmorItem.Type.LEGGINGS)));
+    public static final DeferredItem<ArmorItem> HAZMAT_BOOTS = add(ITEMS.register("hazmat_boots", () -> hazmat(ArmorItem.Type.BOOTS)));
     /** One isotope (or a mixed lot) of fission waste; the creative tab lists every variant, see ReactorTabs. */
     public static final DeferredItem<NuclearWasteItem> NUCLEAR_WASTE = ITEMS.register("nuclear_waste",
             () -> new NuclearWasteItem(new Item.Properties()));
@@ -103,6 +114,10 @@ public final class ReactorItems {
 
     public static Item fluorite(FluoriteColor color) {
         return FLUORITE.get(color).get();
+    }
+
+    private static ArmorItem hazmat(ArmorItem.Type type) {
+        return new ArmorItem(ReactorArmorMaterials.HAZMAT, type, new Item.Properties().stacksTo(1));
     }
 
     private static DeferredItem<Item> simple(String name) {

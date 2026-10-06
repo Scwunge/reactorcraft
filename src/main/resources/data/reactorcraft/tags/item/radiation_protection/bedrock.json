@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    {
+      "id": "rotarycraft:bedrock_helmet",
+      "required": false
+    },
+    {
+      "id": "rotarycraft:bedrock_chestplate",
+      "required": false
+    },
+    {
+      "id": "rotarycraft:bedrock_leggings",
+      "required": false
+    },
+    {
+      "id": "rotarycraft:bedrock_boots",
+      "required": false
+    }
+  ]
+}

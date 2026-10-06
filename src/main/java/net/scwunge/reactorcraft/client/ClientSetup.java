@@ -115,6 +115,8 @@ public final class ClientSetup {
     @SubscribeEvent
     static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ReactorEntities.NEUTRON.get(), NeutronRenderer::new);
+        event.registerEntityRenderer(ReactorEntities.RADIATION.get(), net.scwunge.reactorcraft.client.render.RadiationRenderer::new);
+        event.registerEntityRenderer(ReactorEntities.NUCLEAR_WASTE_ITEM.get(), net.minecraft.client.renderer.entity.ItemEntityRenderer::new);
     }
 
     private static ReactorMachineScreen machineScreen(ReactorMenu menu, net.minecraft.world.entity.player.Inventory inventory,

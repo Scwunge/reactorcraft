@@ -7,6 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.scwunge.reactorcraft.content.entity.NuclearWasteEntity;
 import net.scwunge.reactorcraft.content.waste.Isotope;
 import net.scwunge.reactorcraft.content.waste.WasteManager;
 import net.scwunge.reactorcraft.core.RadiationHooks;
@@ -17,6 +18,20 @@ import java.util.List;
 public class NuclearWasteItem extends Item {
     public NuclearWasteItem(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public boolean hasCustomEntity(ItemStack stack) {
+        return true;
+    }
+
+    /** Dropped waste becomes an entity that irradiates and never despawns. */
+    @Override
+    public Entity createEntity(Level level, Entity location, ItemStack stack) {
+        NuclearWasteEntity entity = new NuclearWasteEntity(level, location.getX(), location.getY(), location.getZ(), stack);
+        entity.setDeltaMovement(location.getDeltaMovement());
+        entity.setPickUpDelay(10);
+        return entity;
     }
 
     @Override

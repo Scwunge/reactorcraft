@@ -7,6 +7,8 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.scwunge.reactorcraft.ReactorCraft;
 import net.scwunge.reactorcraft.content.entity.NeutronEntity;
+import net.scwunge.reactorcraft.content.entity.NuclearWasteEntity;
+import net.scwunge.reactorcraft.content.entity.RadiationEntity;
 
 public final class ReactorEntities {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(Registries.ENTITY_TYPE, ReactorCraft.MODID);
@@ -14,6 +16,14 @@ public final class ReactorEntities {
     public static final DeferredHolder<EntityType<?>, EntityType<NeutronEntity>> NEUTRON = ENTITIES.register("neutron",
             () -> EntityType.Builder.<NeutronEntity>of(NeutronEntity::new, MobCategory.MISC).sized(0.1F, 0.1F).noSummon()
                     .clientTrackingRange(4).updateInterval(20).fireImmune().build("neutron"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<RadiationEntity>> RADIATION = ENTITIES.register("radiation",
+            () -> EntityType.Builder.<RadiationEntity>of(RadiationEntity::new, MobCategory.MISC).sized(0.1F, 0.1F).noSummon()
+                    .clientTrackingRange(8).updateInterval(Integer.MAX_VALUE).fireImmune().build("radiation"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<NuclearWasteEntity>> NUCLEAR_WASTE_ITEM = ENTITIES.register("nuclear_waste_item",
+            () -> EntityType.Builder.<NuclearWasteEntity>of(NuclearWasteEntity::new, MobCategory.MISC).sized(0.25F, 0.25F).clientTrackingRange(6)
+                    .updateInterval(20).fireImmune().build("nuclear_waste_item"));
 
     private ReactorEntities() {
     }

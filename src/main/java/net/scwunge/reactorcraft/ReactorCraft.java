@@ -11,6 +11,8 @@ import net.scwunge.reactorcraft.registry.ReactorBlocks;
 import net.scwunge.reactorcraft.registry.ReactorMenus;
 import net.scwunge.reactorcraft.registry.ReactorFeatures;
 import net.scwunge.reactorcraft.registry.ReactorComponents;
+import net.scwunge.reactorcraft.registry.ReactorArmorMaterials;
+import net.scwunge.reactorcraft.registry.ReactorEffects;
 import net.scwunge.reactorcraft.registry.ReactorEntities;
 import net.scwunge.reactorcraft.registry.ReactorFluids;
 import net.scwunge.reactorcraft.registry.ReactorItems;
@@ -33,6 +35,8 @@ public final class ReactorCraft {
         ReactorItems.ITEMS.register(modBus);
         ReactorBlockEntities.TYPES.register(modBus);
         ReactorEntities.ENTITIES.register(modBus);
+        ReactorEffects.EFFECTS.register(modBus);
+        ReactorArmorMaterials.MATERIALS.register(modBus);
         ReactorMenus.MENUS.register(modBus);
         ReactorTabs.TABS.register(modBus);
         ReactorFeatures.FEATURES.register(modBus);
