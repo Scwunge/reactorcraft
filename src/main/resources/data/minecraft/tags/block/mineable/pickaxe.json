@@ -59,6 +59,8 @@
     "reactorcraft:thorium_core",
     "reactorcraft:pebble_bed",
     "reactorcraft:co2_heater",
+    "reactorcraft:heat_exchanger",
+    "reactorcraft:heat_pipe",
     "reactorcraft:fuel_dump"
   ]
 }

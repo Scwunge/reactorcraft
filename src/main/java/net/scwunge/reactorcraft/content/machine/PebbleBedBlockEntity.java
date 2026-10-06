@@ -17,6 +17,7 @@ import net.scwunge.reactorcraft.ReactorConfig;
 import net.scwunge.reactorcraft.content.item.TrisoPelletItem;
 import net.scwunge.reactorcraft.core.Chance;
 import net.scwunge.reactorcraft.core.CoolantState;
+import net.scwunge.reactorcraft.core.HeatConduction;
 import net.scwunge.reactorcraft.core.ReactorPart;
 import net.scwunge.reactorcraft.core.ReactorType;
 import net.scwunge.reactorcraft.core.TemperaturedReactorTyped;
@@ -38,7 +39,7 @@ import java.util.Set;
  * the beds beside it, and cannot be cooled by liquid: a carbon dioxide heat exchanger takes its heat. Over 1200 C it wears, and it
  * melts into lava at 4400 C or after a hundred hits of wear.
  */
-public class PebbleBedBlockEntity extends FeedingWasteBlockEntity implements TemperaturedReactorTyped, ReactorPart {
+public class PebbleBedBlockEntity extends FeedingWasteBlockEntity implements TemperaturedReactorTyped, ReactorPart, HeatConduction {
     public static final int SLOTS = 47;
     public static final int MIN_TEMPERATURE = 800;
     public static final int OVER_TEMPERATURE = 1200;
@@ -267,6 +268,16 @@ public class PebbleBedBlockEntity extends FeedingWasteBlockEntity implements Tem
     @Override
     public ReactorType getReactorType() {
         return ReactorType.HTGR;
+    }
+
+    @Override
+    public boolean allowExternalHeating() {
+        return false;
+    }
+
+    @Override
+    public boolean allowHeatExtraction() {
+        return true;
     }
 
     public int damage() {

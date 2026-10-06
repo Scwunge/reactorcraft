@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "FPF",
+    "GIG",
+    "FPF"
+  ],
+  "key": {
+    "P": {
+      "item": "rotarycraft:pipe"
+    },
+    "I": {
+      "item": "rotarycraft:impeller"
+    },
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "F": {
+      "item": "rotarycraft:cooling_fin"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:heat_exchanger",
+    "count": 1
+  }
+}

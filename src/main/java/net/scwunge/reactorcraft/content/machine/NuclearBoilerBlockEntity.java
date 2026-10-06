@@ -16,6 +16,7 @@ import net.scwunge.reactorcraft.core.NeutronTile;
 import net.scwunge.reactorcraft.core.ReactorBlockEntity;
 import net.scwunge.reactorcraft.core.ReactorPart;
 import net.scwunge.reactorcraft.core.ReactorType;
+import net.scwunge.reactorcraft.core.HeatConduction;
 import net.scwunge.reactorcraft.core.ReactorTypeMix;
 import net.scwunge.reactorcraft.core.ReactorTyped;
 import net.scwunge.reactorcraft.core.TemperaturedReactorTyped;
@@ -27,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
  * of reactor its heat came from (steam keeps it, and turbines scale their output by it), and fluid shared with boilers stacked
  * above and below.
  */
-public abstract class NuclearBoilerBlockEntity extends ReactorMachineBlockEntity implements TemperaturedReactorTyped, ReactorPart, NeutronTile {
+public abstract class NuclearBoilerBlockEntity extends ReactorMachineBlockEntity implements TemperaturedReactorTyped, ReactorPart, NeutronTile, HeatConduction {
     protected int steam;
     protected final FluidTank tank;
     private final IFluidHandler fillOnly;
@@ -38,6 +39,17 @@ public abstract class NuclearBoilerBlockEntity extends ReactorMachineBlockEntity
         this.tank = addTank("Tank", capacity, s -> isValidFluid(s.getFluid()));
         this.fillOnly = FluidAccess.fillOnly(tank);
         types.add(defaultReactorType(), 1);
+    }
+
+    /** A heat pipe may push heat into a boiler, but not take it back out. */
+    @Override
+    public boolean allowExternalHeating() {
+        return true;
+    }
+
+    @Override
+    public boolean allowHeatExtraction() {
+        return false;
     }
 
     public abstract ReactorType defaultReactorType();

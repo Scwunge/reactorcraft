@@ -19,6 +19,7 @@ import net.scwunge.reactorcraft.content.machine.ControlRodBlock;
 import net.scwunge.reactorcraft.content.machine.SteamGrateBlock;
 import net.scwunge.reactorcraft.content.machine.TurbineCoreBlock;
 import net.scwunge.reactorcraft.content.machine.TurbineMeterBlock;
+import net.scwunge.reactorcraft.content.machine.HeatPipeBlock;
 import net.scwunge.reactorcraft.content.machine.SteamLineBlock;
 import net.scwunge.reactorcraft.content.machine.CpuBlock;
 import net.scwunge.reactorcraft.content.machine.CoolantCellBlock;
@@ -145,6 +146,12 @@ public final class ReactorBlocks {
             () -> new StackableMachineBlock(machine(), ReactorBlockEntities.PEBBLE_BED));
     public static final DeferredBlock<StackableMachineBlock> CO2_HEATER = block("co2_heater",
             () -> new StackableMachineBlock(machine(), ReactorBlockEntities.CO2_HEATER));
+
+    public static final DeferredBlock<ReactorMachineBlock> HEAT_EXCHANGER = block("heat_exchanger",
+            () -> new ReactorMachineBlock(machine(), ReactorBlockEntities.HEAT_EXCHANGER, false, false));
+    public static final DeferredBlock<HeatPipeBlock> HEAT_PIPE = block("heat_pipe",
+            () -> new HeatPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).strength(0.5F, 1F).sound(SoundType.METAL).noOcclusion(),
+                    ReactorBlockEntities.HEAT_PIPE));
 
     private ReactorBlocks() {
     }

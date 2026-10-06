@@ -461,6 +461,22 @@ def m6_blocks():
     out.append(stacked_cube("thorium_core", "thorium", "Thorium Fuel Core", 5, gui="fuelpool"))
     out.append(stacked_cube("pebble_bed", "pebblebed", "Pebble Bed Reactor Core", 5, gui="pebblegui"))
     out.append(stacked_cube("co2_heater", "co2heater", "Carbon Dioxide Heat Exchanger", 4, top_state=0))
+    out.append(plain_cube("heat_exchanger", "exchanger", "Heat Exchanger"))
+    block = "heat_pipe"
+    snow = "minecraft:block/snow"
+    write_json(ASSETS / f"models/block/{block}_core.json", {"textures": {"all": snow, "particle": snow}, "elements": [
+        {"from": [5, 5, 5], "to": [11, 11, 11], "faces": {d: {"texture": "#all"} for d in ("north", "south", "east", "west", "up", "down")}}]})
+    write_json(ASSETS / f"models/block/{block}_arm.json", {"textures": {"all": snow, "particle": snow}, "elements": [
+        {"from": [5, 5, 0], "to": [11, 11, 5], "faces": {d: {"texture": "#all"} for d in ("north", "east", "west", "up", "down")}}]})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}_core")})
+    arms = {"north": {}, "east": {"y": 90}, "south": {"y": 180}, "west": {"y": 270}, "up": {"x": 270}, "down": {"x": 90}}
+    multipart = [{"apply": {"model": m(f"block/{block}_core")}}]
+    for side, rotation in arms.items():
+        multipart.append({"when": {side: "true"}, "apply": {"model": m(f"block/{block}_arm"), **rotation}})
+    write_json(ASSETS / f"blockstates/{block}.json", {"multipart": multipart})
+    lang[f"block.{MOD}.{block}"] = "Heat Pipe"
+    self_drop(block)
+    out.append(m(block))
     block = "fuel_dump"
     if ORIG_BLOCKS.exists():
         for part, name in (("", "side"), ("_top", "top"), ("_bottom", "bottom")):
@@ -632,6 +648,9 @@ def recipes():
            {"t": R + "tungsten_ingot", "a": R + "silumin_ingot", "P": P, "S": STEEL, "C": m("fuel_rod")})
     shaped("fuel_dump", m("fuel_dump"), ["pIp", "BPB", "pbp"],
            {"b": "minecraft:iron_bars", "p": PIPE, "P": R + "bedrock_pipe", "B": P, "I": R + "impeller"})
+    shaped("heat_exchanger", m("heat_exchanger"), ["FPF", "GIG", "FPF"],
+           {"P": PIPE, "I": R + "impeller", "G": "minecraft:gold_ingot", "F": R + "cooling_fin"})
+    shaped("heat_pipe", m("heat_pipe"), [" NP", "NPN", "PN "], {"N": "#minecraft:wool", "P": "minecraft:gold_ingot"}, 6)
     shaped("pebble_bed", m("pebble_bed"), ["SHS", "PCP", "SHS"], {"H": "minecraft:hopper", "P": P, "S": STEEL, "C": m("fuel_rod")})
     shaped("co2_heater", m("co2_heater"), [" i ", "ibi", " i "], {"b": m("reactor_boiler"), "i": P})
     write_json(DATA / "recipe/blast_crafting/triso_pellet.json", {

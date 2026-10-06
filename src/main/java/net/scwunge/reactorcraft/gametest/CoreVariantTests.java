@@ -190,4 +190,41 @@ public final class CoreVariantTests {
             helper.succeed();
         });
     }
+
+    @GameTest(template = EMPTY, timeoutTicks = 120)
+    public static void heatPipesCarryHeatFromAReactorToABoiler(GameTestHelper helper) {
+        BlockPos bed = new BlockPos(1, 1, 1);
+        BlockPos boiler = new BlockPos(4, 1, 1);
+        helper.setBlock(bed, ReactorBlocks.PEBBLE_BED.get());
+        helper.setBlock(new BlockPos(2, 1, 1), ReactorBlocks.HEAT_PIPE.get());
+        helper.setBlock(new BlockPos(3, 1, 1), ReactorBlocks.HEAT_PIPE.get());
+        helper.setBlock(boiler, ReactorBlocks.REACTOR_BOILER.get());
+        net.scwunge.reactorcraft.content.machine.PebbleBedBlockEntity source = helper.getBlockEntity(bed);
+        net.scwunge.reactorcraft.content.machine.ReactorBoilerBlockEntity target = helper.getBlockEntity(boiler);
+        helper.runAfterDelay(3, () -> source.setTemperature(1500));
+        helper.runAfterDelay(100, () -> {
+            helper.assertTrue(target.getTemperature() > 200, "the boiler warms: " + target.getTemperature());
+            helper.assertTrue(source.getTemperature() < 1500, "the reactor cools: " + source.getTemperature());
+            helper.assertTrue(target.getReactorType() == net.scwunge.reactorcraft.core.ReactorType.HTGR, "and knows the heat came from a pebble bed: " + target.getReactorType());
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 40)
+    public static void aHeatExchangerOnlyTakesHotFluidsAndNeedsPower(GameTestHelper helper) {
+        BlockPos at = new BlockPos(2, 1, 2);
+        helper.setBlock(at, ReactorBlocks.HEAT_EXCHANGER.get());
+        net.scwunge.reactorcraft.content.machine.HeatExchangerBlockEntity exchanger = helper.getBlockEntity(at);
+        helper.runAfterDelay(3, () -> {
+            helper.assertTrue(exchanger.inputTank().fill(new net.neoforged.neoforge.fluids.FluidStack(net.minecraft.world.level.material.Fluids.WATER, 500),
+                    net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE) == 0, "plain water does not go in");
+            helper.assertTrue(exchanger.inputTank().fill(new net.neoforged.neoforge.fluids.FluidStack(net.scwunge.reactorcraft.registry.ReactorFluids.HOT_SODIUM.get(), 500),
+                    net.neoforged.neoforge.fluids.capability.IFluidHandler.FluidAction.EXECUTE) == 500, "hot sodium does");
+        });
+        helper.runAfterDelay(25, () -> {
+            helper.assertTrue(exchanger.outputTank().isEmpty(), "with no shaft power it cools nothing");
+            helper.assertTrue(exchanger.currentRecipe() == net.scwunge.reactorcraft.content.machine.HeatExchangerBlockEntity.Exchange.SODIUM, "but it knows the recipe");
+            helper.succeed();
+        });
+    }
 }

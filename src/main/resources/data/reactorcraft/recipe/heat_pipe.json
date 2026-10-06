@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " NP",
+    "NPN",
+    "PN "
+  ],
+  "key": {
+    "N": {
+      "tag": "minecraft:wool"
+    },
+    "P": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:heat_pipe",
+    "count": 6
+  }
+}

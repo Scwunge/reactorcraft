@@ -64,7 +64,8 @@ public class SteamLineBlock extends ReactorMachineBlock implements SteamConnecta
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
         for (Direction dir : Direction.values()) {
-            state = state.setValue(SIDES.get(dir), connects(context.getLevel().getBlockState(context.getClickedPos().relative(dir)), dir));
+            BlockPos at = context.getClickedPos().relative(dir);
+            state = state.setValue(SIDES.get(dir), connects(context.getLevel(), at, context.getLevel().getBlockState(at), dir));
         }
         return state;
     }
@@ -72,11 +73,11 @@ public class SteamLineBlock extends ReactorMachineBlock implements SteamConnecta
     @Override
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos,
                                      BlockPos neighborPos) {
-        return state.setValue(SIDES.get(direction), connects(neighborState, direction));
+        return state.setValue(SIDES.get(direction), connects(level, neighborPos, neighborState, direction));
     }
 
     /** Whether a steam line joins to {@code neighbor}, which is on side {@code dir} of it. */
-    private boolean connects(BlockState neighbor, Direction dir) {
+    protected boolean connects(LevelAccessor level, BlockPos neighborPos, BlockState neighbor, Direction dir) {
         return neighbor.getBlock() instanceof SteamConnectable connectable && connectable.connectsSteam(neighbor, dir.getOpposite());
     }
 
