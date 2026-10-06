@@ -11,6 +11,7 @@ import net.scwunge.reactorcraft.registry.ReactorBlocks;
 import net.scwunge.reactorcraft.registry.ReactorMenus;
 import net.scwunge.reactorcraft.registry.ReactorFeatures;
 import net.scwunge.reactorcraft.registry.ReactorComponents;
+import net.scwunge.reactorcraft.registry.ReactorEntities;
 import net.scwunge.reactorcraft.registry.ReactorFluids;
 import net.scwunge.reactorcraft.registry.ReactorItems;
 import net.scwunge.reactorcraft.registry.ReactorTabs;
@@ -24,12 +25,14 @@ public final class ReactorCraft {
 
     public ReactorCraft(IEventBus modBus, ModContainer container) {
         container.registerConfig(ModConfig.Type.SERVER, ReactorConfig.SPEC);
+        container.registerConfig(ModConfig.Type.CLIENT, ReactorClientConfig.SPEC);
         ReactorFluids.TYPES.register(modBus);
         ReactorFluids.FLUIDS.register(modBus);
         ReactorBlocks.BLOCKS.register(modBus);
         ReactorComponents.COMPONENTS.register(modBus);
         ReactorItems.ITEMS.register(modBus);
         ReactorBlockEntities.TYPES.register(modBus);
+        ReactorEntities.ENTITIES.register(modBus);
         ReactorMenus.MENUS.register(modBus);
         ReactorTabs.TABS.register(modBus);
         ReactorFeatures.FEATURES.register(modBus);

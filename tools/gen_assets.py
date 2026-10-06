@@ -47,6 +47,9 @@ FLUORITE = ["blue", "pink", "orange", "magenta", "green", "red", "white", "yello
 # item id -> (sprite index on items1.png, English name)
 ITEMS = {
     "heavy_water_bucket": (3, "Heavy Water Bucket"),
+    "uranium_fuel_pellet": (1, "Uranium Fuel Pellet"),
+    "depleted_uranium": (2, "Depleted Uranium"),
+    "plutonium_fuel_pellet": (96, "Plutonium Fuel Pellet"),
     "hydrogen_fluoride": (4, "Hydrogen Fluoride"),
     "enriched_uranium_dust": (5, "Enriched Uranium Dust"),
     "depleted_uranium_dust": (6, "Depleted Uranium Dust"),
@@ -420,7 +423,22 @@ def recipes():
 
 
 # ----------------------------------------------------------------------------------------------------------------- tags
+# block tags for what stops neutrons and radiation (RadiationShield); other mods' entries are optional
+SHIELDS = {
+    "steel": ["#c:storage_blocks/steel"],
+    "concrete": [m("concrete")],
+    "water": ["minecraft:water"],
+    "bedrock_ingot": ["#c:storage_blocks/bedrock"],
+    "lead": ["#c:storage_blocks/lead"],
+    "obsidian": ["minecraft:obsidian"],
+    "blast_glass": ["rotarycraft:blast_glass"],
+}
+
+
 def tags():
+    for name, values in SHIELDS.items():
+        write_json(DATA / f"tags/block/shield/{name}.json", {"replace": False, "values": [
+            v if not v.startswith(("#", "rotarycraft:")) else {"id": v, "required": False} for v in values]})
     item_tags = {
         "c:ingots/uranium": [m("uranium_ingot")], "c:ingots/cadmium": [m("cadmium_ingot")], "c:ingots/indium": [m("indium_ingot")],
         "c:ingots/silver": [m("silver_ingot")], "c:gems/fluorite": [m(f"{c}_fluorite") for c in FLUORITE],

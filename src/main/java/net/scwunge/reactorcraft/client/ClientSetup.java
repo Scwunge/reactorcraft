@@ -21,11 +21,13 @@ import net.scwunge.reactorcraft.client.model.ModelWasteStorage;
 import net.scwunge.reactorcraft.client.render.GasCollectorRenderer;
 import net.scwunge.reactorcraft.client.render.MachineItemRenderer;
 import net.scwunge.reactorcraft.client.render.ModelMachineRenderer;
+import net.scwunge.reactorcraft.client.render.NeutronRenderer;
 import net.scwunge.reactorcraft.client.render.ProcessorRenderer;
 import net.scwunge.reactorcraft.client.screen.ReactorMachineScreen;
 import net.scwunge.reactorcraft.content.waste.WasteManager;
 import net.scwunge.reactorcraft.registry.ReactorBlockEntities;
 import net.scwunge.reactorcraft.registry.ReactorBlocks;
+import net.scwunge.reactorcraft.registry.ReactorEntities;
 import net.scwunge.reactorcraft.registry.ReactorFluids;
 import net.scwunge.reactorcraft.registry.ReactorItems;
 import net.scwunge.reactorcraft.registry.ReactorMenus;
@@ -71,6 +73,11 @@ public final class ClientSetup {
         event.registerBlockEntityRenderer(ReactorBlockEntities.GAS_COLLECTOR.get(), context -> new GasCollectorRenderer(context, GAS_COLLECTOR));
         event.registerBlockEntityRenderer(ReactorBlockEntities.WASTE_STORAGE.get(), context ->
                 new ModelMachineRenderer<>(context, WASTE_STORAGE, "waste_storage", ModelWasteStorage.PARTS));
+    }
+
+    @SubscribeEvent
+    static void entityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(ReactorEntities.NEUTRON.get(), NeutronRenderer::new);
     }
 
     @SubscribeEvent

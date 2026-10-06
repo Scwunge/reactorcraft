@@ -11,7 +11,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.scwunge.reactorcraft.content.waste.Isotope;
 import net.scwunge.reactorcraft.content.waste.WasteManager;
 import net.scwunge.reactorcraft.core.Chance;
+import net.scwunge.reactorcraft.content.entity.NeutronEntity;
+import net.scwunge.reactorcraft.core.NeutronTile;
 import net.scwunge.reactorcraft.core.NeutronType;
+import net.minecraft.world.level.Level;
 import net.scwunge.reactorcraft.registry.ReactorBlockEntities;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
  * waste moves down through them; waste goes in at the top and comes out of the bottom, and only the waste that is
  * no longer long-lived can be taken out.
  */
-public class WasteDecayerBlockEntity extends FeedingWasteBlockEntity {
+public class WasteDecayerBlockEntity extends FeedingWasteBlockEntity implements NeutronTile {
     public static final int SLOTS = 15;
     public static final int BASE_TEMPERATURE = 150;
     public static final int OPTIMAL_TEMPERATURE = 400;
@@ -41,9 +44,14 @@ public class WasteDecayerBlockEntity extends FeedingWasteBlockEntity {
         }
     }
 
+    @Override
+    public boolean onNeutron(NeutronEntity neutron, Level level, BlockPos pos) {
+        return onNeutron(neutron.neutronType(), neutron.neutronSpeed());
+    }
+
     /**
      * onNeutron: a fission-type neutron hitting the decayer is absorbed half the time, and then may decay one long-lived
-     * waste item. Returns whether the neutron was absorbed. (The neutron entity itself is milestone 4.)
+     * waste item. Returns whether the neutron was absorbed.
      */
     public boolean onNeutron(NeutronType type, NeutronType.NeutronSpeed speed) {
         if (!level.isClientSide && type.canIrradiateMaterials() && Chance.of(level.random, 50)) {

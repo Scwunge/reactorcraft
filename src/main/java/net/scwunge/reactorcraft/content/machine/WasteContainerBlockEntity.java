@@ -14,6 +14,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.scwunge.reactorcraft.ReactorConfig;
 import net.scwunge.reactorcraft.content.waste.Isotope;
 import net.scwunge.reactorcraft.content.waste.WasteManager;
+import net.scwunge.reactorcraft.content.entity.NeutronEntity;
+import net.scwunge.reactorcraft.core.NeutronTile;
 import net.scwunge.reactorcraft.core.RadiationHooks;
 import net.scwunge.reactorcraft.core.Thermal;
 import net.scwunge.reactorcraft.core.WorldSafety;
@@ -26,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
  * second per item), and is cooled by water source blocks beside it, boiling them away above 100 C. Above 600 C it
  * melts down. Nothing can be taken out by automation unless it is long-lived, which the container never holds.
  */
-public class WasteContainerBlockEntity extends WasteUnitBlockEntity {
+public class WasteContainerBlockEntity extends WasteUnitBlockEntity implements NeutronTile {
     public static final int WIDTH = 9;
     public static final int HEIGHT = 3;
     public static final int MAX_TEMPERATURE = 600;
@@ -134,6 +136,12 @@ public class WasteContainerBlockEntity extends WasteUnitBlockEntity {
     @Override
     public boolean canExtractFromSide(int slot, @Nullable Direction side) {
         return WasteManager.isLongLived(stack(slot));
+    }
+
+    /** Neutrons pass straight through a waste container. */
+    @Override
+    public boolean onNeutron(NeutronEntity neutron, Level level, BlockPos pos) {
+        return false;
     }
 
     public int maxTemperature() {

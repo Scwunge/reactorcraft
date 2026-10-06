@@ -4,17 +4,37 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.scwunge.reactorcraft.content.entity.NeutronEntity;
 
 /**
- * Where nuclear waste and the reactor's machines reach into the neutron and radiation systems. Those are milestones 4
- * and 5, so for now every hook does nothing; each is listed in PLAN.md's deviations log so none is forgotten.
+ * Where nuclear waste and the reactor's machines reach into the radiation systems (milestone 5), so for now those hooks do
+ * nothing; each is listed in PLAN.md's deviations log so none is forgotten.
  */
 public final class RadiationHooks {
     private RadiationHooks() {
     }
 
-    /** M4: decaying waste in a container fires a waste neutron out of {@code pos} in {@code direction} (EntityNeutron, NeutronType.WASTE). */
+    /** A waste container gives off a waste neutron in {@code direction}. */
     public static void leakNeutron(Level level, BlockPos pos, Direction direction) {
+        if (!level.isClientSide) {
+            level.addFreshEntity(new NeutronEntity(level, pos, direction, NeutronType.WASTE));
+        }
+    }
+
+    /** M5: a neutron hits a living thing (RadiationEffects.applyPulseEffects, MODERATE). */
+    public static void pulse(LivingEntity target) {
+    }
+
+    /** M5: a neutron absorbed in a block may transform it (RadiationEffects.transformBlock, MODERATE). */
+    public static void transformBlock(Level level, BlockPos pos) {
+    }
+
+    /** M5: a neutron absorbed in a block may leave a little radiation (contaminateArea, radius 1, LOWLEVEL), if there is little nearby already. */
+    public static void spawnLowRadiation(Level level, BlockPos pos) {
+    }
+
+    /** M5: carrying plutonium gives MODERATE radiation effects (ItemPlutonium.onUpdate). */
+    public static void holdingPlutonium(Level level, net.minecraft.world.entity.player.Player player) {
     }
 
     /** M5: a waste storage block gives every living thing in sight within {@code range} blocks MODERATE radiation effects. */
