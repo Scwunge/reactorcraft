@@ -26,6 +26,7 @@ import net.scwunge.reactorcraft.content.machine.FusionInjectorBlockEntity;
 import net.scwunge.reactorcraft.content.machine.GasDuctBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CentrifugalTurbineBlockEntity;
 import net.scwunge.reactorcraft.content.machine.FusionHeaterBlockEntity;
+import net.scwunge.reactorcraft.content.machine.WastePipeBlockEntity;
 import net.scwunge.reactorcraft.content.machine.SteamDiffuserBlockEntity;
 import net.scwunge.reactorcraft.content.machine.FusionMarkerBlockEntity;
 import net.scwunge.reactorcraft.content.machine.TritizerBlockEntity;
@@ -154,6 +155,9 @@ public final class ReactorBlockEntities {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CentrifugalTurbineBlockEntity>> CENTRIFUGAL_TURBINE =
             register("centrifugal_turbine", CentrifugalTurbineBlockEntity::new, ReactorBlocks.CENTRIFUGAL_TURBINE);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WastePipeBlockEntity>> WASTE_PIPE =
+            register("waste_pipe", WastePipeBlockEntity::new, ReactorBlocks.WASTE_PIPE);
 
     private ReactorBlockEntities() {
     }

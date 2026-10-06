@@ -22,6 +22,7 @@ import net.scwunge.reactorcraft.content.machine.TurbineMeterBlock;
 import net.scwunge.reactorcraft.content.machine.GasDuctBlockEntity;
 import net.scwunge.reactorcraft.content.machine.HeatPipeBlock;
 import net.scwunge.reactorcraft.content.machine.SolenoidBlock;
+import net.scwunge.reactorcraft.content.machine.WastePipeBlockEntity;
 import net.scwunge.reactorcraft.content.multi.FusionStructures;
 import net.scwunge.reactorcraft.content.multi.MultiPartBlock;
 import net.scwunge.reactorcraft.content.multi.MultiStructure;
@@ -196,6 +197,10 @@ public final class ReactorBlocks {
 
     public static final DeferredBlock<TurbineCoreBlock> CENTRIFUGAL_TURBINE = block("centrifugal_turbine",
             () -> new TurbineCoreBlock(machine().noOcclusion(), ReactorBlockEntities.CENTRIFUGAL_TURBINE));
+
+    public static final DeferredBlock<ReactorPipeBlock> WASTE_PIPE = block("waste_pipe",
+            () -> new ReactorPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 10F).sound(SoundType.STONE).noOcclusion(),
+                    ReactorBlockEntities.WASTE_PIPE, (level, pos, other) -> WastePipeBlockEntity.interacts(other)));
 
     private static List<DeferredBlock<MultiPartBlock>> parts(String name, MultiStructure structure, int count) {
         List<DeferredBlock<MultiPartBlock>> list = new ArrayList<>();

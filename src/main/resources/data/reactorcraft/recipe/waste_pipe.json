@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CbC",
+    "CGC",
+    "CbC"
+  ],
+  "key": {
+    "C": {
+      "item": "reactorcraft:concrete"
+    },
+    "b": {
+      "item": "minecraft:iron_bars"
+    },
+    "G": {
+      "tag": "c:glass_blocks"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:waste_pipe",
+    "count": 6
+  }
+}

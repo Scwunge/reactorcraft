@@ -565,6 +565,7 @@ def faced_cube(block, front, side, english):
 def m7_blocks():
     out = [pipe_block("magnetic_pipe", "minecraft:block/gold_block", "Magnetic Pipe"),
            pipe_block("gas_duct", "minecraft:block/terracotta", "Gas Duct"),
+           pipe_block("waste_pipe", m("block/concrete"), "Nuclear Waste Duct"),
            faced_cube("fusion_injector", "injector_#0", "injector_#2", "Fusion Injector"),
            stacked_cube("tritizer", "tritizer", "Tritizer", 5)]
     block = "fusion_marker"
@@ -905,6 +906,7 @@ def recipes():
                                                                                 "pressure": 10000 * (1 + i), "temperature": 100, "stage": 1})
     shaped("steam_diffuser", m("steam_diffuser"), ["BBB", "DPD", "BBB"], {"B": R + "base_panel", "D": R + "diffuser", "P": PIPE})
     shaped("handbook", m("handbook"), ["RSR", "PPP", "PPP"], {"R": "#c:gems/fluorite", "S": STEEL, "P": "minecraft:paper"})
+    shaped("waste_pipe", m("waste_pipe"), ["CbC", "CGC", "CbC"], {"C": m("concrete"), "b": "minecraft:iron_bars", "G": "#c:glass_blocks"}, 6)
     shaped("tritizer", m("tritizer"), ["SPS", "GPG", "SPS"], {"G": R + "blast_glass", "P": PIPE, "S": STEEL})
     shaped("fusion_marker", m("fusion_marker"), ["F", "R"], {"F": m("blue_fluorite"), "R": "minecraft:redstone_torch"})
     shaped("toroid_magnet", m("toroid_magnet"), ["MCM", "CHC", "MCM"], {"H": m("hysteresis_ring"), "M": m("magnetic_core"), "C": m("coolant_pack")})
