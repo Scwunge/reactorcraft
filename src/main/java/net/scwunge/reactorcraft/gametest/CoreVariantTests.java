@@ -132,6 +132,51 @@ public final class CoreVariantTests {
         });
     }
 
+    @GameTest(template = EMPTY, timeoutTicks = 60)
+    public static void aPebbleBedRunsCyclesAndCountsItsCluster(GameTestHelper helper) throws ReflectiveOperationException {
+        BlockPos at = new BlockPos(1, 1, 1);
+        helper.setBlock(at, ReactorBlocks.PEBBLE_BED.get());
+        helper.setBlock(new BlockPos(2, 1, 1), ReactorBlocks.PEBBLE_BED.get());
+        helper.setBlock(new BlockPos(4, 1, 1), ReactorBlocks.PEBBLE_BED.get());
+        net.scwunge.reactorcraft.content.machine.PebbleBedBlockEntity bed = helper.getBlockEntity(at);
+        helper.assertTrue(bed.isItemValid(0, new net.minecraft.world.item.ItemStack(net.scwunge.reactorcraft.registry.ReactorItems.TRISO_PELLET.get())), "pellets go in");
+        helper.assertTrue(!bed.isItemValid(0, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.STICK)), "nothing else does");
+        bed.items().setStackInSlot(46, new net.minecraft.world.item.ItemStack(net.scwunge.reactorcraft.registry.ReactorItems.TRISO_PELLET.get()));
+        java.lang.reflect.Method cycle = net.scwunge.reactorcraft.content.machine.PebbleBedBlockEntity.class.getDeclaredMethod("runDecayCycle");
+        cycle.setAccessible(true);
+        helper.runAfterDelay(3, () -> {
+            try {
+                int before = bed.getTemperature();
+                for (int i = 0; i < 400; i++) {
+                    cycle.invoke(bed);
+                }
+                helper.assertTrue(bed.getTemperature() == before + 20 * 400, "every cycle heats 20 degrees");
+                net.minecraft.world.item.ItemStack left = bed.items().getStackInSlot(46);
+                helper.assertTrue(left.getDamageValue() > 0 || !left.is(net.scwunge.reactorcraft.registry.ReactorItems.TRISO_PELLET.get()), "and wears the pellet");
+            } catch (ReflectiveOperationException e) {
+                throw new IllegalStateException(e);
+            }
+            helper.assertTrue(bed.clusterSize() == 3, "beds within three blocks of each other form one cluster: " + bed.clusterSize());
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 60)
+    public static void aCarbonDioxideHeaterMakesHotCarbonDioxide(GameTestHelper helper) {
+        BlockPos at = new BlockPos(2, 1, 2);
+        helper.setBlock(at, ReactorBlocks.CO2_HEATER.get());
+        net.scwunge.reactorcraft.content.machine.Co2HeaterBlockEntity heater = helper.getBlockEntity(at);
+        helper.runAfterDelay(3, () -> {
+            heater.tank().setFluid(new net.neoforged.neoforge.fluids.FluidStack(net.scwunge.reactorcraft.registry.ReactorFluids.CO2.get(), 2000));
+            heater.setTemperature(900);
+        });
+        helper.runAfterDelay(30, () -> {
+            helper.assertTrue(!heater.outputTank().isEmpty() && heater.outputTank().getFluid().is(net.scwunge.reactorcraft.registry.ReactorFluids.HOT_CO2.get()),
+                    "hot CO2: " + heater.outputTank().getFluid());
+            helper.succeed();
+        });
+    }
+
     @GameTest(template = EMPTY)
     public static void anAbsorberHeatsUpOnFusionNeutronsOnly(GameTestHelper helper) {
         BlockPos at = new BlockPos(2, 1, 2);

@@ -68,7 +68,7 @@ public class ReactorMenu extends AbstractContainerMenu {
         machine.addMenuSlots(this);
         machineSlots = slots.size();
         if (machine.hasPlayerInventory()) {
-            addPlayerInventory(inventory, 8, machine.inventoryY());
+            addPlayerInventory(inventory, machine.inventoryX(), machine.inventoryY());
         }
         addDataSlots(data);
     }

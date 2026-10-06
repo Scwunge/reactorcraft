@@ -353,7 +353,12 @@ public abstract class ReactorMachineBlockEntity extends ReactorBlockEntity imple
         return true;
     }
 
-    /** Where the player inventory starts in the GUI (the original's addPlayerInventoryWithOffset). */
+    /** Where the player inventory starts across the GUI (8 unless the panel is wider). */
+    public int inventoryX() {
+        return 8;
+    }
+
+    /** Where the player inventory starts down the GUI (the original's addPlayerInventoryWithOffset). */
     public int inventoryY() {
         return 84;
     }

@@ -141,6 +141,11 @@ public final class ReactorBlocks {
             () -> new ThoriumFuelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(100F, 500F).noOcclusion()
                     .noLootTable().lightLevel(state -> 6).pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY)));
 
+    public static final DeferredBlock<StackableMachineBlock> PEBBLE_BED = block("pebble_bed",
+            () -> new StackableMachineBlock(machine(), ReactorBlockEntities.PEBBLE_BED));
+    public static final DeferredBlock<StackableMachineBlock> CO2_HEATER = block("co2_heater",
+            () -> new StackableMachineBlock(machine(), ReactorBlockEntities.CO2_HEATER));
+
     private ReactorBlocks() {
     }
 

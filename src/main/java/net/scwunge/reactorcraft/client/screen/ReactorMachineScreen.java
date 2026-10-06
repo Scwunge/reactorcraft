@@ -37,7 +37,7 @@ public class ReactorMachineScreen extends AbstractContainerScreen<ReactorMenu> {
         String block = BuiltInRegistries.BLOCK.getKey(menu.machine().getBlockState().getBlock()).getPath();
         this.layout = MachineLayout.BY_BLOCK.getOrDefault(block, new MachineLayout(166, true, List.of(), List.of(), List.of()));
         this.texture = ReactorCraft.id("textures/gui/" + block + ".png");
-        this.imageWidth = 176;
+        this.imageWidth = layout.width();
         this.imageHeight = layout.height();
         this.inventoryLabelY = layout.height() - 94;
         this.titleLabelY = 5;

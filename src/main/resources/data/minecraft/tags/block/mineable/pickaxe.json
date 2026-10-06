@@ -57,6 +57,8 @@
     "reactorcraft:breeder_core",
     "reactorcraft:sodium_heater",
     "reactorcraft:thorium_core",
+    "reactorcraft:pebble_bed",
+    "reactorcraft:co2_heater",
     "reactorcraft:fuel_dump"
   ]
 }

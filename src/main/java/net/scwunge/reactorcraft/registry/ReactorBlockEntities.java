@@ -19,7 +19,9 @@ import net.scwunge.reactorcraft.content.machine.CoolantCellBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CondenserBlockEntity;
 import net.scwunge.reactorcraft.content.machine.AbsorberBlockEntity;
 import net.scwunge.reactorcraft.content.machine.BreederCoreBlockEntity;
+import net.scwunge.reactorcraft.content.machine.Co2HeaterBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CpuBlockEntity;
+import net.scwunge.reactorcraft.content.machine.PebbleBedBlockEntity;
 import net.scwunge.reactorcraft.content.machine.FuelDumpBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ThoriumCoreBlockEntity;
 import net.scwunge.reactorcraft.content.machine.SodiumHeaterBlockEntity;
@@ -105,6 +107,11 @@ public final class ReactorBlockEntities {
             register("thorium_core", ThoriumCoreBlockEntity::new, ReactorBlocks.THORIUM_CORE);
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FuelDumpBlockEntity>> FUEL_DUMP =
             register("fuel_dump", FuelDumpBlockEntity::new, ReactorBlocks.FUEL_DUMP);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<PebbleBedBlockEntity>> PEBBLE_BED =
+            register("pebble_bed", PebbleBedBlockEntity::new, ReactorBlocks.PEBBLE_BED);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<Co2HeaterBlockEntity>> CO2_HEATER =
+            register("co2_heater", Co2HeaterBlockEntity::new, ReactorBlocks.CO2_HEATER);
 
     private ReactorBlockEntities() {
     }

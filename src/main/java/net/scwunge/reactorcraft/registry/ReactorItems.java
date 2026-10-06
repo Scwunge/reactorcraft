@@ -14,6 +14,7 @@ import net.scwunge.reactorcraft.content.item.RadiationCleanerItem;
 import net.scwunge.reactorcraft.content.item.RadiationGogglesItem;
 import net.scwunge.reactorcraft.content.item.NuclearWasteItem;
 import net.scwunge.reactorcraft.content.item.RemoteControlItem;
+import net.scwunge.reactorcraft.content.item.TrisoPelletItem;
 import net.scwunge.reactorcraft.content.material.FluoriteColor;
 
 import java.util.ArrayList;
@@ -44,6 +45,8 @@ public final class ReactorItems {
     public static final DeferredItem<Item> UNPROCESSED_WASTE = simple("unprocessed_nuclear_waste");
     public static final DeferredItem<FuelPelletItem> FUEL = add(ITEMS.register("uranium_fuel_pellet", () -> new FuelPelletItem(false)));
     public static final DeferredItem<Item> DEPLETED = simple("depleted_uranium");
+    public static final DeferredItem<TrisoPelletItem> TRISO_PELLET = add(ITEMS.register("triso_pellet", TrisoPelletItem::new));
+    public static final DeferredItem<Item> OLD_TRISO_PELLET = simple("depleted_triso_pellet");
     public static final DeferredItem<BreederFuelItem> BREEDER_FUEL = add(ITEMS.register("breeder_fuel", BreederFuelItem::new));
     public static final DeferredItem<RemoteControlItem> REMOTE_CONTROL = add(ITEMS.register("remote_control", RemoteControlItem::new));
     public static final DeferredItem<FuelPelletItem> PLUTONIUM = add(ITEMS.register("plutonium_fuel_pellet", () -> new FuelPelletItem(true)));

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "LDL",
+    "LDL",
+    "LDL"
+  ],
+  "key": {
+    "D": {
+      "item": "reactorcraft:depleted_triso_pellet"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:radiation_shielding_fabric",
+    "count": 1
+  }
+}

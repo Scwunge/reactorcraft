@@ -50,6 +50,8 @@ ITEMS = {
     "uranium_fuel_pellet": (1, "Uranium Fuel Pellet"),
     "depleted_uranium": (2, "Depleted Uranium"),
     "breeder_fuel": (98, "Breeder Reactor Fuel"),
+    "triso_pellet": (102, "TRISO Fuel Pellet"),
+    "depleted_triso_pellet": (103, "Depleted TRISO Fuel"),
     "remote_control": (101, "Remote Reactor Control"),
     "geiger_counter": (116, "Geiger Counter"),
     "radiation_cleaner": (99, "Radiation Cleanup Tool"),
@@ -457,6 +459,8 @@ def m6_blocks():
     out.append(stacked_cube("breeder_core", "breeder", "Breeder Reactor Core", 5, gui="fuelrod"))
     out.append(stacked_cube("sodium_heater", "sodiumboiler", "Sodium Heater", 4, top_state=0))
     out.append(stacked_cube("thorium_core", "thorium", "Thorium Fuel Core", 5, gui="fuelpool"))
+    out.append(stacked_cube("pebble_bed", "pebblebed", "Pebble Bed Reactor Core", 5, gui="pebblegui"))
+    out.append(stacked_cube("co2_heater", "co2heater", "Carbon Dioxide Heat Exchanger", 4, top_state=0))
     block = "fuel_dump"
     if ORIG_BLOCKS.exists():
         for part, name in (("", "side"), ("_top", "top"), ("_bottom", "bottom")):
@@ -628,6 +632,14 @@ def recipes():
            {"t": R + "tungsten_ingot", "a": R + "silumin_ingot", "P": P, "S": STEEL, "C": m("fuel_rod")})
     shaped("fuel_dump", m("fuel_dump"), ["pIp", "BPB", "pbp"],
            {"b": "minecraft:iron_bars", "p": PIPE, "P": R + "bedrock_pipe", "B": P, "I": R + "impeller"})
+    shaped("pebble_bed", m("pebble_bed"), ["SHS", "PCP", "SHS"], {"H": "minecraft:hopper", "P": P, "S": STEEL, "C": m("fuel_rod")})
+    shaped("co2_heater", m("co2_heater"), [" i ", "ibi", " i "], {"b": m("reactor_boiler"), "i": P})
+    write_json(DATA / "recipe/blast_crafting/triso_pellet.json", {
+        "type": R + "blast_crafting", "pattern": [" G ", "GUG", " G "], "key": {"G": ing(m("graphite")), "U": ing(m("uranium_dust"))},
+        "result": {"id": m("triso_pellet"), "count": 4}, "temperature": 750, "speed": 1, "xp": 0.5})
+    shaped("neutron_absorber_triso", m("neutron_absorber"), ["PPP", "PCP", "PPP"], {"C": "#c:storage_blocks/steel", "P": m("depleted_triso_pellet")})
+    shaped("radiation_shielding_fabric_from_pellets", m("radiation_shielding_fabric"), ["LDL", "LDL", "LDL"],
+           {"D": m("depleted_triso_pellet"), "L": "minecraft:leather"}, 1)
     # RotaryCraft grinder
     write_json(DATA / "recipe/grinding/emerald_dust.json", {"type": R + "grinding", "ingredient": ing("#c:gems/emerald"),
                                                            "result": {"id": m("emerald_dust"), "count": 1}})

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "PPP",
+    "PCP",
+    "PPP"
+  ],
+  "key": {
+    "C": {
+      "tag": "c:storage_blocks/steel"
+    },
+    "P": {
+      "item": "reactorcraft:depleted_triso_pellet"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:neutron_absorber",
+    "count": 1
+  }
+}

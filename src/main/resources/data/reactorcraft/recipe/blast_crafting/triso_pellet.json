@@ -1,0 +1,23 @@
+{
+  "type": "rotarycraft:blast_crafting",
+  "pattern": [
+    " G ",
+    "GUG",
+    " G "
+  ],
+  "key": {
+    "G": {
+      "item": "reactorcraft:graphite"
+    },
+    "U": {
+      "item": "reactorcraft:uranium_dust"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:triso_pellet",
+    "count": 4
+  },
+  "temperature": 750,
+  "speed": 1,
+  "xp": 0.5
+}
