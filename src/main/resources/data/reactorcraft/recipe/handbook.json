@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "RSR",
+    "PPP",
+    "PPP"
+  ],
+  "key": {
+    "R": {
+      "tag": "c:gems/fluorite"
+    },
+    "S": {
+      "tag": "c:ingots/steel"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:handbook",
+    "count": 1
+  }
+}

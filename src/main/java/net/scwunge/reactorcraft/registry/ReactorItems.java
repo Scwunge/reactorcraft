@@ -13,6 +13,7 @@ import net.scwunge.reactorcraft.content.item.GeigerCounterItem;
 import net.scwunge.reactorcraft.content.item.RadiationCleanerItem;
 import net.scwunge.reactorcraft.content.item.RadiationGogglesItem;
 import net.scwunge.reactorcraft.content.item.NuclearWasteItem;
+import net.scwunge.reactorcraft.content.item.HandbookItem;
 import net.scwunge.reactorcraft.content.item.RemoteControlItem;
 import net.scwunge.reactorcraft.content.item.TrisoPelletItem;
 import net.scwunge.reactorcraft.content.material.FluoriteColor;
@@ -113,6 +114,7 @@ public final class ReactorItems {
     public static final DeferredItem<Item> CARBIDE_FLAKES = simple("tungsten_carbide_flakes");
     public static final DeferredItem<Item> CARBIDE_INGOT = simple("tungsten_carbide_ingot");
     public static final DeferredItem<Item> TURBINE_CORE = simple("steam_turbine_core");
+    public static final DeferredItem<HandbookItem> HANDBOOK = add(ITEMS.register("handbook", HandbookItem::new));
     /** The eight permanent magnets, each four times as strong as the one before. */
     public static final List<DeferredItem<Item>> PERMANENT_MAGNETS = magnets();
 

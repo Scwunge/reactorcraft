@@ -67,6 +67,9 @@ final class HarnessScript {
         if (only.isEmpty() || only.equals("fusion")) {
             fusion();
         }
+        if (only.isEmpty() || only.equals("handbook")) {
+            handbook();
+        }
     }
 
     static void look(ServerPlayer player, double x, double y, double z, float yaw, float pitch) {
@@ -222,6 +225,27 @@ final class HarnessScript {
                 return 5;
             });
         }
+    }
+
+    /** The handbook: a chapter contents page, a short entry, and a long one that runs over two pages. */
+    private static void handbook() {
+        server(30, server -> player(server).setGameMode(GameType.CREATIVE));
+        int[][] views = {{0, -1, 0}, {1, 0, 0}, {2, 3, 0}, {8, 3, 0}, {0, 0, 0}, {8, -1, 0}};
+        String[] names = {"contents", "processor", "turbine", "solenoid", "physics", "utility"};
+        for (int i = 0; i < views.length; i++) {
+            int[] v = views[i];
+            add((mc, server) -> {
+                net.scwunge.reactorcraft.client.screen.HandbookScreen book = new net.scwunge.reactorcraft.client.screen.HandbookScreen();
+                mc.setScreen(book);
+                book.select(v[0], v[1], v[2]);
+                return 10;
+            });
+            shot("handbook-" + names[i]);
+        }
+        add((mc, server) -> {
+            mc.setScreen(null);
+            return 5;
+        });
     }
 
     private static void buildStructure(ServerLevel level, net.scwunge.reactorcraft.content.multi.MultiStructure structure, BlockPos origin, int rotation) {

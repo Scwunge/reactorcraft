@@ -110,6 +110,7 @@ ITEMS = {
     "tungsten_carbide_flakes": (160, "Tungsten Carbide Flakes"),
     "tungsten_carbide_ingot": (161, "Tungsten Carbide Ingot"),
     "steam_turbine_core": (162, "Steam Turbine Core"),
+    "handbook": (104, "ReactorCraft Handbook"),
 }
 MAGNET_STRENGTHS = ["1.000 mT", "4.000 mT", "16.000 mT", "64.000 mT", "256.000 mT", "1.024 T", "4.096 T", "16.384 T"]
 for i, strength in enumerate(MAGNET_STRENGTHS):
@@ -291,7 +292,11 @@ def machines():
         if gui and GUI_TEX.exists():
             copy_png(GUI_TEX / f"{gui}.png", ASSETS / f"textures/gui/{block}.png")
         write_json(ASSETS / f"models/block/{block}.json", {"parent": "minecraft:block/block", "textures": {"particle": PARTICLE}})
-        write_json(ASSETS / f"models/item/{block}.json", {"parent": "minecraft:builtin/entity", "display": ENTITY_DISPLAY})
+        display = ENTITY_DISPLAY
+        if block == "toroid_magnet":
+            # the magnet model is three blocks across: show it smaller in hands, slots and on the ground
+            display = {k: {**v, "scale": [x * 0.4 for x in v["scale"]]} for k, v in ENTITY_DISPLAY.items()}
+        write_json(ASSETS / f"models/item/{block}.json", {"parent": "minecraft:builtin/entity", "display": display})
         write_json(ASSETS / f"blockstates/{block}.json", {"variants": {"": {"model": m(f"block/{block}")}}})
         lang[f"block.{MOD}.{block}"] = english
         self_drop(block)
@@ -654,6 +659,105 @@ def fluids():
         lang[f"fluid_type.{MOD}.{fluid}"] = english
 
 
+# ------------------------------------------------------------------------------------------------------------- handbook
+RESOURCES_XML = JAR / "Reika/ReactorCraft/Resources"
+# chapter id -> (tab title, tab icon item, category text tag or None, source xml, [(entry tag, page title, icon item)])
+HANDBOOK = [
+    ("info", "Info", "reactorcraft:handbook", "intro", "info.xml", [
+        ("physics", "Nuclear Physics", "minecraft:book"), ("fissioninfo", "Nuclear Fission", "reactorcraft:uranium_fuel_pellet"),
+        ("fusioninfo", "Nuclear Fusion", "reactorcraft:fusion_marker"), ("basics", "Nuclear Power Basics", "reactorcraft:reactor_boiler"),
+        ("enrichment", "Uranium Enrichment", "reactorcraft:isotope_centrifuge"), ("meltdown", "Meltdowns", "reactorcraft:corium_block"),
+        ("radiation", "Radiation", "reactorcraft:radiation_goggles"), ("shielding", "Shielding", "reactorcraft:concrete"),
+        ("structures", "Structures", "reactorcraft:heater_multi_4")]),
+    ("processing", "Processing", "reactorcraft:uranium_processor", "procdesc", "machines.xml", [
+        ("processor", "Uranium Processor", "reactorcraft:uranium_processor"), ("centrifuge", "Isotope Centrifuge", "reactorcraft:isotope_centrifuge"),
+        ("electrolyzer", "Electrolyzer", "reactorcraft:electrolyzer"), ("synthesizer", "Fluid Synthesizer", "reactorcraft:fluid_synthesizer"),
+        ("tritizer", "Neutron Irradiation Chamber", "reactorcraft:tritizer")]),
+    ("powergen", "Power Generation", "reactorcraft:turbine_core", "gendesc", "machines.xml", [
+        ("boiler", "Steam Boiler", "reactorcraft:reactor_boiler"), ("steamline", "Steam Line", "reactorcraft:steam_line"),
+        ("grate", "Steam Grate", "reactorcraft:steam_grate"), ("turbinecore", "Turbine", "reactorcraft:turbine_core"),
+        ("condenser", "Condenser", "reactorcraft:condenser"), ("exchanger", "Heat Exchanger", "reactorcraft:heat_exchanger"),
+        ("pump", "Pressurizer", "reactorcraft:reactor_pump"), ("generator", "Turbine Generator", "reactorcraft:reactor_generator"),
+        ("bigturbine", "High-Pressure Turbine", "reactorcraft:big_turbine")]),
+    ("htgr", "HTGR", "reactorcraft:pebble_bed", "htgrdesc", "machines.xml", [
+        ("pebblebed", "Pebble Bed Reactor Core", "reactorcraft:pebble_bed"), ("co2heater", "Carbon Dioxide Heat Exchanger", "reactorcraft:co2_heater")]),
+    ("fission", "Fission", "reactorcraft:fuel_rod", "fissiondesc", "machines.xml", [
+        ("fuel", "Fuel Core", "reactorcraft:fuel_rod"), ("control", "Control Rod", "reactorcraft:control_rod"),
+        ("coolant", "Coolant Cell", "reactorcraft:coolant_cell"), ("cpu", "Central Control", "reactorcraft:cpu"),
+        ("wastedecayer", "Forced Fission Chamber", "reactorcraft:waste_decayer")]),
+    ("breeder", "Breeder", "reactorcraft:breeder_core", "breederdesc", "machines.xml", [
+        ("breeder", "Breeder Reactor Core", "reactorcraft:breeder_core"), ("sodiumboiler", "Sodium Heater", "reactorcraft:sodium_heater")]),
+    ("thorium", "Thorium", "reactorcraft:thorium_core", "thoriumdesc", "machines.xml", [
+        ("thorium", "Thorium Fuel Core", "reactorcraft:thorium_core"), ("fueldump", "Fuel Dump Valve", "reactorcraft:fuel_dump")]),
+    ("fusion", "Fusion", "reactorcraft:toroid_magnet", "fusiondesc", "machines.xml", [
+        ("heater", "Hydrogen Preheater", "reactorcraft:fusion_heater"), ("injector", "Fusion Plasma Injector", "reactorcraft:fusion_injector"),
+        ("magnet", "Toroid Magnet", "reactorcraft:toroid_magnet"), ("solenoid", "Solenoid Magnet", "reactorcraft:solenoid_magnet"),
+        ("absorber", "Neutron Absorber", "reactorcraft:neutron_absorber")]),
+    ("utility", "Utility", "reactorcraft:magnetic_pipe", "accdesc", "machines.xml", [
+        ("collector", "Gas Collector", "reactorcraft:gas_collector"), ("gaspipe", "Gas Duct", "reactorcraft:gas_duct"),
+        ("magnetpipe", "Magnetic Containment Pipe", "reactorcraft:magnetic_pipe"), ("fluidextractor", "Centrifugal Fluid Extractor", "reactorcraft:fluid_extractor"),
+        ("wastecontainer", "Spent Fuel Container", "reactorcraft:waste_container"), ("storage", "Nuclear Waste Disposal Drum", "reactorcraft:waste_storage"),
+        ("reflector", "Neutron Reflector", "reactorcraft:neutron_reflector"), ("turbinemeter", "Turbine Dynamometer", "reactorcraft:turbine_meter"),
+        ("marker", "Tokamak Blueprint Highlighter", "reactorcraft:fusion_marker"), ("flywheel", "Turbine Flywheel", "reactorcraft:turbine_flywheel"),
+        ("diffuser", "Steam Diffuser", "reactorcraft:steam_diffuser"), ("solartop", "Solar Tower Sodium Cycler", "reactorcraft:solar_top"),
+        ("solar", "Solar Tower Sodium Heat Exchanger", "reactorcraft:solar_exchanger")]),
+    ("tools", "Tools", "reactorcraft:radiation_goggles", "tooldesc", "tools.xml", [
+        ("goggles", "Radiation Goggles", "reactorcraft:radiation_goggles"), ("remote", "Reactor CPU Remote Control", "reactorcraft:remote_control"),
+        ("geiger", "Geiger Counter", "reactorcraft:geiger_counter"), ("cleanup", "Radiation Cleanup Tool", "reactorcraft:radiation_cleaner")]),
+    ("resources", "Resources", "reactorcraft:uranium_fuel_pellet", "resourcedesc", "resource.xml", [
+        ("fluorite", "Fluorite Crystal", "reactorcraft:blue_fluorite"), ("fuel", "Uranium Fuel Pellet", "reactorcraft:uranium_fuel_pellet"),
+        ("depleted", "Depleted Uranium", "reactorcraft:depleted_uranium"), ("waste", "Nuclear Waste", "reactorcraft:nuclear_waste"),
+        ("plutonium", "Plutonium Fuel Pellet", "reactorcraft:plutonium_fuel_pellet"), ("breederfuel", "Breeder Reactor Fuel", "reactorcraft:breeder_fuel"),
+        ("magnet", "Permanent Magnet", "reactorcraft:permanent_magnet_5"), ("pellet", "TRISO Fuel Pellet", "reactorcraft:triso_pellet"),
+        ("oldpellet", "Depleted TRISO Fuel", "reactorcraft:depleted_triso_pellet")]),
+]
+# the numbers the text asks for, in the order its %d and %s appear in the description and then the note (from the original's constants)
+HANDBOOK_VALUES = {
+    "centrifuge": [262144], "electrolyzer": [801], "synthesizer": [220], "turbinecore": [65536, 32768], "bigturbine": [131072],
+    "pump": [16384, 1024], "exchanger": [8192, 512], "fuel": [1800], "cpu": [1024], "breeder": [900], "heater": [150000000],
+    "solenoid": [256, 32768, 8192], "boiler": [650], "fluidextractor": [45, 16, 65536, 512], "turbinemeter": [65536, 131072],
+    "fueldump": [1100], "solartop": ["Sodium Cycler"], "solar": ["Sodium Heat Exchanger", 65536, 2048], "wastedecayer": [400],
+}
+
+
+def handbook_xml(name):
+    import re
+    import xml.etree.ElementTree as ET
+    text = (RESOURCES_XML / name).read_text(encoding="utf-8")
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.S)
+    return ET.fromstring(text.strip())
+
+
+def handbook():
+    if not RESOURCES_XML.exists():
+        return
+    import re
+    clean = lambda s: "\n".join(line.strip() for line in (s or "").strip().splitlines() if line.strip())
+    cats = handbook_xml("categories.xml")
+    chapters = []
+    for chapter, title, icon, category, source, entries in HANDBOOK:
+        root = handbook_xml(source)
+        pages = []
+        for tag, page_title, page_icon in entries:
+            node = root.find(tag)
+            if node is None:
+                continue
+            desc_node = node.find("desc")
+            if desc_node is not None:
+                desc, note = clean(desc_node.text).replace("\n", " "), clean(node.findtext("note"))
+            else:
+                desc, note = clean(node.text).replace("\n", " "), ""
+            values = list(HANDBOOK_VALUES.get(tag, []))
+            def fill(text):
+                def sub(match):
+                    return str(values.pop(0)) if values else match.group(0)
+                return re.sub(r"%[ds]", sub, text)
+            pages.append({"id": tag, "title": page_title, "icon": page_icon, "text": fill(desc), "notes": fill(note)})
+        chapters.append({"id": chapter, "title": title, "icon": icon, "intro": clean(cats.findtext(category)).replace("\n", " "), "pages": pages})
+    write_json(ASSETS / "handbook/en_us.json", {"chapters": chapters})
+    lang[f"item.{MOD}.handbook"] = "ReactorCraft Handbook"
+
+
 # -------------------------------------------------------------------------------------------------------------- recipes
 def ing(v):
     return {"tag": v[1:]} if v.startswith("#") else {"item": v}
@@ -800,6 +904,7 @@ def recipes():
                                                                                 "result": {"id": m(f"permanent_magnet_{i + 1}"), "count": 2},
                                                                                 "pressure": 10000 * (1 + i), "temperature": 100, "stage": 1})
     shaped("steam_diffuser", m("steam_diffuser"), ["BBB", "DPD", "BBB"], {"B": R + "base_panel", "D": R + "diffuser", "P": PIPE})
+    shaped("handbook", m("handbook"), ["RSR", "PPP", "PPP"], {"R": "#c:gems/fluorite", "S": STEEL, "P": "minecraft:paper"})
     shaped("tritizer", m("tritizer"), ["SPS", "GPG", "SPS"], {"G": R + "blast_glass", "P": PIPE, "S": STEEL})
     shaped("fusion_marker", m("fusion_marker"), ["F", "R"], {"F": m("blue_fluorite"), "R": "minecraft:redstone_torch"})
     shaped("toroid_magnet", m("toroid_magnet"), ["MCM", "CHC", "MCM"], {"H": m("hysteresis_ring"), "M": m("magnetic_core"), "C": m("coolant_pack")})
@@ -986,6 +1091,7 @@ def misc_lang():
 items()
 blocks()
 fluids()
+handbook()
 recipes()
 tags()
 radiation_data()
