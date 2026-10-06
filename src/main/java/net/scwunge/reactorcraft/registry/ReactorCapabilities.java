@@ -1,6 +1,8 @@
 package net.scwunge.reactorcraft.registry;
 
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.scwunge.reactorcraft.content.machine.ReactorMachineBlockEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
@@ -20,6 +22,12 @@ public final class ReactorCapabilities {
             if (holder.get() instanceof FluidContainerItem container) {
                 event.registerItem(Capabilities.FluidHandler.ITEM, (stack, ctx) -> container.handler(stack), container);
             }
+        }
+        for (DeferredHolder<BlockEntityType<?>, ? extends BlockEntityType<?>> holder : ReactorBlockEntities.ALL) {
+            @SuppressWarnings("unchecked")
+            BlockEntityType<ReactorMachineBlockEntity> type = (BlockEntityType<ReactorMachineBlockEntity>) holder.get();
+            event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, type, ReactorMachineBlockEntity::fluidHandler);
+            event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, type, ReactorMachineBlockEntity::itemHandler);
         }
     }
 }

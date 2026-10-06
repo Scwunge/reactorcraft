@@ -315,6 +315,9 @@ def recipes():
                                                            "result": {"id": m("emerald_dust"), "count": 1}})
     write_json(DATA / "recipe/grinding/uranium_dust.json", {"type": R + "grinding", "ingredient": ing("#c:ingots/uranium"),
                                                            "result": {"id": m("uranium_dust"), "count": 1}})
+    # RotaryCraft friction heater
+    write_json(DATA / "recipe/friction_heating/graphite.json", {"type": R + "friction_heating", "ingredient": ing(R + "coal_dust"),
+                                                               "result": {"id": m("graphite"), "count": 1}, "temperature": 400, "duration": 100})
 
 
 # ----------------------------------------------------------------------------------------------------------------- tags

@@ -30,6 +30,7 @@ public abstract class ReactorBlockEntity extends BlockEntity {
     private UUID owner;
     private boolean firstTick = true;
     private boolean temperatureKnown;
+    private boolean syncPending;
 
     protected ReactorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -46,6 +47,10 @@ public abstract class ReactorBlockEntity extends BlockEntity {
             be.onFirstTick();
         }
         be.tickServer();
+        if (be.syncPending && (level.getGameTime() + pos.hashCode()) % 5 == 0) {
+            be.syncPending = false;
+            be.syncToClient();
+        }
     }
 
     public static <T extends ReactorBlockEntity> void clientTick(Level level, BlockPos pos, BlockState state, T be) {
@@ -185,6 +190,12 @@ public abstract class ReactorBlockEntity extends BlockEntity {
     }
 
     // ---- saving and sync ----
+
+    /** Sends the client data within the next few ticks; for state that changes often (tank levels), so it goes out at most every 5 ticks. */
+    protected void markForSync() {
+        setChanged();
+        syncPending = true;
+    }
 
     protected void syncToClient() {
         setChanged();

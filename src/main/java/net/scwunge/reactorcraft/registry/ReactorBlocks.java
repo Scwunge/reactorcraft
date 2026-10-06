@@ -12,6 +12,7 @@ import net.scwunge.reactorcraft.ReactorCraft;
 import net.scwunge.reactorcraft.content.block.FluoriteBlock;
 import net.scwunge.reactorcraft.content.block.FluoriteOreBlock;
 import net.scwunge.reactorcraft.content.block.LodestoneBlock;
+import net.scwunge.reactorcraft.content.machine.ReactorMachineBlock;
 import net.scwunge.reactorcraft.content.material.FluoriteColor;
 
 import java.util.EnumMap;
@@ -57,7 +58,25 @@ public final class ReactorBlocks {
     public static final DeferredBlock<Block> LODESTONE_BLOCK = block("lodestone_block", () -> new LodestoneBlock(mat(MapColor.COLOR_GRAY)));
     public static final DeferredBlock<Block> GRAPHITE_BLOCK = block("graphite_block", () -> new Block(mat(MapColor.COLOR_BLACK)));
 
+    // machines (BlockReactorTile; hardness 2, resistance 10, iron)
+    public static final DeferredBlock<ReactorMachineBlock> FLUID_EXTRACTOR = block("fluid_extractor",
+            () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.FLUID_EXTRACTOR, true, true));
+    public static final DeferredBlock<ReactorMachineBlock> ISOTOPE_CENTRIFUGE = block("isotope_centrifuge",
+            () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.ISOTOPE_CENTRIFUGE, true, true));
+    public static final DeferredBlock<ReactorMachineBlock> URANIUM_PROCESSOR = block("uranium_processor",
+            () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.URANIUM_PROCESSOR, true, false));
+    public static final DeferredBlock<ReactorMachineBlock> ELECTROLYZER = block("electrolyzer",
+            () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.ELECTROLYZER, true, false));
+    public static final DeferredBlock<ReactorMachineBlock> FLUID_SYNTHESIZER = block("fluid_synthesizer",
+            () -> new ReactorMachineBlock(machine(), ReactorBlockEntities.FLUID_SYNTHESIZER, false, false));
+    public static final DeferredBlock<ReactorMachineBlock> GAS_COLLECTOR = block("gas_collector",
+            () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.GAS_COLLECTOR, true, true));
+
     private ReactorBlocks() {
+    }
+
+    private static BlockBehaviour.Properties machine() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2F, 10F).sound(SoundType.METAL).requiresCorrectToolForDrops();
     }
 
     public static FluoriteOreBlock fluoriteOre(FluoriteColor color) {

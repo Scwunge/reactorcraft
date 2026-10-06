@@ -1,6 +1,9 @@
 package net.scwunge.reactorcraft;
 
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec;
+
+import java.util.List;
 
 /** Server settings: the original's ReactorOptions that affect gameplay, plus switches for server safety. */
 public final class ReactorConfig {
@@ -13,6 +16,7 @@ public final class ReactorConfig {
     public static final ModConfigSpec.IntValue STEAM_LINE_CAPACITY;
     public static final ModConfigSpec.BooleanValue RADIOACTIVE_ORES;
     public static final ModConfigSpec.DoubleValue LODESTONE_FE_MULTIPLIER;
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> HEAVY_WATER_DIMENSIONS;
 
     public static final ModConfigSpec.BooleanValue MELTDOWNS_DESTROY_BLOCKS;
     public static final ModConfigSpec.BooleanValue RADIATION_TRANSFORMS_BLOCKS;
@@ -34,6 +38,8 @@ public final class ReactorConfig {
                 .define("radioactiveOres", false);
         LODESTONE_FE_MULTIPLIER = BUILDER.comment("Energy a powered lodestone block feeds into the block on top of it, as a multiplier.")
                 .defineInRange("lodestoneEnergyMultiplier", 1.0, 0.0, 1000.0);
+        HEAVY_WATER_DIMENSIONS = BUILDER.comment("Dimensions where the Centrifugal Fluid Extractor finds heavy water in the sea (empty for all).")
+                .defineListAllowEmpty("heavyWaterDimensions", List.of(), () -> "minecraft:overworld", o -> o instanceof String s && ResourceLocation.tryParse(s) != null);
         BUILDER.pop();
 
         BUILDER.push("safety");

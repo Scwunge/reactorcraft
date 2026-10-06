@@ -6,7 +6,9 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.scwunge.reactorcraft.registry.ReactorBlockEntities;
 import net.scwunge.reactorcraft.registry.ReactorBlocks;
+import net.scwunge.reactorcraft.registry.ReactorMenus;
 import net.scwunge.reactorcraft.registry.ReactorFeatures;
 import net.scwunge.reactorcraft.registry.ReactorFluids;
 import net.scwunge.reactorcraft.registry.ReactorItems;
@@ -25,6 +27,8 @@ public final class ReactorCraft {
         ReactorFluids.FLUIDS.register(modBus);
         ReactorBlocks.BLOCKS.register(modBus);
         ReactorItems.ITEMS.register(modBus);
+        ReactorBlockEntities.TYPES.register(modBus);
+        ReactorMenus.MENUS.register(modBus);
         ReactorTabs.TABS.register(modBus);
         ReactorFeatures.FEATURES.register(modBus);
     }
