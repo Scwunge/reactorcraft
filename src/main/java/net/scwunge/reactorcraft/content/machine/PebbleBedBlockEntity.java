@@ -1,5 +1,6 @@
 package net.scwunge.reactorcraft.content.machine;
 
+import net.scwunge.reactorcraft.core.FuelStage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -141,11 +142,11 @@ public class PebbleBedBlockEntity extends FeedingWasteBlockEntity implements Tem
     }
 
     private static ItemStack fissionProduct(ItemStack pellet) {
-        if (pellet.getDamageValue() >= TrisoPelletItem.STAGES - 1) {
+        if (FuelStage.get(pellet) >= TrisoPelletItem.STAGES - 1) {
             return new ItemStack(ReactorItems.OLD_TRISO_PELLET.get());
         }
         ItemStack next = pellet.copy();
-        next.setDamageValue(pellet.getDamageValue() + 1);
+        FuelStage.set(next, FuelStage.get(pellet) + 1);
         return next;
     }
 

@@ -48,11 +48,11 @@ public enum ReactorFuel {
         if (input.isEmpty()) {
             return ItemStack.EMPTY;
         }
-        if (input.getDamageValue() >= STAGES - 1) {
+        if (FuelStage.get(input) >= STAGES - 1) {
             return this == URANIUM ? new ItemStack(ReactorItems.DEPLETED.get()) : ItemStack.EMPTY;
         }
         ItemStack next = input.copy();
-        next.setDamageValue(input.getDamageValue() + 1);
+        FuelStage.set(next, FuelStage.get(input) + 1);
         return next;
     }
 

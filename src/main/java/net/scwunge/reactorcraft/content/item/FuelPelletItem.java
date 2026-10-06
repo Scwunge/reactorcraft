@@ -1,5 +1,6 @@
 package net.scwunge.reactorcraft.content.item;
 
+import net.scwunge.reactorcraft.core.FuelStage;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -14,13 +15,13 @@ public class FuelPelletItem extends Item {
     private final boolean radioactive;
 
     public FuelPelletItem(boolean radioactive) {
-        super(new Item.Properties().durability(ReactorFuel.STAGES));
+        super(new Item.Properties());
         this.radioactive = radioactive;
     }
 
     @Override
     public Component getName(ItemStack stack) {
-        int depleted = stack.getDamageValue() * 100 / ReactorFuel.STAGES;
+        int depleted = FuelStage.get(stack) * 100 / ReactorFuel.STAGES;
         return Component.translatable(getDescriptionId(stack)).append(" (" + depleted + "% Depleted)");
     }
 

@@ -1,5 +1,6 @@
 package net.scwunge.reactorcraft.content.machine;
 
+import net.scwunge.reactorcraft.core.FuelStage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -94,12 +95,12 @@ public class BreederCoreBlockEntity extends NuclearCoreBlockEntity {
                 if (neutron.neutronType().canTriggerFuelConversion()
                         && Chance.of(level.random, 5 * neutron.neutronSpeed().wasteConversionMultiplier())) {
                     ItemStack fuel = stack(slot);
-                    if (fuel.getDamageValue() >= BreederFuelItem.STAGES - 1) {
+                    if (FuelStage.get(fuel) >= BreederFuelItem.STAGES - 1) {
                         setStack(slot, new ItemStack(ReactorItems.PLUTONIUM.get()));
                         pushSpentFuel(slot);
                     } else {
                         ItemStack next = fuel.copy();
-                        next.setDamageValue(fuel.getDamageValue() + 1);
+                        FuelStage.set(next, FuelStage.get(fuel) + 1);
                         setStack(slot, next);
                     }
                     temperature += 50;

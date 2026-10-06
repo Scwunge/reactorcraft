@@ -64,6 +64,9 @@ final class HarnessScript {
         if (only.isEmpty() || only.equals("variants")) {
             variants();
         }
+        if (only.isEmpty() || only.equals("fusion")) {
+            fusion();
+        }
     }
 
     static void look(ServerPlayer player, double x, double y, double z, float yaw, float pitch) {
@@ -219,6 +222,59 @@ final class HarnessScript {
                 return 5;
             });
         }
+    }
+
+    private static void buildStructure(ServerLevel level, net.scwunge.reactorcraft.content.multi.MultiStructure structure, BlockPos origin, int rotation) {
+        for (int pass = 0; pass < 2; pass++) {
+            for (net.scwunge.reactorcraft.content.multi.MultiStructure.Cell cell : structure.cells()) {
+                Block block = cell.sample().get();
+                boolean part = block instanceof net.scwunge.reactorcraft.content.multi.MultiPartBlock;
+                if (block == net.minecraft.world.level.block.Blocks.AIR || part != (pass == 1)) {
+                    continue;
+                }
+                level.setBlock(net.scwunge.reactorcraft.content.multi.MultiStructure.at(origin, cell.x(), cell.y(), cell.z(), rotation),
+                        block.defaultBlockState(), 3);
+            }
+        }
+    }
+
+    /** Fusion (milestone 7): the heater chamber, the injector housing, the solenoid coil, a ring of magnets with plasma in it, a tritizer stack and the marker. */
+    private static void fusion() {
+        BlockPos heater = new BlockPos(-30, Y + 1, 0);
+        BlockPos injector = new BlockPos(-20, Y + 2, 0);
+        BlockPos solenoid = new BlockPos(0, Y + 2, 30);
+        server(60, server -> {
+            ServerLevel level = level(server);
+            ServerPlayer player = player(server);
+            player.setGameMode(GameType.CREATIVE);
+            level.setDayTime(6000);
+            buildStructure(level, net.scwunge.reactorcraft.content.multi.FusionStructures.HEATER, heater, 0);
+            level.setBlock(heater.offset(1, 1, 1), net.scwunge.reactorcraft.content.multi.FusionStructures.HEATER.part(0).defaultBlockState(), 3);
+            buildStructure(level, net.scwunge.reactorcraft.content.multi.FusionStructures.INJECTOR, injector, 0);
+            buildStructure(level, net.scwunge.reactorcraft.content.multi.FusionStructures.SOLENOID, solenoid, 0);
+            for (int i = 0; i < 4; i++) {
+                level.setBlockAndUpdate(new BlockPos(-10 + i * 2, Y + 1, -8), ReactorBlocks.TOROID_MAGNET.get().defaultBlockState());
+            }
+            level.setBlockAndUpdate(new BlockPos(0, Y + 1, -14), ReactorBlocks.TRITIZER.get().defaultBlockState());
+            level.setBlockAndUpdate(new BlockPos(0, Y + 2, -14), ReactorBlocks.TRITIZER.get().defaultBlockState());
+            level.setBlockAndUpdate(new BlockPos(4, Y + 1, -14), ReactorBlocks.FUSION_MARKER.get().defaultBlockState());
+            level.setBlockAndUpdate(new BlockPos(4, Y, -14), net.minecraft.world.level.block.Blocks.REDSTONE_BLOCK.defaultBlockState());
+            level.setBlockAndUpdate(new BlockPos(6, Y + 1, -14), ReactorBlocks.GAS_DUCT.get().defaultBlockState());
+            level.setBlockAndUpdate(new BlockPos(7, Y + 1, -14), ReactorBlocks.GAS_DUCT.get().defaultBlockState());
+            for (int i = 0; i < 6; i++) {
+                level.addFreshEntity(new net.scwunge.reactorcraft.content.entity.PlasmaEntity(level, new BlockPos(-10, Y + 1, -8), null));
+            }
+            look(player, heater.getX() + 2.5, Y + 6, heater.getZ() - 9, 0, 15);
+        });
+        shot("fusion-heater-chamber");
+        server(5, server -> look(player(server), injector.getX() + 4.5, Y + 6, injector.getZ() - 10, 0, 15));
+        shot("fusion-injector-housing");
+        server(5, server -> look(player(server), solenoid.getX() + 0.5, Y + 14, solenoid.getZ() - 14, 0, 40));
+        shot("fusion-solenoid-coil");
+        server(5, server -> look(player(server), -5.5, Y + 4, -14, 0, 25));
+        shot("fusion-magnets-and-marker");
+        server(5, server -> look(player(server), 3.5, Y + 3, -17, 0, 20));
+        shot("fusion-tritizer-and-duct");
     }
 
     /** The power plant side: a boiler under a steam line to a grate, a three-stage turbine fed by steam, a condenser, a pump and a CPU. */

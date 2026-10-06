@@ -28,6 +28,10 @@ public final class ReactorComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> WATER = COMPONENTS.register("water",
             () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
 
+    /** How far a fuel item (fuel pellet, breeder fuel, TRISO pellet) has been used, in stages; fresh fuel has none, so it stacks. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> FUEL_STAGE = COMPONENTS.register("fuel_stage",
+            () -> DataComponentType.<Integer>builder().persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT).build());
+
     private ReactorComponents() {
     }
 }

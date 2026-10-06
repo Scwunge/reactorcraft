@@ -152,7 +152,7 @@ public final class CoreVariantTests {
                 }
                 helper.assertTrue(bed.getTemperature() == before + 20 * 400, "every cycle heats 20 degrees");
                 net.minecraft.world.item.ItemStack left = bed.items().getStackInSlot(46);
-                helper.assertTrue(left.getDamageValue() > 0 || !left.is(net.scwunge.reactorcraft.registry.ReactorItems.TRISO_PELLET.get()), "and wears the pellet");
+                helper.assertTrue(net.scwunge.reactorcraft.core.FuelStage.get(left) > 0 || !left.is(net.scwunge.reactorcraft.registry.ReactorItems.TRISO_PELLET.get()), "and wears the pellet");
             } catch (ReflectiveOperationException e) {
                 throw new IllegalStateException(e);
             }

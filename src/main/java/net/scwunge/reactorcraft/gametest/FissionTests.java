@@ -1,5 +1,6 @@
 package net.scwunge.reactorcraft.gametest;
 
+import net.scwunge.reactorcraft.core.FuelStage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
@@ -39,12 +40,12 @@ public final class FissionTests {
         helper.assertTrue(ReactorFuel.of(new ItemStack(ReactorItems.PLUTONIUM.get())) == ReactorFuel.PLUTONIUM, "plutonium pellet");
         helper.assertTrue(ReactorFuel.of(new ItemStack(ReactorItems.DEPLETED.get())) == null, "depleted uranium is not fuel");
         ItemStack next = ReactorFuel.URANIUM.fissionProduct(fresh);
-        helper.assertTrue(next.is(ReactorItems.FUEL.get()) && next.getDamageValue() == 1, "one stage on: damage " + next.getDamageValue());
+        helper.assertTrue(next.is(ReactorItems.FUEL.get()) && FuelStage.get(next) == 1, "one stage on: damage " + FuelStage.get(next));
         ItemStack last = new ItemStack(ReactorItems.FUEL.get());
-        last.setDamageValue(ReactorFuel.STAGES - 1);
+        FuelStage.set(last, ReactorFuel.STAGES - 1);
         helper.assertTrue(ReactorFuel.URANIUM.fissionProduct(last).is(ReactorItems.DEPLETED.get()), "the last stage leaves depleted uranium");
         ItemStack lastPlutonium = new ItemStack(ReactorItems.PLUTONIUM.get());
-        lastPlutonium.setDamageValue(ReactorFuel.STAGES - 1);
+        FuelStage.set(lastPlutonium, ReactorFuel.STAGES - 1);
         helper.assertTrue(ReactorFuel.PLUTONIUM.fissionProduct(lastPlutonium).isEmpty(), "plutonium burns away completely");
         helper.assertTrue(ReactorFuel.PLUTONIUM.voidCoefficient > 0 && ReactorFuel.URANIUM.voidCoefficient == 0, "void coefficients");
         helper.succeed();
@@ -112,7 +113,7 @@ public final class FissionTests {
             helper.assertTrue(rod.isActive(), "a neutron wakes the core up");
             helper.assertTrue(absorbed > 20, "some of 3000 neutrons should have caused fission or poisoning, got " + absorbed);
             helper.assertTrue(rod.getTemperature() > before, "fission heats the core: " + before + " to " + rod.getTemperature());
-            helper.assertTrue(rod.items().getStackInSlot(3).getDamageValue() > 0 || rod.items().getStackInSlot(3).isEmpty(),
+            helper.assertTrue(FuelStage.get(rod.items().getStackInSlot(3)) > 0 || rod.items().getStackInSlot(3).isEmpty(),
                     "fission should have used up some fuel");
             helper.succeed();
         });

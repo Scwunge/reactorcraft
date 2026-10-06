@@ -1,5 +1,6 @@
 package net.scwunge.reactorcraft.content.item;
 
+import net.scwunge.reactorcraft.core.FuelStage;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -9,12 +10,12 @@ public class TrisoPelletItem extends Item {
     public static final int STAGES = 25;
 
     public TrisoPelletItem() {
-        super(new Item.Properties().durability(STAGES));
+        super(new Item.Properties());
     }
 
     @Override
     public Component getName(ItemStack stack) {
-        return Component.translatable(getDescriptionId(stack)).append(" (" + stack.getDamageValue() * 100 / STAGES + "% Depleted)");
+        return Component.translatable(getDescriptionId(stack)).append(" (" + FuelStage.get(stack) * 100 / STAGES + "% Depleted)");
     }
 
     @Override
