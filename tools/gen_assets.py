@@ -222,6 +222,7 @@ def blocks():
         self_drop(block)
         pickaxe.append(m(block))
     pickaxe.extend(machines())
+    pickaxe.extend(core_blocks())
     write_json(RES / "data/minecraft/tags/block/mineable/pickaxe.json", {"replace": False, "values": pickaxe})
     write_json(RES / "data/minecraft/tags/block/needs_stone_tool.json", {"replace": False, "values": stone_tool})
     write_json(RES / "data/minecraft/tags/block/needs_iron_tool.json", {"replace": False, "values": iron_tool})
@@ -247,6 +248,7 @@ MODELLED = {
     "electrolyzer": ("Electrolyzer", "electrolyzer", "electrolyzer"),
     "gas_collector": ("Gas Collector", "co2collector", None),
     "waste_storage": ("Nuclear Waste Disposal Drum", "storage", "wastestorage"),
+    "control_rod": ("Control Rod", "control", None),
 }
 # block id -> (English name, side texture, top and bottom texture, GUI texture)
 CUBES = {
@@ -297,6 +299,42 @@ def machines():
     if GUI_TEX.exists():
         copy_png(GUI_TEX / "wastedecayer.png", ASSETS / f"textures/gui/{block}.png")
     lang[f"block.{MOD}.{block}"] = "Forced Fission Chamber"
+    self_drop(block)
+    out.append(m(block))
+    return out
+
+
+CORE_TEXTURES = JAR / "assets/reactorcraft/textures/blocks"
+
+
+def core_blocks():
+    """The fission core's cube blocks: the fuel core (stackable), the coolant cell (look by coolant) and their GUI."""
+    out = []
+    block = "fuel_rod"
+    for state in range(5):
+        if ORIG_BLOCKS.exists():
+            copy_png(ORIG_BLOCKS / f"fuel_#{state}.png", ASSETS / f"textures/block/{block}_{state}.png")
+    for state in range(4):
+        write_json(ASSETS / f"models/block/{block}_{state}.json", {"parent": "minecraft:block/cube_bottom_top", "textures": {
+            "side": m(f"block/{block}_{state}"), "top": m(f"block/{block}_4"), "bottom": m(f"block/{block}_4")}})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}_0")})
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {
+        "above=false,below=false": {"model": m(f"block/{block}_0")}, "above=true,below=false": {"model": m(f"block/{block}_1")},
+        "above=true,below=true": {"model": m(f"block/{block}_2")}, "above=false,below=true": {"model": m(f"block/{block}_3")}}})
+    if GUI_TEX.exists():
+        copy_png(GUI_TEX / "fuelrod.png", ASSETS / f"textures/gui/{block}.png")
+    lang[f"block.{MOD}.{block}"] = "Fuel Core"
+    self_drop(block)
+    out.append(m(block))
+    block = "coolant_cell"
+    states = ["empty", "water", "heavy", "sodium", "lithium"]
+    for i, state in enumerate(states):
+        if ORIG_BLOCKS.exists():
+            copy_png(ORIG_BLOCKS / f"coolant_#{i}.png", ASSETS / f"textures/block/{block}_{state}.png")
+        write_json(ASSETS / f"models/block/{block}_{state}.json", {"parent": "minecraft:block/cube_all", "textures": {"all": m(f"block/{block}_{state}")}})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}_empty")})
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {f"coolant={st}": {"model": m(f"block/{block}_{st}")} for st in states}})
+    lang[f"block.{MOD}.{block}"] = "Coolant Cell"
     self_drop(block)
     out.append(m(block))
     return out
@@ -412,6 +450,11 @@ def recipes():
     shaped("electrolyzer", m("electrolyzer"), ["SPS", "PRP", "BPB"], {"P": PIPE, "B": P, "S": STEEL, "R": R + "reservoir"})
     shaped("waste_storage", m("waste_storage"), ["SPS", "PCP", "SPS"], {"S": STEEL, "P": P, "C": "#c:chests/wooden"})
     shaped("gas_collector", m("gas_collector"), [" p ", "SpS", "PpP"], {"p": PIPE, "P": P, "S": STEEL})
+    # ReactorRecipes.addMachines: the fission core
+    shaped("fuel_rod", m("fuel_rod"), ["SHS", "PCP", "SCS"], {"P": P, "S": STEEL, "C": m("fuel_canister"), "H": "minecraft:hopper"})
+    shaped("control_rod", m("control_rod"), ["SGS", "RRR", "PPP"],
+           {"S": STEEL, "P": P, "R": m("absorption_rod"), "G": R + "steel_gear_unit_2"})
+    shaped("coolant_cell", m("coolant_cell"), ["SPS", "GRG", "SPS"], {"S": STEEL, "P": PIPE, "G": "minecraft:glass", "R": R + "reservoir"})
     # RotaryCraft grinder
     write_json(DATA / "recipe/grinding/emerald_dust.json", {"type": R + "grinding", "ingredient": ing("#c:gems/emerald"),
                                                            "result": {"id": m("emerald_dust"), "count": 1}})

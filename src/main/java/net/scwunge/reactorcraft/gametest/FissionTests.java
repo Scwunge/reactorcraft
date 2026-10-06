@@ -12,6 +12,11 @@ import net.scwunge.reactorcraft.ReactorCraft;
 import net.scwunge.reactorcraft.content.block.FluoriteBlock;
 import net.scwunge.reactorcraft.content.entity.NeutronEntity;
 import net.scwunge.reactorcraft.content.material.FluoriteColor;
+import net.scwunge.reactorcraft.content.machine.ControlRodBlockEntity;
+import net.scwunge.reactorcraft.content.machine.CoolantCellBlockEntity;
+import net.scwunge.reactorcraft.content.machine.FuelRodBlockEntity;
+import net.scwunge.reactorcraft.content.waste.WasteManager;
+import net.scwunge.reactorcraft.core.CoolantState;
 import net.scwunge.reactorcraft.core.NeutronType;
 import net.scwunge.reactorcraft.core.RadiationShield;
 import net.scwunge.reactorcraft.core.ReactorFuel;
@@ -75,6 +80,136 @@ public final class FissionTests {
         helper.assertTrue(neutron.getDeltaMovement().x == NeutronEntity.SPEED, "speed " + neutron.getDeltaMovement());
         helper.runAfterDelay(2, () -> {
             helper.assertTrue(neutron.isAlive() && neutron.getX() > helper.absolutePos(BlockPos.ZERO).getX() + 1.5, "x after two ticks: " + neutron.getX());
+            helper.succeed();
+        });
+    }
+
+    private static NeutronEntity neutron(GameTestHelper helper, NeutronType type) {
+        return new NeutronEntity(helper.getLevel(), helper.absolutePos(new BlockPos(0, 1, 0)), Direction.EAST, type);
+    }
+
+    private static void setTemperature(net.scwunge.reactorcraft.core.ReactorBlockEntity be, int temperature) throws ReflectiveOperationException {
+        java.lang.reflect.Field field = net.scwunge.reactorcraft.core.ReactorBlockEntity.class.getDeclaredField("temperature");
+        field.setAccessible(true);
+        field.setInt(be, temperature);
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 60)
+    public static void neutronsCauseFissionInAFuelRod(GameTestHelper helper) {
+        BlockPos at = new BlockPos(2, 1, 2);
+        helper.setBlock(at, ReactorBlocks.FUEL_ROD.get());
+        FuelRodBlockEntity rod = helper.getBlockEntity(at);
+        rod.items().setStackInSlot(3, new ItemStack(ReactorItems.FUEL.get()));
+        helper.runAfterDelay(3, () -> {
+            int before = rod.getTemperature();
+            helper.assertTrue(rod.isFissile() && !rod.isActive(), "fresh fuel is fissile and the core is idle");
+            int absorbed = 0;
+            for (int i = 0; i < 600; i++) {
+                if (rod.onNeutron(neutron(helper, NeutronType.FISSION), helper.getLevel(), helper.absolutePos(at))) {
+                    absorbed++;
+                }
+            }
+            helper.assertTrue(rod.isActive(), "a neutron wakes the core up");
+            helper.assertTrue(absorbed > 20, "some of 600 neutrons should have caused fission or poisoning, got " + absorbed);
+            helper.assertTrue(rod.getTemperature() > before, "fission heats the core: " + before + " to " + rod.getTemperature());
+            helper.assertTrue(rod.items().getStackInSlot(3).getDamageValue() > 0 || rod.items().getStackInSlot(3).isEmpty(),
+                    "fission should have used up some fuel");
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY)
+    public static void fullWasteSoaksUpEveryNeutron(GameTestHelper helper) {
+        BlockPos at = new BlockPos(2, 1, 2);
+        helper.setBlock(at, ReactorBlocks.FUEL_ROD.get());
+        FuelRodBlockEntity rod = helper.getBlockEntity(at);
+        for (int i = 4; i < 12; i++) {
+            rod.items().setStackInSlot(i, WasteManager.waste(net.scwunge.reactorcraft.content.waste.Isotope.CS137));
+        }
+        rod.items().setStackInSlot(3, new ItemStack(ReactorItems.FUEL.get()));
+        for (int i = 0; i < 50; i++) {
+            helper.assertTrue(rod.onNeutron(neutron(helper, NeutronType.FISSION), helper.getLevel(), helper.absolutePos(at))
+                    || !NeutronType.FISSION.canTriggerFission(helper.getLevel().random), "full waste should absorb");
+        }
+        helper.succeed();
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 80)
+    public static void controlRodsSoakUpNeutronsWhenLowered(GameTestHelper helper) {
+        BlockPos at = new BlockPos(2, 1, 2);
+        helper.setBlock(at, ReactorBlocks.CONTROL_ROD.get());
+        ControlRodBlockEntity rod = helper.getBlockEntity(at);
+        helper.assertTrue(rod.isActive(), "a new rod starts lowered");
+        int absorbed = 0;
+        for (int i = 0; i < 1000; i++) {
+            if (rod.onNeutron(neutron(helper, NeutronType.FISSION), helper.getLevel(), helper.absolutePos(at))) {
+                absorbed++;
+            }
+        }
+        helper.assertTrue(absorbed > 500 && absorbed < 700, "60% of 1000, got " + absorbed);
+        rod.toggle(false, false);
+        helper.runAfterDelay(40, () -> {
+            helper.assertTrue(!rod.isActive() && rod.rodPosition() == 20, "raised rod at " + rod.rodPosition());
+            helper.assertTrue(!rod.onNeutron(neutron(helper, NeutronType.FISSION), helper.getLevel(), helper.absolutePos(at)), "a raised rod absorbs nothing");
+            rod.drop(false);
+        });
+        helper.runAfterDelay(50, () -> {
+            helper.assertTrue(rod.isActive(), "a SCRAM drops the rod all the way (" + rod.rodPosition() + ")");
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 60)
+    public static void coolantCellsModerateAndPassTheirContentsDown(GameTestHelper helper) {
+        BlockPos top = new BlockPos(2, 2, 2);
+        BlockPos bottom = new BlockPos(2, 1, 2);
+        helper.setBlock(top, ReactorBlocks.COOLANT_CELL.get());
+        helper.setBlock(bottom, ReactorBlocks.COOLANT_CELL.get());
+        CoolantCellBlockEntity upper = helper.getBlockEntity(top);
+        CoolantCellBlockEntity lower = helper.getBlockEntity(bottom);
+        upper.setCoolant(CoolantState.HEAVY);
+        helper.assertTrue(helper.getBlockState(top).getValue(net.scwunge.reactorcraft.content.machine.CoolantCellBlock.COOLANT) == CoolantState.HEAVY,
+                "the block shows its coolant");
+        NeutronEntity fast = neutron(helper, NeutronType.FISSION);
+        helper.assertTrue(!upper.onNeutron(fast, helper.getLevel(), helper.absolutePos(top)), "a coolant cell never absorbs");
+        helper.assertTrue(fast.neutronSpeed() == NeutronType.NeutronSpeed.THERMAL, "heavy water moderates");
+        helper.runAfterDelay(8, () -> {
+            helper.assertTrue(upper.coolant() == CoolantState.EMPTY && lower.coolant() == CoolantState.HEAVY,
+                    "heavy water moved down: " + upper.coolant() + "/" + lower.coolant());
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 60)
+    public static void fuelFeedsDownAColumnOfCores(GameTestHelper helper) {
+        BlockPos bottom = new BlockPos(2, 1, 2);
+        BlockPos top = new BlockPos(2, 2, 2);
+        helper.setBlock(bottom, ReactorBlocks.FUEL_ROD.get());
+        helper.setBlock(top, ReactorBlocks.FUEL_ROD.get());
+        FuelRodBlockEntity lower = helper.getBlockEntity(bottom);
+        FuelRodBlockEntity upper = helper.getBlockEntity(top);
+        upper.items().setStackInSlot(3, new ItemStack(ReactorItems.FUEL.get()));
+        helper.runAfterDelay(30, () -> {
+            helper.assertTrue(upper.items().getStackInSlot(3).isEmpty() && upper.items().getStackInSlot(0).isEmpty(), "the upper core handed its fuel down");
+            helper.assertTrue(lower.items().getStackInSlot(3).is(ReactorItems.FUEL.get()), "the lower core has the fuel in its reacting slot");
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 100)
+    public static void anOverheatedCoreMeltsDown(GameTestHelper helper) {
+        BlockPos at = new BlockPos(2, 1, 2);
+        helper.setBlock(at, ReactorBlocks.FUEL_ROD.get());
+        FuelRodBlockEntity rod = helper.getBlockEntity(at);
+        helper.runAfterDelay(3, () -> {
+            try {
+                setTemperature(rod, 2500);
+            } catch (ReflectiveOperationException e) {
+                throw new IllegalStateException(e);
+            }
+        });
+        helper.runAfterDelay(45, () -> {
+            helper.assertTrue(!helper.getBlockState(at).is(ReactorBlocks.FUEL_ROD.get()), "the core should be gone after a meltdown");
             helper.succeed();
         });
     }

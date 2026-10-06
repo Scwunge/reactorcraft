@@ -38,8 +38,11 @@
     "reactorcraft:electrolyzer",
     "reactorcraft:gas_collector",
     "reactorcraft:waste_storage",
+    "reactorcraft:control_rod",
     "reactorcraft:fluid_synthesizer",
     "reactorcraft:waste_container",
-    "reactorcraft:waste_decayer"
+    "reactorcraft:waste_decayer",
+    "reactorcraft:fuel_rod",
+    "reactorcraft:coolant_cell"
   ]
 }

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "coolant=empty": {
+      "model": "reactorcraft:block/coolant_cell_empty"
+    },
+    "coolant=water": {
+      "model": "reactorcraft:block/coolant_cell_water"
+    },
+    "coolant=heavy": {
+      "model": "reactorcraft:block/coolant_cell_heavy"
+    },
+    "coolant=sodium": {
+      "model": "reactorcraft:block/coolant_cell_sodium"
+    },
+    "coolant=lithium": {
+      "model": "reactorcraft:block/coolant_cell_lithium"
+    }
+  }
+}

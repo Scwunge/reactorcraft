@@ -12,7 +12,10 @@ import net.scwunge.reactorcraft.ReactorCraft;
 import net.scwunge.reactorcraft.content.block.FluoriteBlock;
 import net.scwunge.reactorcraft.content.block.FluoriteOreBlock;
 import net.scwunge.reactorcraft.content.block.LodestoneBlock;
+import net.scwunge.reactorcraft.content.machine.ControlRodBlock;
+import net.scwunge.reactorcraft.content.machine.CoolantCellBlock;
 import net.scwunge.reactorcraft.content.machine.ReactorMachineBlock;
+import net.scwunge.reactorcraft.content.machine.StackableMachineBlock;
 import net.scwunge.reactorcraft.content.machine.WasteDecayerBlock;
 import net.scwunge.reactorcraft.content.material.FluoriteColor;
 
@@ -79,6 +82,13 @@ public final class ReactorBlocks {
             () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.WASTE_STORAGE, true, false));
     public static final DeferredBlock<WasteDecayerBlock> WASTE_DECAYER = block("waste_decayer",
             () -> new WasteDecayerBlock(machine(), ReactorBlockEntities.WASTE_DECAYER));
+
+    public static final DeferredBlock<StackableMachineBlock> FUEL_ROD = block("fuel_rod",
+            () -> new StackableMachineBlock(machine(), ReactorBlockEntities.FUEL_ROD));
+    public static final DeferredBlock<ControlRodBlock> CONTROL_ROD = block("control_rod",
+            () -> new ControlRodBlock(machine().noOcclusion(), ReactorBlockEntities.CONTROL_ROD));
+    public static final DeferredBlock<CoolantCellBlock> COOLANT_CELL = block("coolant_cell",
+            () -> new CoolantCellBlock(machine(), ReactorBlockEntities.COOLANT_CELL));
 
     private ReactorBlocks() {
     }

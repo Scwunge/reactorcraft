@@ -37,6 +37,10 @@ public final class RadiationHooks {
     public static void holdingPlutonium(Level level, net.minecraft.world.entity.player.Player player) {
     }
 
+    /** M5: a reactor meltdown contaminates the surroundings (RadiationEffects.contaminateArea, radius 32, LETHAL). */
+    public static void contaminateReactor(Level level, BlockPos pos) {
+    }
+
     /** M5: a waste storage block gives every living thing in sight within {@code range} blocks MODERATE radiation effects. */
     public static void sickenMobs(Level level, BlockPos pos, int range) {
     }

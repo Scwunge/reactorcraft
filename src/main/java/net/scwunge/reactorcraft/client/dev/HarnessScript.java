@@ -55,6 +55,9 @@ final class HarnessScript {
         if (only.isEmpty() || only.equals("machines")) {
             machines();
         }
+        if (only.isEmpty() || only.equals("core")) {
+            core();
+        }
     }
 
     static void look(ServerPlayer player, double x, double y, double z, float yaw, float pitch) {
@@ -161,6 +164,59 @@ final class HarnessScript {
                 return 5;
             });
         }
+    }
+
+    /** A small fission core: a fuel column, coolant cells in every state, control rods up and down, with neutrons flying. */
+    private static void core() {
+        server(40, server -> {
+            ServerLevel level = level(server);
+            ServerPlayer player = player(server);
+            player.setGameMode(GameType.CREATIVE);
+            for (int dx = -1; dx <= 9; dx++) {
+                for (int dz = 3; dz <= 9; dz++) {
+                    for (int dy = 1; dy <= 4; dy++) {
+                        level.setBlockAndUpdate(new BlockPos(dx, Y + dy, dz), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+                    }
+                }
+            }
+            for (int h = 0; h < 3; h++) {
+                level.setBlockAndUpdate(new BlockPos(2, Y + 1 + h, 6), ReactorBlocks.FUEL_ROD.get().defaultBlockState());
+            }
+            net.scwunge.reactorcraft.content.machine.FuelRodBlockEntity top =
+                    (net.scwunge.reactorcraft.content.machine.FuelRodBlockEntity) level.getBlockEntity(new BlockPos(2, Y + 3, 6));
+            top.items().setStackInSlot(3, new ItemStack(ReactorItems.FUEL.get()));
+            top.items().setStackInSlot(4, WasteManager.waste(Isotope.CS137));
+            net.scwunge.reactorcraft.core.CoolantState[] states = net.scwunge.reactorcraft.core.CoolantState.values();
+            for (int i = 0; i < states.length; i++) {
+                BlockPos at = new BlockPos(4 + i - 1 + (i == 0 ? 0 : 0), Y + 1, 4);
+                level.setBlockAndUpdate(at, ReactorBlocks.COOLANT_CELL.get().defaultBlockState());
+                ((net.scwunge.reactorcraft.content.machine.CoolantCellBlockEntity) level.getBlockEntity(at)).setCoolant(states[i]);
+            }
+            level.setBlockAndUpdate(new BlockPos(0, Y + 1, 6), ReactorBlocks.CONTROL_ROD.get().defaultBlockState());
+            level.setBlockAndUpdate(new BlockPos(6, Y + 1, 6), ReactorBlocks.CONTROL_ROD.get().defaultBlockState());
+            ((net.scwunge.reactorcraft.content.machine.ControlRodBlockEntity) level.getBlockEntity(new BlockPos(6, Y + 1, 6))).setActive(false, false);
+            level.setDayTime(6000);
+            look(player, 3.5, Y + 2.6, 1.5, 0, 15);
+        });
+        server(30, server -> {
+            ServerLevel level = level(server);
+            for (int i = 0; i < 4; i++) {
+                level.addFreshEntity(new net.scwunge.reactorcraft.content.entity.NeutronEntity(level, new BlockPos(1 + i, Y + 2, 5),
+                        net.minecraft.core.Direction.EAST, i % 2 == 0 ? net.scwunge.reactorcraft.core.NeutronType.FISSION : net.scwunge.reactorcraft.core.NeutronType.DECAY));
+            }
+        });
+        shot("core-1");
+        server(5, server -> {
+            if (level(server).getBlockEntity(new BlockPos(2, Y + 3, 6)) instanceof ReactorMachineBlockEntity machine) {
+                ReactorMenu.open(player(server), machine);
+            }
+        });
+        add((mc, server) -> 10);
+        shot("gui-fuel-rod");
+        add((mc, server) -> {
+            mc.player.closeContainer();
+            return 5;
+        });
     }
 
     /** All mod items in the creative tab, page by page. */

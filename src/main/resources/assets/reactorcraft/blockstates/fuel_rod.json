@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "above=false,below=false": {
+      "model": "reactorcraft:block/fuel_rod_0"
+    },
+    "above=true,below=false": {
+      "model": "reactorcraft:block/fuel_rod_1"
+    },
+    "above=true,below=true": {
+      "model": "reactorcraft:block/fuel_rod_2"
+    },
+    "above=false,below=true": {
+      "model": "reactorcraft:block/fuel_rod_3"
+    }
+  }
+}
