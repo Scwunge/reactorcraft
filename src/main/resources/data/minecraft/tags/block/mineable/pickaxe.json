@@ -51,6 +51,8 @@
     "reactorcraft:turbine_meter",
     "reactorcraft:coolant_cell",
     "reactorcraft:reactor_boiler",
-    "reactorcraft:steam_line"
+    "reactorcraft:steam_line",
+    "reactorcraft:neutron_reflector",
+    "reactorcraft:neutron_absorber"
   ]
 }

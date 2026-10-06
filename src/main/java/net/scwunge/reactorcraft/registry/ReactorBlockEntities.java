@@ -17,7 +17,9 @@ import net.scwunge.reactorcraft.content.machine.FuelRodBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ControlRodBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CoolantCellBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CondenserBlockEntity;
+import net.scwunge.reactorcraft.content.machine.AbsorberBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CpuBlockEntity;
+import net.scwunge.reactorcraft.content.machine.ReflectorBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ReactorPumpBlockEntity;
 import net.scwunge.reactorcraft.content.machine.ReactorBoilerBlockEntity;
 import net.scwunge.reactorcraft.content.machine.SteamGrateBlockEntity;
@@ -84,6 +86,11 @@ public final class ReactorBlockEntities {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurbineMeterBlockEntity>> TURBINE_METER =
             register("turbine_meter", TurbineMeterBlockEntity::new, ReactorBlocks.TURBINE_METER);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReflectorBlockEntity>> REFLECTOR =
+            register("neutron_reflector", ReflectorBlockEntity::new, ReactorBlocks.REFLECTOR);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AbsorberBlockEntity>> ABSORBER =
+            register("neutron_absorber", AbsorberBlockEntity::new, ReactorBlocks.ABSORBER);
 
     private ReactorBlockEntities() {
     }

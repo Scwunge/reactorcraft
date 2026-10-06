@@ -122,6 +122,11 @@ public final class ReactorBlocks {
     public static final DeferredBlock<TurbineMeterBlock> TURBINE_METER = block("turbine_meter",
             () -> new TurbineMeterBlock(machine(), ReactorBlockEntities.TURBINE_METER));
 
+    public static final DeferredBlock<ReactorMachineBlock> REFLECTOR = block("neutron_reflector",
+            () -> new ReactorMachineBlock(machine(), ReactorBlockEntities.REFLECTOR, false, false));
+    public static final DeferredBlock<ReactorMachineBlock> ABSORBER = block("neutron_absorber",
+            () -> new ReactorMachineBlock(machine(), ReactorBlockEntities.ABSORBER, false, false));
+
     private ReactorBlocks() {
     }
 

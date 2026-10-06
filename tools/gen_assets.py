@@ -232,6 +232,7 @@ def blocks():
     pickaxe.extend(machines())
     pickaxe.extend(core_blocks())
     pickaxe.extend(steam_blocks())
+    pickaxe.extend(m6_blocks())
     write_json(RES / "data/minecraft/tags/block/mineable/pickaxe.json", {"replace": False, "values": pickaxe})
     write_json(RES / "data/minecraft/tags/block/needs_stone_tool.json", {"replace": False, "values": stone_tool})
     write_json(RES / "data/minecraft/tags/block/needs_iron_tool.json", {"replace": False, "values": iron_tool})
@@ -418,6 +419,43 @@ def steam_blocks():
     return out
 
 
+def plain_cube(block, texture, english):
+    """A cube machine with one texture on every side."""
+    if ORIG_BLOCKS.exists():
+        copy_png(ORIG_BLOCKS / f"{texture}.png", ASSETS / f"textures/block/{block}.png")
+    write_json(ASSETS / f"models/block/{block}.json", {"parent": "minecraft:block/cube_all", "textures": {"all": m(f"block/{block}")}})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}")})
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {"": {"model": m(f"block/{block}")}}})
+    lang[f"block.{MOD}.{block}"] = english
+    self_drop(block)
+    return m(block)
+
+
+def stacked_cube(block, texture, english, states=5, top_state=None, gui=None):
+    """A machine that looks different when another is above or below it (states 0-3), with its own top and bottom."""
+    top = top_state if top_state is not None else states - 1
+    for state in range(states):
+        if ORIG_BLOCKS.exists():
+            copy_png(ORIG_BLOCKS / f"{texture}_#{state}.png", ASSETS / f"textures/block/{block}_{state}.png")
+    for state in range(4):
+        write_json(ASSETS / f"models/block/{block}_{state}.json", {"parent": "minecraft:block/cube_bottom_top", "textures": {
+            "side": m(f"block/{block}_{state}"), "top": m(f"block/{block}_{top}"), "bottom": m(f"block/{block}_{top}")}})
+    write_json(ASSETS / f"models/item/{block}.json", {"parent": m(f"block/{block}_0")})
+    write_json(ASSETS / f"blockstates/{block}.json", {"variants": {
+        "above=false,below=false": {"model": m(f"block/{block}_0")}, "above=true,below=false": {"model": m(f"block/{block}_1")},
+        "above=true,below=true": {"model": m(f"block/{block}_2")}, "above=false,below=true": {"model": m(f"block/{block}_3")}}})
+    if gui and GUI_TEX.exists():
+        copy_png(GUI_TEX / f"{gui}.png", ASSETS / f"textures/gui/{block}.png")
+    lang[f"block.{MOD}.{block}"] = english
+    self_drop(block)
+    return m(block)
+
+
+def m6_blocks():
+    out = [plain_cube("neutron_reflector", "reflector", "Neutron Reflector"), plain_cube("neutron_absorber", "absorber", "Neutron Absorber")]
+    return out
+
+
 SILK = {"condition": "minecraft:match_tool", "predicate": {"predicates": {"minecraft:enchantments": [
     {"enchantments": "minecraft:silk_touch", "levels": {"min": 1}}]}}}
 NO_SILK = {"condition": "minecraft:inverted", "term": SILK}
@@ -554,6 +592,9 @@ def recipes():
     shaped("geiger_counter", m("geiger_counter"), [" r ", "sSs", "sgs"],
            {"r": R + "radar_unit", "s": STEEL, "S": R + "screen", "g": R + "steel_gear"})
     shaped("radiation_cleaner", m("radiation_cleaner"), [" sp", "sbs", "ss "], {"b": "minecraft:water_bucket", "s": STEEL, "p": R + "pipe"})
+    # ReactorRecipes.addMachines: reflector and absorber
+    shaped("neutron_reflector", m("neutron_reflector"), ["GGG", "GSG", "GGG"], {"G": m("graphite"), "S": "#c:storage_blocks/steel"})
+    shaped("neutron_absorber_depleted", m("neutron_absorber"), [" P ", "PCP", " P "], {"C": "#c:storage_blocks/steel", "P": m("depleted_uranium")})
     # RotaryCraft grinder
     write_json(DATA / "recipe/grinding/emerald_dust.json", {"type": R + "grinding", "ingredient": ing("#c:gems/emerald"),
                                                            "result": {"id": m("emerald_dust"), "count": 1}})

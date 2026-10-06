@@ -65,6 +65,13 @@ public class NeutronEntity extends Entity implements IEntityWithComplexSpawn {
         return speed;
     }
 
+    /** reverseHorizontally: a reflector turns it back the way it came (up and down are left alone). */
+    public void reverseHorizontally() {
+        Vec3 m = getDeltaMovement();
+        setDeltaMovement(-m.x, m.y, -m.z);
+        hurtMarked = true;
+    }
+
     /** moderate: a moderator (heavy water) slows it to thermal speed. */
     public void moderate() {
         speed = NeutronSpeed.THERMAL;
