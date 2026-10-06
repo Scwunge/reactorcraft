@@ -67,6 +67,9 @@ final class HarnessScript {
         if (only.isEmpty() || only.equals("fusion")) {
             fusion();
         }
+        if (only.isEmpty() || only.equals("power")) {
+            power();
+        }
         if (only.isEmpty() || only.equals("handbook")) {
             handbook();
         }
@@ -260,6 +263,53 @@ final class HarnessScript {
                         block.defaultBlockState(), 3);
             }
         }
+    }
+
+    /** The big turbine (three stages), the flywheel and the generator, each formed and looked at from the front and from the side. */
+    private static void power() {
+        BlockPos turbine = new BlockPos(-30, Y + 7, 40);
+        BlockPos flywheel = new BlockPos(10, Y + 1, 40);
+        BlockPos generator = new BlockPos(40, Y + 1, 40);
+        server(60, server -> {
+            ServerLevel level = level(server);
+            ServerPlayer player = player(server);
+            player.setGameMode(GameType.CREATIVE);
+            level.setDayTime(6000);
+            for (int x = -40; x < 60; x++) {
+                for (int z = 25; z < 60; z++) {
+                    level.setBlock(new BlockPos(x, Y, z), net.minecraft.world.level.block.Blocks.STONE.defaultBlockState(), 2);
+                    for (int y = Y + 1; y < Y + 16; y++) {
+                        level.setBlock(new BlockPos(x, y, z), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 2);
+                    }
+                }
+            }
+            net.scwunge.reactorcraft.content.multi.PowerStructures.TurbineStructure structure = net.scwunge.reactorcraft.content.multi.PowerStructures.TURBINE;
+            for (int pass = 0; pass < 2; pass++) {
+                for (int i = 0; i < structure.cells().size(); i++) {
+                    net.scwunge.reactorcraft.content.multi.MultiStructure.Cell cell = structure.cells().get(i);
+                    Block block = cell.sample().get();
+                    boolean part = block instanceof net.scwunge.reactorcraft.content.multi.MultiPartBlock;
+                    if (structure.stageOf(i) >= 3 || part != (pass == 1)) {
+                        continue;
+                    }
+                    net.minecraft.world.level.block.state.BlockState state = block.defaultBlockState();
+                    if (state.hasProperty(net.scwunge.reactorcraft.content.machine.ReactorMachineBlock.LOOK)) {
+                        state = state.setValue(net.scwunge.reactorcraft.content.machine.ReactorMachineBlock.LOOK, net.scwunge.reactorcraft.content.multi.MultiStructure.forward(0));
+                    }
+                    level.setBlock(net.scwunge.reactorcraft.content.multi.MultiStructure.at(turbine, cell.x(), cell.y(), cell.z(), 0), state, 3);
+                }
+            }
+            buildStructure(level, net.scwunge.reactorcraft.content.multi.PowerStructures.FLYWHEEL, flywheel, 0);
+            buildStructure(level, net.scwunge.reactorcraft.content.multi.PowerStructures.GENERATOR, generator, 0);
+            look(player, turbine.getX() + 1.5, Y + 9, turbine.getZ() - 22, 0, 8);
+        });
+        shot("power-turbine-front");
+        server(5, server -> look(player(server), turbine.getX() + 9.5, Y + 12, turbine.getZ() + 14, 180, 30));
+        shot("power-turbine-back");
+        server(5, server -> look(player(server), flywheel.getX() + 0.5, Y + 6, flywheel.getZ() - 14, 0, 12));
+        shot("power-flywheel");
+        server(5, server -> look(player(server), generator.getX() + 0.5, Y + 6, generator.getZ() - 14, 0, 12));
+        shot("power-generator");
     }
 
     /** Fusion (milestone 7): the heater chamber, the injector housing, the solenoid coil, a ring of magnets with plasma in it, a tritizer stack and the marker. */
