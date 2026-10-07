@@ -82,4 +82,31 @@ public final class PowerGenTests {
             helper.succeed();
         });
     }
+
+    @GameTest(template = EMPTY, timeoutTicks = 40)
+    public static void aSolarExchangerTakesSodiumAndGivesBackTheRest(GameTestHelper helper) {
+        BlockPos at = new BlockPos(2, 1, 2);
+        helper.setBlock(at, ReactorBlocks.SOLAR_EXCHANGER.get());
+        net.scwunge.reactorcraft.content.machine.SolarExchangerBlockEntity exchanger = helper.getBlockEntity(at);
+        helper.assertTrue(exchanger.receiveSodium(600) == 0, "it takes sodium that fits");
+        helper.assertTrue(exchanger.receiveSodium(600) == 200, "and returns what does not: the tank holds 1000");
+        helper.assertTrue(exchanger.sodiumTank().getFluid().is(ReactorFluids.WARM_SODIUM.get()), "as hot sodium");
+        helper.assertTrue(!exchanger.isActive(), "with no shaft power it is not active");
+        helper.succeed();
+    }
+
+    @GameTest(template = EMPTY, timeoutTicks = 40)
+    public static void aSolarTopWarmsUnderMirrorsAndOnlyWorksAsAStackedPair(GameTestHelper helper) {
+        BlockPos at = new BlockPos(2, 1, 2);
+        helper.setBlock(at, ReactorBlocks.SOLAR_TOP.get());
+        net.scwunge.reactorcraft.content.machine.SolarTopBlockEntity top = helper.getBlockEntity(at);
+        helper.runAfterDelay(3, () -> {
+            int before = top.getTemperature();
+            helper.assertTrue(!top.isActive(), "alone it is not active");
+            top.tick(100, 1F);
+            helper.assertTrue(top.getMaxTemperature() == 1800, "it tops out at 1800");
+            helper.assertTrue(top.getTemperature() >= before, "mirrors never cool it");
+            helper.succeed();
+        });
+    }
 }

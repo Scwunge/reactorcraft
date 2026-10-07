@@ -275,6 +275,8 @@ MODELLED = {
     "turbine_core": ("Turbine", "turbine", None),
     "steam_diffuser": ("Steam Diffuser", "diffuser", None),
     "centrifugal_turbine": ("Centrifugal Turbine", "miniturbine", None),
+    "solar_exchanger": ("Solar Tower Sodium Heat Exchanger", "solar", None),
+    "solar_top": ("Solar Tower Sodium Cycler", "solartop", None),
     "toroid_magnet": ("Toroid Magnet", "magnet", None),
 }
 # block id -> (English name, side texture, top and bottom texture, GUI texture)
@@ -973,6 +975,8 @@ def recipes():
     shaped("steam_diffuser", m("steam_diffuser"), ["BBB", "DPD", "BBB"], {"B": R + "base_panel", "D": R + "diffuser", "P": PIPE})
     shaped("handbook", m("handbook"), ["RSR", "PPP", "PPP"], {"R": "#c:gems/fluorite", "S": STEEL, "P": "minecraft:paper"})
     shaped("waste_pipe", m("waste_pipe"), ["CbC", "CGC", "CbC"], {"C": m("concrete"), "b": "minecraft:iron_bars", "G": "#c:glass_blocks"}, 6)
+    shaped("solar_exchanger", m("solar_exchanger"), ["sPs", "pEp", "sPs"], {"s": STEEL, "P": R + "base_panel", "p": PIPE, "E": m("heat_exchanger")})
+    shaped("solar_top", m("solar_top"), ["aPa", "tct", "sPs"], {"a": m("cd_in_ag_alloy_ingot"), "P": R + "base_panel", "t": R + "tungsten_ingot", "c": m("condenser"), "s": STEEL})
     shaped("tritizer", m("tritizer"), ["SPS", "GPG", "SPS"], {"G": R + "blast_glass", "P": PIPE, "S": STEEL})
     shaped("fusion_marker", m("fusion_marker"), ["F", "R"], {"F": m("blue_fluorite"), "R": "minecraft:redstone_torch"})
     shaped("toroid_magnet", m("toroid_magnet"), ["MCM", "CHC", "MCM"], {"H": m("hysteresis_ring"), "M": m("magnetic_core"), "C": m("coolant_pack")})

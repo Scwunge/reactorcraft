@@ -22,6 +22,8 @@ import net.scwunge.reactorcraft.client.model.ModelReactorPump;
 import net.scwunge.reactorcraft.client.model.ModelSteamGrate;
 import net.scwunge.reactorcraft.client.model.ModelDiffuser;
 import net.scwunge.reactorcraft.client.model.ModelHeavyPump;
+import net.scwunge.reactorcraft.client.model.ModelSolarExchanger;
+import net.scwunge.reactorcraft.client.model.ModelSolarTop;
 import net.scwunge.reactorcraft.client.model.ModelMiniTurbine;
 import net.scwunge.reactorcraft.client.model.ModelMagnet;
 import net.scwunge.reactorcraft.client.model.ModelSolenoid;
@@ -69,6 +71,8 @@ public final class ClientSetup {
     private static final ModelLayerLocation TOROID_MAGNET = layer("toroid_magnet");
     private static final ModelLayerLocation SOLENOID = layer("solenoid_magnet");
     private static final ModelLayerLocation STEAM_DIFFUSER = layer("steam_diffuser");
+    private static final ModelLayerLocation SOLAR_EXCHANGER = layer("solar_exchanger");
+    private static final ModelLayerLocation SOLAR_TOP = layer("solar_top");
     private static final ModelLayerLocation CENTRIFUGAL_TURBINE = layer("centrifugal_turbine");
     private static final ModelLayerLocation[] TURBINE_STAGES = new ModelLayerLocation[TurbineRenderer.STAGES];
     private static final ModelLayerLocation[] BIG_TURBINE_STAGES = new ModelLayerLocation[BigTurbineRenderer.STAGES];
@@ -106,6 +110,8 @@ public final class ClientSetup {
         event.registerLayerDefinition(TOROID_MAGNET, ModelMagnet::create);
         event.registerLayerDefinition(SOLENOID, ModelSolenoid::create);
         event.registerLayerDefinition(STEAM_DIFFUSER, ModelDiffuser::create);
+        event.registerLayerDefinition(SOLAR_EXCHANGER, ModelSolarExchanger::create);
+        event.registerLayerDefinition(SOLAR_TOP, ModelSolarTop::create);
         event.registerLayerDefinition(CENTRIFUGAL_TURBINE, ModelMiniTurbine::create);
         event.registerLayerDefinition(FLYWHEEL, ModelFlywheel::create);
         event.registerLayerDefinition(GENERATOR, ModelGenerator::create);
@@ -147,6 +153,10 @@ public final class ClientSetup {
         event.registerBlockEntityRenderer(ReactorBlockEntities.TOROID_MAGNET.get(), context -> new ToroidMagnetRenderer(context, TOROID_MAGNET));
         event.registerBlockEntityRenderer(ReactorBlockEntities.SOLENOID.get(), context -> new SolenoidRenderer(context, SOLENOID));
         event.registerBlockEntityRenderer(ReactorBlockEntities.STEAM_DIFFUSER.get(), context -> new SteamDiffuserRenderer(context, STEAM_DIFFUSER));
+        event.registerBlockEntityRenderer(ReactorBlockEntities.SOLAR_EXCHANGER.get(), context ->
+                new ModelMachineRenderer<>(context, SOLAR_EXCHANGER, "solar_exchanger", ModelSolarExchanger.PARTS));
+        event.registerBlockEntityRenderer(ReactorBlockEntities.SOLAR_TOP.get(), context ->
+                new ModelMachineRenderer<>(context, SOLAR_TOP, "solar_top", ModelSolarTop.PARTS));
         event.registerBlockEntityRenderer(ReactorBlockEntities.CENTRIFUGAL_TURBINE.get(), context ->
                 new ModelMachineRenderer<>(context, CENTRIFUGAL_TURBINE, "centrifugal_turbine", ModelMiniTurbine.PARTS));
         event.registerBlockEntityRenderer(ReactorBlockEntities.FUSION_MARKER.get(), FusionMarkerRenderer::new);
@@ -186,7 +196,7 @@ public final class ClientSetup {
                 ReactorBlocks.URANIUM_PROCESSOR.asItem(), ReactorBlocks.ELECTROLYZER.asItem(), ReactorBlocks.GAS_COLLECTOR.asItem(),
                 ReactorBlocks.CONTROL_ROD.asItem(), ReactorBlocks.STEAM_GRATE.asItem(), ReactorBlocks.CONDENSER.asItem(), ReactorBlocks.REACTOR_PUMP.asItem(), ReactorBlocks.TURBINE_CORE.asItem(),
                 ReactorBlocks.WASTE_STORAGE.asItem(), ReactorBlocks.TOROID_MAGNET.asItem(), ReactorBlocks.SOLENOID.asItem(), ReactorBlocks.STEAM_DIFFUSER.asItem(), ReactorBlocks.CENTRIFUGAL_TURBINE.asItem(),
-                ReactorBlocks.BIG_TURBINE.asItem(), ReactorBlocks.FLYWHEEL.asItem(), ReactorBlocks.GENERATOR.asItem());
+                ReactorBlocks.BIG_TURBINE.asItem(), ReactorBlocks.FLYWHEEL.asItem(), ReactorBlocks.GENERATOR.asItem(), ReactorBlocks.SOLAR_EXCHANGER.asItem(), ReactorBlocks.SOLAR_TOP.asItem());
         for (ReactorFluids.Entry fluid : ReactorFluids.ALL) {
             ResourceLocation still = fluid.texture == null
                     ? ResourceLocation.withDefaultNamespace("block/water_still") : ReactorCraft.id("block/fluid/" + fluid.texture);

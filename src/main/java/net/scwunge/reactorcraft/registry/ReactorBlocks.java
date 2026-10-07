@@ -213,6 +213,11 @@ public final class ReactorBlocks {
             () -> new ReactorPipeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(1.5F, 10F).sound(SoundType.STONE).noOcclusion(),
                     ReactorBlockEntities.WASTE_PIPE, (level, pos, other) -> WastePipeBlockEntity.interacts(other)));
 
+    public static final DeferredBlock<ReactorMachineBlock> SOLAR_EXCHANGER = block("solar_exchanger",
+            () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.SOLAR_EXCHANGER, true, false));
+    public static final DeferredBlock<ReactorMachineBlock> SOLAR_TOP = block("solar_top",
+            () -> new ReactorMachineBlock(machine().noOcclusion(), ReactorBlockEntities.SOLAR_TOP, true, false));
+
     private static List<DeferredBlock<MultiPartBlock>> parts(String name, MultiStructure structure, int count) {
         return parts(name, structure, count, -1);
     }

@@ -26,6 +26,8 @@ import net.scwunge.reactorcraft.content.machine.FusionInjectorBlockEntity;
 import net.scwunge.reactorcraft.content.machine.GasDuctBlockEntity;
 import net.scwunge.reactorcraft.content.machine.CentrifugalTurbineBlockEntity;
 import net.scwunge.reactorcraft.content.machine.FusionHeaterBlockEntity;
+import net.scwunge.reactorcraft.content.machine.SolarExchangerBlockEntity;
+import net.scwunge.reactorcraft.content.machine.SolarTopBlockEntity;
 import net.scwunge.reactorcraft.content.machine.WastePipeBlockEntity;
 import net.scwunge.reactorcraft.content.machine.SteamDiffuserBlockEntity;
 import net.scwunge.reactorcraft.content.machine.FusionMarkerBlockEntity;
@@ -166,6 +168,11 @@ public final class ReactorBlockEntities {
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<WastePipeBlockEntity>> WASTE_PIPE =
             register("waste_pipe", WastePipeBlockEntity::new, ReactorBlocks.WASTE_PIPE);
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarExchangerBlockEntity>> SOLAR_EXCHANGER =
+            register("solar_exchanger", SolarExchangerBlockEntity::new, ReactorBlocks.SOLAR_EXCHANGER);
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<SolarTopBlockEntity>> SOLAR_TOP =
+            register("solar_top", SolarTopBlockEntity::new, ReactorBlocks.SOLAR_TOP);
 
     private ReactorBlockEntities() {
     }

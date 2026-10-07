@@ -74,6 +74,8 @@
   "block.reactorcraft.red_fluorite_ore": "Red Fluorite",
   "block.reactorcraft.silver_ore": "Silver Ore",
   "block.reactorcraft.sodium_heater": "Sodium Heater",
+  "block.reactorcraft.solar_exchanger": "Solar Tower Sodium Heat Exchanger",
+  "block.reactorcraft.solar_top": "Solar Tower Sodium Cycler",
   "block.reactorcraft.solenoid_magnet": "Solenoid Magnet",
   "block.reactorcraft.solenoid_multi_0": "Ferromagnetic Base",
   "block.reactorcraft.solenoid_multi_1": "Magnetic Linkage",

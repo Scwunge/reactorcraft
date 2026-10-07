@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "sPs",
+    "pEp",
+    "sPs"
+  ],
+  "key": {
+    "s": {
+      "tag": "c:ingots/steel"
+    },
+    "P": {
+      "item": "rotarycraft:base_panel"
+    },
+    "p": {
+      "item": "rotarycraft:pipe"
+    },
+    "E": {
+      "item": "reactorcraft:heat_exchanger"
+    }
+  },
+  "result": {
+    "id": "reactorcraft:solar_exchanger",
+    "count": 1
+  }
+}
