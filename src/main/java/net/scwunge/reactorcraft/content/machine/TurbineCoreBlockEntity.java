@@ -87,7 +87,12 @@ public class TurbineCoreBlockEntity extends ReactorMachineBlockEntity implements
 
     @Nullable
     private TurbineCoreBlockEntity neighbour(Direction dir) {
-        if (level.getBlockEntity(worldPosition.relative(dir)) instanceof TurbineCoreBlockEntity other && other.steamMovement() == steamMovement()
+        // never load a chunk to look: when the server stops, a chunk that is being unloaded would be waited for for ever
+        BlockPos at = worldPosition.relative(dir);
+        if (!level.hasChunkAt(at)) {
+            return null;
+        }
+        if (level.getBlockEntity(at) instanceof TurbineCoreBlockEntity other && other.steamMovement() == steamMovement()
                 && other.getType() == getType()) {
             return other;
         }

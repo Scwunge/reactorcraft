@@ -164,7 +164,8 @@ public class ControlRodBlockEntity extends ReactorMachineBlockEntity implements 
 
     @Override
     public void setRemoved() {
-        if (cpu != null && level != null && level.getBlockEntity(cpu) instanceof CpuBlockEntity c) {
+        // no chunk is loaded to look for the CPU: one that is being unloaded (as the server stops) would be waited for for ever
+        if (cpu != null && level != null && level.hasChunkAt(cpu) && level.getBlockEntity(cpu) instanceof CpuBlockEntity c) {
             c.layout().remove(worldPosition);
             c.removeTemperatureCheck(worldPosition);
         }

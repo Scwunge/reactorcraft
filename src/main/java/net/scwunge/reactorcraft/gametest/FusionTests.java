@@ -204,13 +204,18 @@ public final class FusionTests {
     @GameTest(template = EMPTY, timeoutTicks = 100)
     public static void anInjectorHousingFormsInAnyDirectionAndBreaksWithAPart(GameTestHelper helper) {
         BlockPos origin = helper.absolutePos(new BlockPos(6, 4, 6));
-        for (int rotation : new int[]{0, 1}) {
-            BlockPos at = origin.offset(rotation * 24, 0, 0);
-            build(helper, FusionStructures.INJECTOR, at, rotation, null);
-            helper.assertTrue(allFormed(helper, FusionStructures.INJECTOR, at, rotation), "the housing forms (turned " + rotation + ")");
-            FusionInjectorBlockEntity injector = (FusionInjectorBlockEntity) helper.getLevel().getBlockEntity(MultiStructure.at(at, 2, 0, 0, rotation));
+        // both turns are built in the same place, one after the other: a second housing built beside the first would stand in the space of the test next to this one
+        for (int rotation : new int[]{1, 0}) {
+            build(helper, FusionStructures.INJECTOR, origin, rotation, null);
+            helper.assertTrue(allFormed(helper, FusionStructures.INJECTOR, origin, rotation), "the housing forms (turned " + rotation + ")");
+            FusionInjectorBlockEntity injector = (FusionInjectorBlockEntity) helper.getLevel().getBlockEntity(MultiStructure.at(origin, 2, 0, 0, rotation));
             helper.assertTrue(injector != null && injector.isFormed(), "and tells the injector");
             helper.assertTrue(injector.facing() == MultiStructure.forward(rotation), "which now faces along it: " + injector.facing());
+            if (rotation == 1) {
+                for (MultiStructure.Cell cell : FusionStructures.INJECTOR.cells()) {
+                    helper.getLevel().setBlock(MultiStructure.at(origin, cell.x(), cell.y(), cell.z(), rotation), Blocks.AIR.defaultBlockState(), 3);
+                }
+            }
         }
         BlockPos hub = MultiStructure.at(origin, 0, 1, 0, 0);
         helper.getLevel().setBlock(hub, Blocks.AIR.defaultBlockState(), 3);

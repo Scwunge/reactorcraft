@@ -152,7 +152,8 @@ public abstract class NuclearCoreBlockEntity extends ReactorMachineBlockEntity i
 
     @Override
     public void setRemoved() {
-        if (cpu != null && level != null && level.getBlockEntity(cpu) instanceof CpuBlockEntity c) {
+        // no chunk is loaded to look for the CPU: one that is being unloaded (as the server stops) would be waited for for ever
+        if (cpu != null && level != null && level.hasChunkAt(cpu) && level.getBlockEntity(cpu) instanceof CpuBlockEntity c) {
             c.removeTemperatureCheck(worldPosition);
         }
         if (activeTimer > 0 && level instanceof ServerLevel) {

@@ -126,6 +126,10 @@ public class SolenoidBlockEntity extends ReactorMachineBlockEntity implements Mu
         ToroidAim aim = ToroidAim.W;
         int count = 0;
         while (count <= 38) {
+            if (!level.hasChunkAt(at)) {
+                // the ring goes on into chunks that are not loaded (or, as the server stops, are being unloaded): do not load them to look
+                break;
+            }
             if (level.getBlockEntity(at) instanceof ToroidMagnetBlockEntity magnet) {
                 magnet.setHasSolenoid(has);
                 aim = magnet.aim();
